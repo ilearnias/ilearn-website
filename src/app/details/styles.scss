@@ -1,0 +1,28 @@
+@use "../../config/variables.scss" as vars;
+
+.product-box1 {
+  padding: 10vh;
+  padding-top: 15vh;
+  background-image: url("../assets/images/bg-abt.png"),
+    linear-gradient(to right, vars.$primary, vars.$primary);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+    padding-top: 15vh;
+    padding-bottom: 10vh;
+  }
+}
+.product-Img {
+  border: 1px solid rgba(0, 0, 0, 0.213);
+  padding: 15px 15px;
+  border-radius: 5px;
+  color: #ffffff70;
+  font-size: 12px;
+  margin-bottom: 20px;
+  height: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

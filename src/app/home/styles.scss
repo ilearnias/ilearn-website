@@ -1,0 +1,394 @@
+@use "../../config/variables.scss" as vars;
+.Home-Container {
+  background: vars.$primary;
+}
+.section2-position {
+  background-color: #1b2730;
+  position: fixed;
+  z-index: 1000;
+  bottom: 0;
+  width: 100%;
+}
+.Home-Section1 {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.Home-Menu {
+  background: vars.$primary;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: vars.$primary;
+  img {
+    width: 33px;
+    height: 33px;
+  }
+  &.sticky {
+    margin-top: -1px;
+    padding-top: 10vh;
+    z-index: 900;
+    background: rgba(0, 0, 0, 0.273);
+    backdrop-filter: saturate(200%) blur(30px);
+    font-size: 12px;
+    img {
+      width: 40px;
+      height: 22px;
+    }
+  }
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    &.sticky {
+      padding-top: 8vh;
+    }
+  }
+}
+
+.Home-ScrollBtn-Box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Home-ScrollBtn {
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.133);
+    border-radius: 100px;
+  }
+}
+
+.Home-Section2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  min-height: 100vh;
+  // background-image: radial-gradient(
+  //   vars.$primary2,
+  //   vars.$primary,
+  //   vars.$primary
+  // );
+  background-color: #fff;
+}
+
+.Home-Section3 {
+  text-align: center;
+  min-height: 20px;
+  background-color: #000;
+}
+
+.Home-video1 {
+  object-fit: cover;
+  width: 100%;
+  height: 100vh;
+  // background-color: #3a2ba0;
+  background-color: vars.$primary;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    height: 100vh;
+    background-color: vars.$primary;
+  }
+}
+
+.Home-videoHover {
+  position: absolute;
+  padding: 10vh 10vh 0 10vh;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  background-image: radial-gradient(
+    transparent,
+    // #364a58,
+    // #1f3f55,
+    // #354c61,
+    // green,
+    // red,
+    // #344959,
+    // #2b363e,
+    // #1b2730,
+    vars.$primary
+  );
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    height: 100vh;
+    // background-image: radial-gradient(
+    //   transparent,
+    //   #19193d7a,
+    //   #19193d7a,
+    //   #19193dbe
+    // );
+    background-image: radial-gradient(
+      transparent,
+      // #364a58,
+      // #1f3f55,
+      // #354c61,
+      // green,
+      // red,
+      // #344959,
+      // #2b363e,
+      // #1b2730,
+      vars.$primary
+    );
+  }
+}
+
+.Home-text1 {
+  // margin-top: 20vh;
+  color: vars.$primary;
+  text-align: center;
+  font-size: 55px;
+  font-family: vars.$Bold;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    font-size: 35px;
+    margin-bottom: 20px;
+  }
+}
+
+.Home-text2 {
+  color: vars.$primary;
+  text-align: center;
+  font-family: vars.$Regular;
+  line-height: 30px;
+  letter-spacing: 1px;
+  // font-size: 40px;
+  // width: 80%;
+  padding: 0px 100px;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 0px 10px;
+    // font-size: 15px;
+  }
+}
+
+.Home-text3 {
+  color: #fff;
+  text-align: center;
+  font-size: 55px;
+  font-family: vars.$Bold;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    font-size: 35px;
+    margin-bottom: 20px;
+  }
+}
+
+.Home-text4 {
+  color: #fff;
+  text-align: center;
+  font-family: vars.$Regular;
+  line-height: 30px;
+  letter-spacing: 1px;
+  padding: 0px 100px;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 0px 10px;
+    // font-size: 15px;
+  }
+}
+
+.Home-horizonalScroll {
+  overflow: auto;
+  white-space: nowrap;
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 0;
+}
+
+.Home-horizonalScroll::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.Home-Section2Item {
+  color: white;
+  text-align: center;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 15vh;
+  gap: 10px;
+  font-family: vars.$Regular;
+  font-size: 12px;
+  // padding: 20px 0px 15px 0px;
+  img {
+    width: 33px;
+    height: 33px;
+  }
+  &:hover {
+    color: #ff4000;
+    cursor: pointer;
+  }
+}
+
+.Home-Section2Item.active {
+  color: #ff4000;
+}
+
+.Home-Section2Box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Home-Section2Imag {
+  object-fit: contain;
+  width: 700px;
+  @media screen and (min-width: 768px) {
+    height: 300px;
+  }
+}
+
+.container-width {
+  @media screen and (max-width: 576px) {
+    min-width: 240px !important;
+  }
+}
+
+.break-line {
+  white-space: pre-wrap; /* Maintains whitespace and line breaks */
+}
+
+.Home-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  color: #87a5ff;
+}
+.Home-floatBtnTxt {
+  color: #ff4000;
+  font-size: 20px;
+  font-family: vars.$Bold;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.Home-floatBtnItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  // color: rgb(255, 255, 255);
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-family: vars.$SemiBold;
+}
+.Home-floatBtnTxt2 {
+  color: #000;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-family: vars.$Regular;
+  cursor: pointer;
+  &:hover {
+    color: #ff4000;
+  }
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+}
+
+.curosal-box {
+  background-color: red;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 0px 20px;
+  }
+}
+
+.Home-Btn1 {
+  cursor: pointer !important;
+  border: none !important;
+  color: #fff !important;
+  background-color: rgb(255, 64, 0) !important;
+  border-radius: 100px !important;
+  transition: transform 0.3s ease, color 0.3s ease !important;
+  &:hover {
+    transform: translateY(-3px) !important;
+  }
+}
+
+.Home-Btn2 {
+  cursor: pointer;
+  color: vars.$primary;
+  &:hover {
+    color: #ff4000;
+  }
+}
+
+// -----------
+
+.Home-Parallax1 {
+  position: relative;
+  width: 100%;
+  height: 85vh;
+  overflow: hidden;
+  z-index: 999;
+  @media screen and (max-width:576px) {
+  height: 79vh;
+  }
+}
+
+.Home-video1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.Home-videoHover {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.slick-slider {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.slick-slide h3 {
+  color: #fff;
+  text-align: center;
+}
+.Carousel1 {
+  width: 100vw;
+}
+.Carousel2 {
+  width: 100vw;
+  background-color: #e5e5e5d3;
+}
+.brand-imgDiv {
+  display: flex !important;
+  justify-content: center;
+}
+.brand-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.whatsApp-btn {
+  // height: 40px !important;
+  // width: 40px !important;
+  bottom: 110px !important;
+  background-color: #075e54 !important;
+  z-index: 1000 !important;
+}

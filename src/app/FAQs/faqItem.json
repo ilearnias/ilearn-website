@@ -1,0 +1,57 @@
+[
+  {
+    "id": 1,
+    "question": "t('1_Do_you_accept_returns')",
+    "answer": "t('We_do_accept_returns')"
+  },
+  {
+    "id": 2,
+    "question": "t('2_Can_I_exchange_an_item')",
+    "answer": "t('We_do_accept')"
+  },
+  {
+    "id": 3,
+    "question": "t('3_What_is_the_status_of')",
+    "answer": ""
+  },
+  {
+    "id": 4,
+    "question": "t('4_Can_I_Cancel_my_order')",
+    "answer": "t('Order_can_be')"
+  },
+  {
+    "id": 5,
+    "question": "t('5_How_long_does_it_take')",
+    "answer": "t('Express_Shipping')"
+  },
+  {
+    "id": 6,
+    "question": "t('6_What_payment_methods')",
+    "answer": "t('We_Accept_Cash')"
+  },
+  {
+    "id": 7,
+    "question": "t('7_Do_you_accept_returns')",
+    "answer": "t('We_do_accept_returns_in')"
+  },
+  {
+    "id": 8,
+    "question": "t('8_Can_I_exchange_an_item')",
+    "answer": "t('We_do_accept_exchanges')"
+  },
+  {
+    "id": 9,
+    "question": "t('9_How_long_does_it_take')",
+    "answer": ""
+  },
+  {
+    "id": 10,
+    "question": "t('10_Do_you_have')",
+    "answer": ""
+  },
+  {
+    "id": 11,
+    "question": "t('11_Is_there_a_warranty')",
+    "answer": ""
+  }
+]

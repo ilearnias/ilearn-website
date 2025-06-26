@@ -1,0 +1,189 @@
+@use "../../config/variables.scss" as vars;
+
+.contact-Container {
+  min-height: 100vh;
+}
+
+.contact-box1 {
+  padding: 10vh;
+  padding-top: 15vh;
+  background-image: url("../assets/images/bg-abt.png"),
+    linear-gradient(to right, vars.$primary, vars.$primary);
+  // background-image: linear-gradient(to right, vars.$primary, vars.$primary);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+    padding-top: 15vh;
+    padding-bottom: 10vh;
+  }
+}
+
+.contact-text1 {
+  color: #fff;
+  text-align: center;
+  font-size: 50px;
+  font-family: vars.$Bold;
+}
+
+.contact-text2 {
+  color: #fff;
+  text-align: center;
+  font-family: vars.$Thin;
+  font-size: 14px;
+}
+
+.contact-box2 {
+  padding: 50px 0px;
+  background-image: linear-gradient(
+      to right,
+      #ffff,
+      #ffff,
+      #e4e4e400,
+      #33146100
+    ),
+    url("../assets/images/mappprisum.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #fff;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+    padding-bottom: 20vh;
+    background-image: linear-gradient(
+        to bottom,
+        #ffff,
+        #ffff,
+        #e4e4e400,
+        #33146100
+      ),
+      url("../assets/branch/Headquarters.png");
+  }
+}
+
+.contact-box3 {
+  font-family: vars.$Regular;
+  border-radius: 20px;
+  font-size: 17px;
+  color: vars.$primary;
+  flex: 1;
+}
+
+.contact-text3 {
+  color: vars.$primary;
+  font-size: 35px;
+  font-family: vars.$Bold;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    text-align: center;
+    margin-top: 20px;
+  }
+}
+
+.contact-row {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.contact-box4 {
+  border: 1px solid rgba(255, 255, 255, 0.451);
+  padding: 15px 15px;
+  border-radius: 10px;
+  color: #ffffff70;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.contact-box5 {
+  background-color: rgba(82, 76, 66, 0.678);
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  color: vars.$primary1;
+}
+
+.contact-text6 {
+  color: #fff;
+  font-family: vars.$SemiBold;
+  font-size: 15px;
+  margin-left: 2px;
+}
+
+.contact-box6 {
+  border: 1px solid rgb(235, 235, 235);
+  border-radius: 100px;
+  padding: 8px 20px;
+  text-align: center;
+  color: #fff;
+  font-family: vars.$Medium;
+  margin-top: 10px;
+  font-size: 15px;
+
+  transition: transform 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+  &:hover {
+    color: vars.$primary1;
+  }
+  @media only screen and (max-width: 768px) {
+    font-size: 12px;
+    white-space: nowrap;
+    text-align: center;
+    padding: 8px;
+  }
+}
+
+.contact-box7 {
+  padding: 60px 0px;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 50px 10px;
+  }
+}
+
+.contact-box9 {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-family: vars.$Regular;
+  margin-bottom: 20px;
+}
+
+.contact-text9 {
+  font-family: vars.$SemiBold;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.contact-box10 {
+  border: 1px solid rgba(128, 128, 128, 0.164);
+  padding: 10px;
+  color: black;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.contact-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.contact-text10 {
+  margin-bottom: 20px;
+  font-family: vars.$Regular;
+  color: gray;
+}
+
+.contact-formBox {
+  padding: 50px 10px;
+  border-radius: 10px;
+}

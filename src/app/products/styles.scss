@@ -1,0 +1,74 @@
+@use "../../config/variables.scss" as vars;
+
+.product-box1 {
+  padding: 10vh;
+  padding-top: 15vh;
+  background-image: url("../assets/images/bg-abt.png"),
+    linear-gradient(to right, vars.$primary, vars.$primary);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+    padding-top: 15vh;
+    padding-bottom: 10vh;
+  }
+}
+.product-text1 {
+  color: #fff;
+  text-align: center;
+  font-size: 50px;
+  font-family: vars.$Bold;
+}
+.product-text2 {
+  color: #fff;
+  text-align: center;
+  font-family: vars.$Thin;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.product-cardTxt {
+  font-size: 16px;
+  font-family: vars.$SemiBold;
+  text-align: center;
+}
+
+.product-item1 {
+  border: 1px solid rgba(182, 182, 182, 0.407);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  height: 250px;
+  cursor: pointer;
+  // transition: transform 0.3s ease, color 0.3s ease;
+  &:hover {
+    // transform: translateY(-4px);
+    background-color: rgba(201, 201, 201, 0.092);
+  }
+}
+
+.product-item2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.product-img{
+  height: 170px !important;
+  object-fit: contain;
+}
+
+.Product-TxtBox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  // background-color: red;
+}

@@ -1,0 +1,51 @@
+@use "../../config/variables.scss" as vars;
+
+.join-container {
+  min-height: 100vh;
+}
+
+.join-box1 {
+  padding: 10vh;
+  padding-top: 15vh;
+  background-image: url("../assets/images/bg-abt.png"),
+    linear-gradient(to right, vars.$primary, vars.$primary);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+    padding-top: 15vh;
+    padding-bottom: 10vh;
+  }
+}
+
+.join-text1 {
+  color: #fff;
+  text-align: center;
+  font-size: 50px;
+  font-family: vars.$Bold;
+}
+
+.join-text2 {
+  color: #fff;
+  text-align: center;
+  font-family: vars.$Thin;
+  font-size: 14px;
+}
+
+.join-box2 {
+  padding: 50px 0px;
+}
+
+.join-text3 {
+  color: #000;
+  font-size: 20px;
+  font-family: vars.$SemiBold;
+  margin-bottom: 5px;
+}
+
+.join-text4 {
+  color: #4d4d4d;
+  font-size: 16px;
+  font-family: vars.$Regular;
+}

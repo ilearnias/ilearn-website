@@ -1,0 +1,54 @@
+@use "../../config/variables.scss" as vars;
+
+.about-box1 {
+  padding: 10vh;
+  padding-top: 15vh;
+  background-image: url("../assets/images/bg-abt.png"),
+    linear-gradient(to right, vars.$primary, vars.$primary);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+    padding-top: 15vh;
+    padding-bottom: 10vh;
+  }
+}
+
+.about-text1 {
+  color: #fff;
+  text-align: center;
+  font-size: 50px;
+  font-family: vars.$Bold;
+}
+
+.about-text2 {
+  color: #fff;
+  text-align: center;
+  font-family: vars.$Thin;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.about-txt1 {
+  font-size: 30px;
+  font-family: vars.$Bold;
+  color: vars.$primary;
+  margin-top: 50px;
+  margin-bottom: 40px;
+}
+
+.about-txt2 {
+  font-size: 23px;
+  font-family: vars.$SemiBold;
+  color: rgb(71, 71, 71);
+  margin-bottom: 10px;
+}
+
+.about-txt3 {
+  font-size: 16px;
+  font-family: vars.$Regular;
+  color: vars.$primary;
+  text-align: justify;
+  margin-bottom: 12px;
+}

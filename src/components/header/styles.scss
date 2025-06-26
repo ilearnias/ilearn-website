@@ -1,0 +1,223 @@
+@use "../../config/variables.scss" as vars;
+.Header {
+  height: 10vh;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  &.scrolled {
+    background: rgba(0, 0, 0, 0.273);
+    backdrop-filter: saturate(200%) blur(30px);
+  }
+  // @media screen and (min-width: 320px) and (max-width: 768px) {
+  //   padding: 0px 10px;
+  // }
+}
+
+.Header-Box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.Header-LogoBox {
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    flex: 1;
+  }
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.Header-MenuBox {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  font-size: 14px;
+  font-family: vars.$Regular;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.Header-MoreBox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.Header-Button {
+  background-color: rgb(255, 64, 0);
+  padding: 4px 15px;
+  font-size: 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: vars.$Regular;
+  transition: transform 0.3s ease, color 0.3s ease;
+  &:hover {
+    background-color: rgba(255, 64, 0, 0.834);
+    transform: translateY(-2px);
+  }
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.Header-Button2 {
+  border: 1px solid rgb(255, 64, 0);
+  padding: 4px 15px;
+  font-size: 14px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-family: vars.$Regular;
+  transition: transform 0.3s ease, color 0.3s ease;
+  &:hover {
+    color: #fff;
+    transform: translateY(-2px);
+  }
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    display: none;
+  }
+}
+
+.header-popover {
+  padding: 2px 6px !important;
+  width: 200px !important;
+  font-size: 15px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-popoverItem {
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease !important;
+  font-family: vars.$Regular;
+  &:hover {
+    transform: translateX(3px) !important;
+    color: #ff4000;
+  }
+}
+
+.header-item {
+  cursor: pointer;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 15px;
+  &:hover {
+    color: #b8b8b8;
+    cursor: pointer;
+  }
+}
+
+.Header-menuIcon {
+  display: none;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    display: flex;
+  }
+}
+.Header-popoverContent {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  width: 100;
+  cursor: pointer;
+}
+// .Header-popoverContent:active,
+.Header-popoverContent.selected {
+  color: #ff4000;
+  text-decoration: underline;
+}
+.Header-popoverTxt1 {
+  font-family: vars.$SemiBold;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.Header-popoverTxt2 {
+  font-family: vars.$Regular;
+  font-size: 14px;
+}
+.Header-popoverTxt3 {
+  font-family: vars.$Regular;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+.Drawer-items {
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &:hover {
+    .Drawer-itemsTxt {
+      color: #ff4000;
+    }
+
+    .Drawer-itemsIcon {
+      color: #ff4000;
+    }
+  }
+}
+
+.Drawer-itemsTxt {
+  font-family: vars.$Regular;
+  font-size: 17px;
+  color: #ffffff;
+}
+.Drawer-itemsIcon {
+  color: #ffffff27;
+  font-size: 20px;
+}
+
+.Drawer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  width: 100%;
+  padding: 10px;
+}
+
+.Drawer-footerIcon {
+  color: #fff;
+  font-size: 25px;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  &:hover {
+    color: #ff4000;
+    transform: translateY(-3px);
+  }
+}
+
+.Drawer-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+
+.header-icon {
+  cursor: pointer;
+  transition: transform 0.5s ease, color 0.3s ease;
+  &:hover {
+    color: vars.$primary1;
+    transform: translateY(-1px);
+  }
+}

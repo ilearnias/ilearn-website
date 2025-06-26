@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Home",
+    "path": "/"
+  },
+  {
+    "name": "About",
+    "path": "/about"
+  },
+  {
+    "name": "Our Team",
+    "path": "/team"
+  },
+  {
+    "name": "Awards & Accreditation",
+    "path": "/awards"
+  },
+  {
+    "name": "Products",
+    "path": "/product"
+  },
+  {
+    "name": "Vendors",
+    "path": "/vendors"
+  },
+  {
+    "name": "Customers",
+    "path": "/customers"
+  },
+  {
+    "name": "News",
+    "path": "/blogs"
+  },
+  {
+    "name": "Careers",
+    "path": "/join"
+  },
+  {
+    "name": "Contact Us",
+    "path": "/contact"
+  }
+]

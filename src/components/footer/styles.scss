@@ -1,0 +1,181 @@
+@use "../../config/variables.scss" as vars;
+a {
+  text-decoration: none;
+}
+.footer {
+  color: gray;
+  padding: 50px 0px;
+  padding-bottom: 10px;
+  border-top: 1px solid rgba(128, 128, 128, 0.175);
+  background-image: linear-gradient(to right, vars.$primary, vars.$primary);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 20px 10px;
+  }
+}
+
+.footer-col {
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px 10px;
+  }
+}
+.footer-text {
+  color: rgb(255, 255, 255);
+  font-family: vars.$Regular;
+  font-size: 13px;
+  text-align: justify;
+}
+.footer-txt1 {
+  color: rgb(255, 255, 255);
+  font-size: 20px;
+  font-family: vars.$Bold;
+  margin-bottom: 20px;
+}
+
+.footer-txt2 {
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-family: vars.$Regular;
+  cursor: pointer;
+  &:hover {
+    color: #ff4000;
+  }
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+}
+.footer-text2 {
+  color: rgb(255, 255, 255);
+  font-size: 12px;
+  font-family: vars.$Regular;
+}
+.footer-txt3 {
+  color: rgb(202, 202, 202);
+  font-size: 16px;
+  font-family: vars.$Regular;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    text-align: center;
+  }
+}
+
+.footer-txt4 {
+  color: rgb(255, 255, 255);
+  font-size: 13px;
+  font-family: vars.$Regular;
+  cursor: pointer;
+  &:hover {
+    color: #ff4000;
+  }
+}
+
+.footer-item1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  margin-bottom: 5px;
+  font-family: vars.$SemiBold;
+}
+
+.footer-item2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 20px;
+  @media screen and (max-width: 768px) {
+    margin-top: 20px;
+    line-height: 25px;
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+
+.footer-icon-box {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.footer-icon {
+  color: #fff;
+  font-size: 25px;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  &:hover {
+    color: #ff4000;
+    transform: translateY(-3px);
+  }
+}
+
+.footer-logo {
+  margin-bottom: 15px;
+}
+
+.footer-divider {
+  flex: 1;
+  border-top-width: 0.001cm;
+  background-color: rgba(4, 4, 4, 0);
+  margin: 30px 0px 20px 0px;
+}
+
+.box1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-text3 {
+  color: rgb(255, 255, 255);
+  font-size: 12px;
+  font-family: vars.$Regular;
+}
+
+.footer-text4 {
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  font-family: vars.$Regular;
+  &:hover {
+    color: #ff4000;
+  }
+}
+
+.txt1 {
+  color: rgb(255, 255, 255);
+  font-family: vars.$Regular;
+  font-size: 12px;
+}
+
+.txt2 {
+  color: rgb(255, 255, 255);
+  font-family: vars.$Regular;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.scroll-btn {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  margin-bottom: 20px;
+}
+
+.footer-txt5 {
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-family: vars.$SemiBold;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+}
