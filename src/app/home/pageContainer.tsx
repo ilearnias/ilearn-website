@@ -27,6 +27,7 @@ export default function PageContainer() {
     const bottomNav: any = document.querySelector(".section2-position");
     bottomNav.style.position = "sticky";
     bottomNav.style.bottom = "0";
+
     const handleScroll = () => {
       const footer: any = document.getElementById("bfooter");
       const bottomNav: any = document.querySelector(".section2-position");

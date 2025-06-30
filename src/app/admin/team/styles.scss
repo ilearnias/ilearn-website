@@ -1,0 +1,158 @@
+.team-page {
+  .team-header {
+    margin-bottom: 30px;
+    
+    h1 {
+      color: #1f2937;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+  }
+
+  .team-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .ant-input-affix-wrapper {
+      max-width: 400px;
+
+      @media (max-width: 768px) {
+        max-width: none;
+      }
+    }
+  }
+
+  .team-stats {
+    margin-bottom: 30px;
+
+    .ant-card {
+      .ant-card-body {
+        padding: 20px;
+        text-align: center;
+      }
+
+      .ant-statistic-title {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+
+      .ant-statistic-content {
+        .ant-statistic-content-prefix {
+          font-size: 20px;
+          margin-right: 8px;
+        }
+
+        .ant-statistic-content-value {
+          font-size: 24px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .team-table {
+    .ant-card-body {
+      padding: 0;
+    }
+
+    .ant-table {
+      .ant-table-thead {
+        .ant-table-cell {
+          background: #fafafa;
+          font-weight: 600;
+          color: #1f2937;
+        }
+      }
+
+      .ant-table-tbody {
+        .ant-table-row {
+          &:hover {
+            background: #f5f5f5;
+          }
+        }
+
+        .ant-table-cell {
+          padding: 12px 16px;
+        }
+      }
+    }
+
+    .ant-tag {
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 8px;
+    }
+
+    .ant-dropdown-trigger {
+      .ant-btn {
+        border: none;
+        box-shadow: none;
+        
+        &:hover {
+          background: #f0f0f0;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 480px) {
+  .team-page {
+    .team-header h1 {
+      font-size: 24px;
+    }
+
+    .team-stats {
+      .ant-col {
+        margin-bottom: 16px;
+      }
+    }
+
+    .team-table {
+      .ant-table {
+        .ant-table-thead {
+          display: none;
+        }
+
+        .ant-table-tbody {
+          .ant-table-row {
+            display: block;
+            margin-bottom: 16px;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            padding: 16px;
+          }
+
+          .ant-table-cell {
+            display: block;
+            border: none;
+            padding: 4px 0;
+
+            &:before {
+              content: attr(data-label) ": ";
+              font-weight: 600;
+              color: #666;
+            }
+          }
+        }
+      }
+    }
+  }
+} 
