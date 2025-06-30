@@ -66,71 +66,44 @@ const successStories: SuccessStory[] = [
 const SuccessStoriesSection = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMounted, setIsMounted] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    setIsMounted(true);
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
+    setIsClient(true);
   }, []);
 
   const scrollToNext = () => {
-    if (carouselRef.current) {
-      const cardWidth = isMobile ? 295 : 320; // Card width + gap
-      const newScrollLeft = carouselRef.current.scrollLeft + cardWidth;
-      carouselRef.current.scrollTo({
-        left: newScrollLeft,
-        behavior: 'smooth'
-      });
-      setCurrentIndex(prev => Math.min(prev + 1, successStories.length - 1));
-    }
+    if (!carouselRef.current || !isClient) return;
+    
+    const containerWidth = carouselRef.current.offsetWidth;
+    const scrollAmount = Math.min(containerWidth, 320); // Use container width or max card width
+    const newScrollLeft = carouselRef.current.scrollLeft + scrollAmount;
+    
+    carouselRef.current.scrollTo({
+      left: newScrollLeft,
+      behavior: 'smooth'
+    });
+    setCurrentIndex(prev => Math.min(prev + 1, successStories.length - 1));
   };
 
   const scrollToPrev = () => {
-    if (carouselRef.current) {
-      const cardWidth = isMobile ? 295 : 320; // Card width + gap
-      const newScrollLeft = carouselRef.current.scrollLeft - cardWidth;
-      carouselRef.current.scrollTo({
-        left: newScrollLeft,
-        behavior: 'smooth'
-      });
-      setCurrentIndex(prev => Math.max(prev - 1, 0));
-    }
+    if (!carouselRef.current || !isClient) return;
+    
+    const containerWidth = carouselRef.current.offsetWidth;
+    const scrollAmount = Math.min(containerWidth, 320); // Use container width or max card width
+    const newScrollLeft = carouselRef.current.scrollLeft - scrollAmount;
+    
+    carouselRef.current.scrollTo({
+      left: newScrollLeft,
+      behavior: 'smooth'
+    });
+    setCurrentIndex(prev => Math.max(prev - 1, 0));
   };
 
-  // Prevent hydration issues by not rendering navigation buttons until client-side
-  const renderNavButtons = isMounted && (
-    <>
-      <button 
-        className="nav-button prev" 
-        onClick={scrollToPrev}
-        aria-label="Previous story"
-        style={{ display: currentIndex === 0 ? 'none' : 'flex' }}
-      >
-        ‹
-      </button>
-      <button 
-        className="nav-button next" 
-        onClick={scrollToNext}
-        aria-label="Next story"
-        style={{ display: currentIndex === successStories.length - 1 ? 'none' : 'flex' }}
-      >
-        ›
-      </button>
-    </>
-  );
-
   return (
-    <div className="success-stories-section">
-      <Container>
+    <div className="success-stories-section ">
+      <Container noPadding className="mx-0 md:mx-4 ">
         <div className="section-header">
           <h2>
             <span className="text-primary">Success</span>
@@ -141,13 +114,32 @@ const SuccessStoriesSection = () => {
           </p>
         </div>
 
-        <div className="stories-carousel">
-          {renderNavButtons}
-          <div className="flex gap-16 overflow-x-auto scroll-smooth scrollbar-none w-full" ref={carouselRef}>
+        <div className="stories-carousel p-0 ">
+          {isClient && (
+            <>
+              <button 
+                className="nav-button prev md:hidden" 
+                onClick={scrollToPrev}
+                aria-label="Previous story"
+                style={{ display: currentIndex === 0 ? 'none' : 'flex' }}
+              >
+                <span>‹</span>
+              </button>
+              <button 
+                className="nav-button next md:hidden" 
+                onClick={scrollToNext}
+                aria-label="Next story"
+                style={{ display: currentIndex === successStories.length - 1 ? 'none' : 'flex' }}
+              >
+                <span>›</span>
+              </button>
+            </>
+          )}
+          <div className="flex px-10 md:pl-0  gap-[77px] md overflow-x-auto scroll-smooth scrollbar-none" ref={carouselRef}>
             {successStories.map((story, index) => (
               <div 
                 key={`${story.name}-${pathname}`}
-                className="story-card"
+                className="story-card border-2 border-red-500 "
               >
                 <div className="success-badge">SUCCESS</div>
                 <div className="image-container">
