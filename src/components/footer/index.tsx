@@ -1,4 +1,7 @@
-import { Col, Container, Row } from "react-bootstrap";
+"use client";
+
+import { Col, Row } from "react-bootstrap";
+import Container from "@/components/common/Container";
 import "./styles.scss";
 import { useRouter } from "next/navigation";
 import { FaFacebookF } from "react-icons/fa";
@@ -6,7 +9,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import { RiInstagramFill } from "react-icons/ri";
 import { IoIosArrowDropupCircle } from "react-icons/io";
 import Image from "next/image";
-import Logo from "../../app/assets/images/logo.png";
+import Logo from "../../../public/new-logo.png";
 import { useTranslation } from "react-i18next";
 import { TbMailFilled, TbPlayerTrackNextFilled } from "react-icons/tb";
 import { FaLinkedinIn } from "react-icons/fa";
@@ -14,6 +17,7 @@ import { MdStorefront } from "react-icons/md";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoLocationSharp } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
+import { useEffect, useState } from "react";
 
 import Apple from "../../app/assets/images/apple-pay.png";
 import Visa from "../../app/assets/images/visa.png";
@@ -23,6 +27,15 @@ import Mada from "../../app/assets/images/mada.png";
 export default function Footer() {
   const router = useRouter();
   const { t } = useTranslation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null; // or a loading state
+  }
 
   return (
     <>
@@ -31,9 +44,9 @@ export default function Footer() {
           <Row>
             <Col lg="3" sm="6" className="footer-col">
               <div className="footer-logo">
-                <Image src={Logo} width={200} height={200} alt="LOGO" />
+                <Image src={Logo} width={200} height={200} alt="iLearn IAS Logo" />
               </div>
-              <div className="footer-text">{t("Connect_Networkss")}</div>
+              <div className="footer-text">Kerala's most successful Civil Services Training Academy —delivering the state's highest success rate through results-driven Prelims-cum-Mains & classroom programs.</div>
               <div
                 onClick={() => router.push("/about")}
                 className="footer-text footer-txt2 d-flex align-items-center gap-1 text-white mt-2"
@@ -41,118 +54,111 @@ export default function Footer() {
                 <TbPlayerTrackNextFilled color="rgb(255, 64, 0)" />
                 <div className="footer-text4">{t("Read_More")}</div>
               </div>
-              <div className="mt-5 d-flex align-items-center gap-2">
-                <Image src={Mada} width={40} height={50} alt="LOGO" />
-                <Image src={Mastercard} width={28} height={50} alt="LOGO" />
-                <Image src={Visa} width={40} height={50} alt="LOGO" />
-                <Image src={Apple} width={50} height={50} alt="LOGO" />
-              </div>
             </Col>
             <Col lg={1} sm={0}></Col>
             <Col>
               <Row>
                 <Col lg="4" className="footer-col">
-                  <div className="footer-txt1">{t("Quick Link")}</div>
+                  <div className="footer-txt1">Quick Links</div>
+                  <div
+                    className="footer-txt2"
+                    onClick={() => router.push("/home")}
+                  >
+                    Home
+                  </div>
                   <div
                     className="footer-txt2"
                     onClick={() => router.push("/about")}
                   >
-                    {t("About Us")}
+                    About
                   </div>
                   <div
                     className="footer-txt2"
-                    onClick={() => router.push("/vendors")}
+                    onClick={() => router.push("/result")}
                   >
-                    {t("Vendors")}
+                    Results
                   </div>
                   <div
                     className="footer-txt2"
-                    onClick={() => router.push("/products")}
+                    onClick={() => router.push("/programs")}
                   >
-                    {t("Products")}
+                    Programs
                   </div>
                   <div
                     className="footer-txt2"
-                    onClick={() => router.push("/join")}
+                    onClick={() => router.push("/blog")}
                   >
-                    {t("Careers")}
+                    Blog
+                  </div>
+                  <div
+                    className="footer-txt2"
+                    onClick={() => router.push("/ilearn-app")}
+                  >
+                    iLearn App
+                  </div>
+                  <div
+                    className="footer-txt2"
+                    onClick={() => router.push("/gallery")}
+                  >
+                    Gallery
                   </div>
                   <div
                     className="footer-txt2"
                     onClick={() => router.push("/contact")}
                   >
-                    {t("Contact Us")}
-                  </div>
-                  <div
-                    className="footer-txt2"
-                    onClick={() => router.push("/FAQs")}
-                  >
-                    {t("FAQs")}
+                    Contact Us
                   </div>
                 </Col>
                 <Col lg="4" className="footer-col">
-                  <div className="footer-txt1">{t("Need_help")}</div>
-                  <div
-                    className="footer-txt2"
-                    onClick={() => router.push("/return")}
-                  >
-                    {t("Return_Exchange")}
+                  <div className="footer-txt1">Our Programs</div>
+                  <div className="footer-txt2">
+                    Prelims-cum-Mains Program (PCM)
                   </div>
-                  <div
-                    className="footer-txt2"
-                    onClick={() => router.push("/warranty")}
-                  >
-                    {t("Warranty")}
+                  <div className="footer-txt2">
+                    Integrated Prelims Test Series (iPTS)
                   </div>
-                  <div
-                    className="footer-txt2"
-                    onClick={() => router.push("/awards")}
-                  >
-                    {t("Awards")}
+                  <div className="footer-txt2">
+                    Mains Test Series & Answer Writing (MTS/MAP)
                   </div>
-                  <div
-                    className="footer-txt2"
-                    onClick={() => router.push("/team")}
-                  >
-                    {t("OurTeam")}
+                  <div className="footer-txt2">
+                    Interview Guidance Program (iGP)
                   </div>
-                  <div
-                    className="footer-txt2"
-                    onClick={() => router.push("/quote")}
-                  >
-                    {t("requestQuote")}
+                  <div className="footer-txt2">
+                    Current Affairs & News Analysis (CANA)
                   </div>
-                  <div
-                    className="footer-txt2"
-                    onClick={() => router.push("/shipping")}
-                  >
-                    {t("Shipping_Delivery")}
+                  <div className="footer-txt2">
+                    Restart Program
+                  </div>
+                  <div className="footer-txt2">
+                    Geography Optional
+                  </div>
+                  <div className="footer-txt2">
+                    Political Science & IR Optional
+                  </div>
+                  <div className="footer-txt2">
+                    Sociology Optional
+                  </div>
+                  <div className="footer-txt2">
+                    Malayalam Optional
                   </div>
                 </Col>
                 <Col lg="4" className="footer-col">
-                  <div className="footer-txt1">{t("Contact Us")}</div>
+                  <div className="footer-txt1">Contact Us</div>
                   <div className="footer-icon-box">
                     <a
                       target="_blank"
-                      href="https://www.facebook.com/prismnetwrks"
+                      href="#"
                     >
                       <FaFacebookF className="footer-icon" />
                     </a>
                     <a
                       target="_blank"
-                      href="https://www.instagram.com/prismnetwrks/"
+                      href="#"
                     >
                       <RiInstagramFill className="footer-icon" />
                     </a>
-                    <a target="_blank" href="https://x.com/prismnetwrks">
-
+                    <a target="_blank" href="#">
                       <FaXTwitter className="footer-icon" />
-                    </a>
-                    <a
-                      target="_blank"
-                      href="https://www.linkedin.com/in/prismnetwrks/"
-                    >
-                      <FaLinkedinIn className="footer-icon" />
                     </a>
                   </div>
 
@@ -161,10 +167,10 @@ export default function Footer() {
                       <div className="mb-2">
                         <FaPhoneAlt size={20} color="#fff" />
                       </div>
-                      <div className="">
-                        <a href="tel:+966 9200 11 990">
+                      <div >
+                        <a href="tel:8089166792">
                           <div className="footer-txt2">
-                            +973 1750 0105 x 1555
+                            8089166792
                           </div>
                         </a>
                       </div>
@@ -174,8 +180,8 @@ export default function Footer() {
                         <TbMailFilled size={22} color="#fff" />
                       </div>
                       <div className="">
-                        <a href="mailto:info@prismwll.com">
-                          <div className="footer-txt2">info@prismwll.com</div>
+                        <a href="mailto:ilearnoffc@gmail.com">
+                          <div className="footer-txt2">ilearnoffc@gmail.com</div>
                         </a>
                       </div>
                     </div>
@@ -184,27 +190,9 @@ export default function Footer() {
                         <IoLocationSharp size={22} color="#fff" />
                       </div>
                       <div className="">
-                        <div className="footer-txt2"> Gudaibiya , Bahrain</div>
+                        <div className="footer-txt2">iLearn IAS Academy, Minchin Road, Chakka, Thiruvananthapuram, Kerala 695011</div>
                       </div>
                     </div>
-                  </div>
-                  <div className="footer-text2 mt-1"></div>
-                  <div className="footer-txt5 mt-3 mb-2">
-                    {t("PRISM_stores")}
-                  </div>
-                  <div
-                    onClick={() => router.push("/contact")}
-                    className="footer-txt2 d-flex align-items-center gap-3"
-                  >
-                    <MdStorefront size={22} color="#fff" />
-                    <div className="footer-text4">{t("See_our_stores")}</div>
-                    <IoIosArrowForward size={16} color="#fff" />
-                  </div>
-                  <div className="footer-text3 mt-4">
-                    {t("Sunday_Thursday")}
-                  </div>
-                  <div className="footer-text2 mt-2">
-                    * {t("Working_hours")}
                   </div>
                 </Col>
               </Row>
@@ -214,7 +202,7 @@ export default function Footer() {
           <Row>
             <Col lg="4">
               <div className="txt1">
-                Copyright © 2024 PRISM.&nbsp; {t("Rights")}
+                Copyright © 2024 iLearn IAS Academy. All Rights Reserved.
               </div>
             </Col>
             <Col lg="4"></Col>
@@ -224,13 +212,13 @@ export default function Footer() {
                   onClick={() => router.push("/privacypolicy")}
                   className="footer-txt4"
                 >
-                  {t("Privacy Policy")}
+                  Privacy Policy
                 </div>
                 <div
                   onClick={() => router.push("/termsofservice")}
                   className="footer-txt4"
                 >
-                  {t("Terms of Service")}
+                  Terms of Service
                 </div>
               </div>
             </Col>
@@ -238,7 +226,7 @@ export default function Footer() {
           <Row>
             <Col lg="3"></Col>
             <Col lg="6" sm="12" xs="12">
-              <div className="txt2 mt-4">{t("PRISM_Networks")}</div>
+              <div className="txt2 mt-4">Kerala's most successful Civil Services Training Academy</div>
             </Col>
             <Col lg="3">
               <div className="scroll-btn mt-3">
@@ -261,3 +249,4 @@ export default function Footer() {
     </>
   );
 }
+

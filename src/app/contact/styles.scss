@@ -1,5 +1,161 @@
 @use "../../config/variables.scss" as vars;
 
+.contact-container {
+  padding: 80px 0;
+  background-color: #f8f9fa;
+
+  .contact-header {
+    margin-bottom: 60px;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+
+      .text-primary {
+        color: #f04c24;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #6c757d;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .contact-details {
+    max-width: 1000px;
+    margin: 0 auto;
+
+    .location-info {
+      margin-bottom: 60px;
+
+      .info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 40px;
+
+        .icon {
+          font-size: 2rem;
+          color: #f04c24;
+          margin-right: 20px;
+          margin-top: 5px;
+        }
+
+        .info-content {
+          h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+          }
+
+          p {
+            color: #6c757d;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
+
+    .contact-methods {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin: 40px 0;
+
+      .contact-method {
+        display: flex;
+        align-items: flex-start;
+
+        .icon {
+          font-size: 2rem;
+          color: #f04c24;
+          margin-right: 20px;
+          margin-top: 5px;
+        }
+
+        .method-content {
+          h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #333;
+          }
+
+          p {
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+          }
+
+          .contact-link {
+            color: #f04c24;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-right: 20px;
+            transition: color 0.3s ease;
+
+            &:hover {
+              color: darken(#f04c24, 10%);
+              text-decoration: underline;
+            }
+          }
+
+          .whatsapp-links {
+            display: flex;
+            gap: 20px;
+          }
+        }
+      }
+    }
+
+    .map-container {
+      margin-top: 60px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .contact-container {
+    .contact-details {
+      .contact-methods {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-container {
+    padding: 40px 0;
+
+    .contact-header {
+      h2 {
+        font-size: 2rem;
+      }
+    }
+
+    .contact-details {
+      .contact-methods {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .location-info {
+        .info-item {
+          margin-bottom: 30px;
+        }
+      }
+    }
+  }
+}
+
 .contact-Container {
   min-height: 100vh;
 }
@@ -186,4 +342,46 @@ a {
 .contact-formBox {
   padding: 50px 10px;
   border-radius: 10px;
+}
+
+.contact-hero {
+  position: relative;
+  height: 400px;
+  background-image: url('../assets/images/bg-Lines.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+
+    .hero-content {
+      h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .breadcrumb {
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.8);
+
+        .active {
+          color: #f04c24;
+        }
+      }
+    }
+  }
 }

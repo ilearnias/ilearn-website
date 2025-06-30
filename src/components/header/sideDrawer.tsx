@@ -7,19 +7,25 @@ import { RiInstagramFill } from "react-icons/ri";
 import { FaXTwitter } from "react-icons/fa6";
 import { IoMdArrowForward } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import { useTranslation } from "react-i18next";
 import { IoClose } from "react-icons/io5";
+import SubText from "../common/SubText";
 
 export default function SideDrawer(props: any) {
   const router = useRouter();
-  const { t } = useTranslation();
 
   return (
     <Drawer
       title={
         <div className="Drawer-header">
           <div>
-            <Image src={"./logo.svg"} width={100} height={100} alt="Logo" />
+            <Image 
+              src="/new-logo.png" 
+              width={150} 
+              height={50} 
+              alt="iLearn Logo"
+              priority
+              className="header-logo"
+            />
           </div>
           <div onClick={() => props?.close()}>
             <IoClose size={30} />
@@ -56,14 +62,30 @@ export default function SideDrawer(props: any) {
             <div
               className="Drawer-items"
               key={index}
-              onClick={() => router.push(item?.path)}
+              onClick={() => {
+                router.push(item?.path);
+                props?.close();
+              }}
             >
-              <div className="Drawer-itemsTxt">{t(item.name)}</div>
-
+              <div className="Drawer-itemsTxt">
+                <SubText text={item.name} color="white" />
+              </div>
               <IoMdArrowForward className="Drawer-itemsIcon" />
             </div>
           );
         })}
+        <div
+          className="Drawer-items join-now-mobile"
+          onClick={() => {
+            router.push("/quote");
+            props?.close();
+          }}
+        >
+          <div className="Drawer-itemsTxt">
+            <SubText text="Join Now" color="white" />
+          </div>
+          <IoMdArrowForward className="Drawer-itemsIcon" />
+        </div>
       </div>
     </Drawer>
   );

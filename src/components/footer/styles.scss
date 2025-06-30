@@ -24,7 +24,7 @@ a {
 .footer-text {
   color: rgb(255, 255, 255);
   font-family: vars.$Regular;
-  font-size: 13px;
+  font-size: 14px;
   text-align: justify;
 }
 .footer-txt1 {
@@ -36,12 +36,12 @@ a {
 
 .footer-txt2 {
   color: rgb(255, 255, 255);
-  font-size: 14px;
+  font-size: 16px;
   margin-bottom: 5px;
   font-family: vars.$Regular;
   cursor: pointer;
   &:hover {
-    color: #ff4000;
+    color: red;
   }
   @media screen and (min-width: 320px) and (max-width: 768px) {
     margin-bottom: 10px;
@@ -110,7 +110,7 @@ a {
   cursor: pointer;
   transition: transform 0.3s ease, color 0.3s ease;
   &:hover {
-    color: #ff4000;
+    color:red;
     transform: translateY(-3px);
   }
 }
@@ -144,7 +144,7 @@ a {
   font-size: 15px;
   font-family: vars.$Regular;
   &:hover {
-    color: #ff4000;
+    color: red;
   }
 }
 

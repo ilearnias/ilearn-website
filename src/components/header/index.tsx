@@ -1,32 +1,17 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import "./styles.scss";
-import { Container } from "react-bootstrap";
-import { CiGlobe } from "react-icons/ci";
+import Container from "@/components/common/Container";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { CgMenuRight } from "react-icons/cg";
 import SideDrawer from "./sideDrawer";
-import { Popover } from "antd";
-import languages from "./language.json";
-import { useTranslation } from "react-i18next";
-import i18n from "../../i18n";
-import Logo from "../../app/assets/images/logo.png";
+import SubText from "../common/SubText";
 
 export default function Header() {
   const router = useRouter();
   const [lastScrollY, setLastScrollY] = useState<any>(0);
   const [dawerOpen, setDawerOpen] = useState<any>(false);
-  const { t } = useTranslation();
-
-  var selectedLanguage: any;
-
-  if (typeof window !== "undefined") {
-    selectedLanguage = localStorage.getItem("i18nextLng") || "en";
-  }
-  // const [selected, setselected] = useState(selectedLanguage.toUpperCase());
-  const [popoverVisible, setPopoverVisible] = useState(false);
-  const [languageColor, setlanguageColor] = useState(null);
 
   const handleNavigation = useCallback(
     (e: any) => {
@@ -50,167 +35,66 @@ export default function Header() {
     console.log("lastScrollY", lastScrollY);
   }, [handleNavigation, lastScrollY]);
 
-  const handleLanguageSwitch = (language: any) => {
-    localStorage.setItem("i18nextLng", language);
-    i18n.changeLanguage(language);
-    setPopoverVisible(false);
-  };
-
-  const content = (
-    <div>
-      {languages?.map((item: any, i: any) => (
-        <div
-          key={i}
-          className={`Header-popoverContent ${
-            languageColor === item.code ? "selected" : ""
-          }`}
-          onClick={() => {
-            setlanguageColor(item?.code);
-            handleLanguageSwitch(item?.code);
-          }}
-        >
-          <div className="Header-popoverTxt1">{item?.code}</div>
-          <div className="Header-popoverTxt2">{item?.name}</div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const company = (
-    <div className="header-popover">
-      <div className="header-popoverItem" onClick={() => router.push("/about")}>
-        {t("About Us")}
-      </div>
-      <div className="header-popoverItem" onClick={() => router.push("/team")}>
-        {t("OurTeam")}
-      </div>
-      <div
-        className="header-popoverItem"
-        onClick={() => router.push("/awards")}
-      >
-        {t("Awards")}
-      </div>
-    </div>
-  );
-
-  const products = (
-    <div className="header-popover">
-      <div className="header-item" onClick={() => router.push("/about")}>
-        Active Networking
-      </div>
-      <div className="header-item" onClick={() => router.push("/team")}>
-        Power Solution
-      </div>
-      <div className="header-item" onClick={() => router.push("/awards")}>
-        Data Center Solution
-      </div>
-      <div className="header-item" onClick={() => router.push("/awards")}>
-        Copper Products
-      </div>
-      <div className="header-item" onClick={() => router.push("/awards")}>
-        Optical Fiber Products
-      </div>
-      <div className="header-item" onClick={() => router.push("/awards")}>
-        Racks & Cabinets
-      </div>
-      <div className="header-item" onClick={() => router.push("/awards")}>
-        Tools & Testing
-      </div>
-    </div>
-  );
-
   return (
-    <div>
-      <div className={lastScrollY ? "Header scrolled" : "Header"}>
-        <Container>
-          <div className="Header-Box">
-            <div className="Header-LogoBox" onClick={() => router.push("/")}>
-              <Image src={Logo} width={150} height={200} alt="LOGO" />
+    <div className="w-full">
+      <div className={`${lastScrollY ? "Header scrolled" : "Header"} w-full bg-gray-900 `}>
+        <Container className="w-full h-full px-4 md:px-0">
+          <div className="flex items-center justify-between w-full h-full">
+            <div className="Header-LogoBox h-full flex items-center" onClick={() => router.push("/")}>
+              <Image 
+                src="/new-logo.png" 
+                width={150} 
+                height={50} 
+                alt="iLearn Logo"
+                priority
+                className="header-logo"
+              />
             </div>
-            <div className="Header-MenuBox">
-              <div onClick={() => router.push("/")} className="header-item">
-                {t("Home")}
-              </div>
+            <div className="flex-1 flex justify-center h-full">
+              <div className="Header-MenuBox flex justify-center items-center gap-10 h-full">
+                <div className="!flex !items-center !justify-center !gap-7 pt-3">
+                  <div onClick={() => router.push("/")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="Home" color="white" />
+                  </div>
 
-              <Popover
-                className="header-item"
-                placement="bottomLeft"
-                trigger="hover"
-                content={company}
-              >
-                {t("Company")}
-              </Popover>
+                  <div onClick={() => router.push("/about")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="About" color="white" />
+                  </div>
 
-              <div
-                onClick={() => router.push("/products")}
-                className="header-item"
-              >
-                {/* <Popover
-                  className="header-item"
-                  placement="bottomLeft"
-                  content={products}
-                >
-                  {t("Products")}
-                </Popover> */}
-                {t("Products")}
-              </div>
+                  <div onClick={() => router.push("/result")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="Results" color="white" />
+                  </div>
 
-              <div
-                onClick={() => router.push("/vendors")}
-                className="header-item"
-              >
-                {t("Vendors")}
-              </div>
+                  <div onClick={() => router.push("/programs")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="Programs" color="white" />
+                  </div>
 
-              <div
-                onClick={() => router.push("/customers")}
-                className="header-item"
-              >
-                {t("Customers")}
-              </div>
+                  <div onClick={() => router.push("/blogs")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="Blog" color="white" />
+                  </div>
 
-              <div
-                onClick={() => router.push("/blogs")}
-                className="header-item"
-              >
-                {t("News")}
-              </div>
+                  <div onClick={() => router.push("/ilearn_app")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="iLearn App" color="white" />
+                  </div>
 
-              <div onClick={() => router.push("/join")} className="header-item">
-                {t("Careers")}
-              </div>
+                  <div onClick={() => router.push("/gallery")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="Gallery" color="white" />
+                  </div>
 
-              <div
-                onClick={() => router.push("/contact")}
-                className="header-item"
-              >
-                {t("Contact Us")}
+                  <div onClick={() => router.push("/contact")} className="header-hover">
+                    <SubText size="small" className="!font-semibold" text="Contact Us" color="white" />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="Header-MoreBox">
-              <div
-                className="Header-Button2"
+            <div className="flex items-center gap-4 h-full">
+              <div 
+                className="!text-[16px] !font-semibold !text-white border-2 border-red-500 hover:bg-red-500 transition-all duration-300 ease-in-out rounded-md px-4 py-2 cursor-pointer md:block hidden" 
                 onClick={() => router.push("/quote")}
               >
-                {t("requestQuote")}
+                Join Now
               </div>
-              <div className="Header-Button">{t("Store")}</div>
-              <div className="header-icon">
-                <Popover
-                  content={content}
-                  placement="bottom"
-                  arrow={false}
-                  open={popoverVisible}
-                  onOpenChange={setPopoverVisible}
-                  trigger="click"
-                >
-                  <CiGlobe size={25} />
-                </Popover>{" "}
-              </div>
-              <div
-                className="Header-menuIcon"
-                onClick={() => setDawerOpen(!dawerOpen)}
-              >
+              <div className="Header-menuIcon md:hidden" onClick={() => setDawerOpen(!dawerOpen)}>
                 <CgMenuRight size={25} />
               </div>
             </div>

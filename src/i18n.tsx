@@ -5,30 +5,33 @@ import { initReactI18next } from "react-i18next";
 import en from "./languages/english.json";
 import ar from "./languages/arabic.json";
 
+const resources = {
+  en: {
+    translation: en,
+  },
+  ar: {
+    translation: ar,
+  },
+};
+
+i18n
+  .use(initReactI18next)
+  .init({
+    resources,
+    lng: "en", // default language
+    fallbackLng: "en",
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+
+// Add language detection only on the client side
 if (typeof window !== "undefined") {
-  const selectedLanguage = localStorage.getItem("i18nextLng") || "en";
-  i18n
-    .use(LanguageDetector)
-    .use(initReactI18next)
-    .init({
-      resources: {
-        en: {
-          translation: en,
-        },
-        ar: {
-          translation: ar,
-        },
-      },
-      fallbackLng: "en",
-      debug: false,
-      interpolation: {
-        escapeValue: false,
-      },
-      detection: {
-        order: ["localStorage", "navigator"],
-      },
-      lng: selectedLanguage,
-    });
+  i18n.use(LanguageDetector);
+  const storedLang = localStorage.getItem("i18nextLng");
+  if (storedLang) {
+    i18n.changeLanguage(storedLang);
+  }
 }
 
 export default i18n;

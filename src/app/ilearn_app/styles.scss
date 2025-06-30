@@ -1,0 +1,354 @@
+@use "../../config/variables.scss" as vars;
+
+.customers-Container {
+  min-height: 100vh;
+}
+
+.customers-box1 {
+  padding: 10vh;
+  padding-top: 15vh;
+  background-image: url("../assets/images/bg-abt.png"),
+    linear-gradient(to right, vars.$primary, vars.$primary);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+    padding-top: 15vh;
+    padding-bottom: 10vh;
+  }
+}
+
+.customers-box2 {
+  @media screen and (min-width: 320px) and (max-width: 768px) {
+    padding: 10px;
+  }
+}
+
+.customers-Img {
+  border: 1px solid rgba(0, 0, 0, 0.213);
+  padding: 15px 15px;
+  border-radius: 5px;
+  color: #ffffff70;
+  font-size: 12px;
+  margin-bottom: 20px;
+  height: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.customers-text1 {
+  color: #fff;
+  text-align: center;
+  font-size: 50px;
+  font-family: vars.$Bold;
+}
+
+.customers-text2 {
+  color: #fff;
+  text-align: center;
+  font-family: vars.$Thin;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.app-landing-container {
+  .hero-section {
+    padding: 80px 0;
+    background: #ffffff;
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: #333;
+
+      .highlight {
+        color: #e51b23;
+      }
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .app-store-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+
+      .store-button {
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        transition: transform 0.2s;
+
+        &:hover {
+          transform: translateY(-2px);
+        }
+
+        &.google-play {
+          background: #000000;
+        }
+
+        &.app-store {
+          background: #000000;
+        }
+
+        .store-icon {
+          font-size: 24px;
+          margin-right: 8px;
+        }
+
+        .button-text {
+          display: flex;
+          flex-direction: column;
+          
+          span {
+            font-size: 0.7rem;
+            margin-bottom: 2px;
+          }
+
+          strong {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+
+    .hero-image {
+      text-align: right;
+      img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+      }
+    }
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a237e;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: #616161;
+    margin-bottom: 3rem;
+  }
+
+  .features-section {
+    padding: 60px 0;
+    background: #f8f9fa;
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 3rem;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      p {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .screenshots-section {
+    padding: 60px 0;
+    background: white;
+
+    .screenshot-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+
+      .tab {
+        padding: 8px 16px;
+        border: none;
+        background: none;
+        color: #666;
+        cursor: pointer;
+        font-weight: 500;
+        position: relative;
+
+        &.active {
+          color: #e51b23;
+          &:after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #e51b23;
+          }
+        }
+      }
+    }
+
+    .screenshot-gallery {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 2rem;
+
+      .screenshot {
+        img {
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+
+  .reviews-section {
+    padding: 60px 0;
+    background: #f8f9fa;
+
+    .review-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      height: 100%;
+
+      .review-header {
+        margin-bottom: 1rem;
+
+        .reviewer-name {
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 0.5rem;
+        }
+
+        .review-rating {
+          color: #ffc107;
+          font-size: 1.1rem;
+        }
+      }
+
+      .review-content {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+    }
+
+    .review-summary {
+      margin-top: 2rem;
+
+      .rating {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .total-reviews {
+        color: #666;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .download-section {
+    padding: 60px 0;
+    background: white;
+
+    .download-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .download-count {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+  }
+
+  .faq-section {
+    padding: 60px 0;
+    background: #f8f9fa;
+
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+
+      .faq-item {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        .faq-question {
+          padding: 1.5rem;
+          font-weight: 500;
+          color: #333;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          &:before {
+            content: '•';
+            color: #e51b23;
+            font-size: 1.5rem;
+          }
+        }
+
+        .faq-answer {
+          padding: 0 1.5rem 1.5rem;
+          color: #666;
+          font-size: 0.9rem;
+          line-height: 1.6;
+        }
+      }
+    }
+  }
+}

@@ -3,37 +3,41 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import LoadingProvider from "@/components/common/LoadingProvider";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Prism International Solutions WLL",
+  title: "iLearn - Your Path to UPSC Success",
   description:
-    "Prism Networks Trading Company I Best networking solution in Riyadh, Saudi Arabia I Networking Solutions in Saudi Arabia I Wireless Solutions Riyadh, Saudi Arabia I Cybersecurity Solutions Provider In Saudi Arabia",
+    "iLearn offers comprehensive UPSC preparation programs including Foundation Course, Optional Subjects, and Interview Guidance. Join us to achieve your IAS dream.",
   alternates: {
-    canonical: "https://connect.com.sa",
+    canonical: "https://ilearn.edu",
   },
   openGraph: {
     type: "website",
-    title: "Prism International Solutions WLL",
+    title: "iLearn - Your Path to UPSC Success",
     description:
-      "Prism Networks Trading Company I Best networking solution in Riyadh, Saudi Arabia I Networking Solutions in Saudi Arabia I Wireless Solutions Riyadh, Saudi Arabia I Cybersecurity Solutions Provider In Saudi Arabia",
-    url: "https://connect.com.sa",
+      "iLearn offers comprehensive UPSC preparation programs including Foundation Course, Optional Subjects, and Interview Guidance. Join us to achieve your IAS dream.",
+    url: "https://ilearn.edu",
     images: {
-      url: "https://connect.com.sa/logo.png",
-      alt: "Prism - Leading technology distributor of data and telecommunication products",
+      url: "https://ilearn.edu/logo.png",
+      alt: "iLearn - Leading UPSC Coaching Institute",
       width: 575,
       height: 275,
     },
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prism International Solutions WLL",
+    title: "iLearn - Your Path to UPSC Success",
     description:
-      "Prism Networks Trading Company I Best networking solution in Riyadh, Saudi Arabia I Networking Solutions in Saudi Arabia I Wireless Solutions Riyadh, Saudi Arabia I Cybersecurity Solutions Provider In Saudi Arabia",
-    creator: "@Suprabhaatham",
+      "iLearn offers comprehensive UPSC preparation programs including Foundation Course, Optional Subjects, and Interview Guidance. Join us to achieve your IAS dream.",
+    creator: "@iLearn",
     images: {
-      url: "https://connect.com.sa/logo.png",
-      alt: "Prism - Leading technology distributor of data and telecommunication products",
+      url: "https://ilearn.edu/logo.png",
+      alt: "iLearn - Leading UPSC Coaching Institute",
       width: 575,
       height: 275,
     },
@@ -47,8 +51,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+      </head>
       <body className={inter.className}>
-        <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <LoadingProvider>
+            <Header />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </LoadingProvider>
+        </AntdRegistry>
       </body>
     </html>
   );

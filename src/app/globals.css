@@ -54,3 +54,12 @@ body {
   background: #f04c24;
   cursor: pointer;
 } */
+
+.perspective-1000 {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.origin-top {
+  transform-origin: top;
+}
