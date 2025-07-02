@@ -21,7 +21,6 @@ const PageContainer = () => {
       <TeamSection />
       <MediaSection />
       <BeginJourneySection />
-      <Footer />
     </div>
   );
 };

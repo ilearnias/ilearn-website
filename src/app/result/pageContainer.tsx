@@ -14,7 +14,7 @@ const PageContainer = () => {
       <ResultSection />
       <ResultSummary />
       <TopAchievers />
-      <Footer />
+
     </div>
   );
 };

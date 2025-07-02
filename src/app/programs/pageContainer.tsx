@@ -15,7 +15,7 @@ const PageContainer = () => {
         <ProgramsSection />
         <QuestionsSection />
       </main>
-      <Footer />
+  
     </>
   );
 };

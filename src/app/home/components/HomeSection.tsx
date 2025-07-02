@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import './styles.scss';
-import Heading from '@/components/common/Heading';
-import SubHeading from '@/components/common/SubHeading';
-import SubText from '@/components/common/SubText';
+import React, { useEffect, useState } from "react";
+import "./styles.scss";
+import Heading from "@/components/common/Heading";
+import SubHeading from "@/components/common/SubHeading";
+import SubText from "@/components/common/SubText";
 import Container from "@/components/common/Container";
 
 const HomeSection = () => {
@@ -20,23 +20,41 @@ const HomeSection = () => {
 
   return (
     <div className="home-section !flex !flex-col !items-center !justify-center w-full">
-      <Container className='w-full'>
+      <Container className="w-full">
         <div className="content-wrapper w-full flex ">
           <div className="text-content ">
             <div className="heading-group">
-              <Heading 
+              <Heading
                 text={
                   <>
-                    <span>We don't claim</span><br />
-                    <span>results,</span><br />
+                    <span>We don't claim</span>
+                    <br />
+                    <span>results,</span>
+                    <br />
                     <span>we make </span>
-                    <span>genuine</span><br />
+                    <span>genuine</span>
+                    <br />
                     <span>results.</span>
                   </>
                 }
                 color="black"
                 animate={true}
-                className="text-[#1F2937] font-bold"
+                className="text-[#1F2937] md:block hidden font-bold"
+              />
+              <Heading
+                text={
+                  <>
+                    <span>We don't claim</span>
+                    <br />
+                    <span>results, We</span>
+                    <br />
+                    <span>make genuine</span> <br />
+                    <span>results.</span>
+                  </>
+                }
+                color="black"
+                animate={true}
+                className="text-[#1F2937] font-bold md:hidden"
               />
             </div>
             <SubHeading
@@ -61,7 +79,7 @@ const HomeSection = () => {
               </button>
             </div>
           </div>
-          <div className={`video-container ${isVisible ? 'visible' : ''}`}>
+          <div className={`video-container ${isVisible ? "visible" : ""}`}>
             <iframe
               src="https://www.youtube.com/embed/3FdY6vrK4y8?si=5z6YSsX-OOz9-UuB&enablejsapi=1"
               title="YouTube video player"
@@ -70,7 +88,7 @@ const HomeSection = () => {
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
               onError={(e) => {
-                console.error('Video failed to load:', e);
+                console.error("Video failed to load:", e);
               }}
             />
             {!isVisible && (
@@ -85,4 +103,4 @@ const HomeSection = () => {
   );
 };
 
-export default HomeSection; 
+export default HomeSection;

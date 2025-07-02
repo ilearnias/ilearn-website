@@ -95,7 +95,7 @@ const PageContainer = () => {
           </div>
         </Container>
       </div>
-      <Footer />
+     
     </>
   );
 };
