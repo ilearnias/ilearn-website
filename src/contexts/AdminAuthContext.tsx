@@ -8,6 +8,7 @@ import React, {
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
+import { API_CONFIG, API_ENDPOINTS } from "@/config/api";
 
 interface AdminUser {
   id: number;
@@ -47,7 +48,6 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
   const router = useRouter();
 
   useEffect(() => {
-    // Check for existing authentication on mount
     const checkAuth = () => {
       try {
         const token = localStorage.getItem("adminToken");
@@ -70,40 +70,41 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/admin/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password })
-      // });
+      console.log('Attempting login with email:', email);
 
-      // const data = await response.json();
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'include'
+      });
 
-      // if (!response.ok) {
-      //   throw new Error(data.message || 'Login failed');
-      // }
+      console.log('Login response status:', response.status);
 
-      // Mock authentication for now
-      if (email === "admin@ilearn.com" && password === "admin123") {
-        const mockUser = {
-          id: 1,
-          email,
-          name: "Admin User",
-        };
+      const responseData = await response.json();
+      console.log('Login response data:', responseData);
 
-        const mockToken = "mock-jwt-token";
+      if (!response.ok || !responseData.status) {
+        throw new Error(responseData.message || 'Login failed');
+      }
 
-        localStorage.setItem("adminToken", mockToken);
-        localStorage.setItem("adminUser", JSON.stringify(mockUser));
+      // Extract data from the nested structure
+      const { user, accessToken: token } = responseData.data;
 
-        setUser(mockUser);
-        return true;
+      if (token && user) {
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('adminUser', JSON.stringify(user));
+        setUser(user);
+      return true;
       } else {
-        throw new Error("Invalid credentials");
+        console.error('Invalid response format:', responseData);
+        throw new Error('Invalid response format');
       }
     } catch (error) {
-      console.error("Login error:", error);
-      return false;
+      console.error('Login error:', error);
+      throw error;
     }
   };
 

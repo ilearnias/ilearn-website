@@ -1,0 +1,94 @@
+.blog-posts-page {
+  padding: 24px;
+
+  .blog-posts-header {
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: #666;
+    }
+  }
+
+  .blog-posts-stats {
+    margin-bottom: 24px;
+
+    .ant-card {
+      height: 100%;
+      
+      .ant-statistic {
+        .ant-statistic-title {
+          color: #666;
+          font-size: 14px;
+        }
+
+        .ant-statistic-content {
+          font-size: 24px;
+          
+          .anticon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  .blog-posts-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .blog-posts-table {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+    .ant-table-thead > tr > th {
+      background: #fafafa;
+    }
+  }
+
+  .post-form {
+    margin-top: 24px;
+
+    .ant-form-item-label {
+      font-weight: 500;
+    }
+
+    .ant-input-textarea {
+      resize: none;
+    }
+
+    .ant-upload.ant-upload-select-picture-card {
+      width: 100%;
+      margin-right: 0;
+    }
+  }
+
+  .post-thumbnail {
+    width: 40px;
+    height: 40px;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .ant-tag {
+    margin: 0 4px 4px 0;
+    
+    .anticon {
+      margin-right: 4px;
+    }
+  }
+} 

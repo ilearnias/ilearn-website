@@ -12,6 +12,7 @@
     "@ant-design/nextjs-registry": "^1.0.0",
     "@emotion/react": "^11.11.4",
     "antd": "^5.18.3",
+    "axios": "^1.10.0",
     "bootstrap": "^5.3.3",
     "emailjs-com": "^3.2.0",
     "i18next": "^23.11.5",

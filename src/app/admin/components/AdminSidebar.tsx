@@ -7,7 +7,15 @@ import {
   DashboardOutlined,
   TeamOutlined,
   BankOutlined,
-  InfoCircleOutlined,
+  BookOutlined,
+  TrophyOutlined,
+  SmileOutlined,
+  PictureOutlined,
+  ContactsOutlined,
+  CrownOutlined,
+  ReadOutlined,
+  BarChartOutlined,
+  DownOutlined,
 } from "@ant-design/icons";
 import "./AdminSidebar.scss";
 
@@ -24,13 +32,94 @@ const AdminSidebar: React.FC = () => {
       subItems: [],
     },
     {
+      id: "programmes",
+      label: "Programmes",
+      icon: <BookOutlined />,
+      href: "/admin/programmes",
+      subItems: [],
+    },
+    {
+      id: "results",
+      label: "Results",
+      icon: <TrophyOutlined />,
+      href: "/admin/results",
+      subItems: [
+        {
+          id: "results-list",
+          label: "Results List",
+          href: "/admin/results",
+        },
+        {
+          id: "results-summary",
+          label: "Results Summary",
+          href: "/admin/results/summary",
+        },
+      ],
+    },
+    {
+      id: "success-stories",
+      label: "Success Stories",
+      icon: <SmileOutlined />,
+      href: "/admin/success-stories",
+      subItems: [],
+    },
+    {
+      id: "achievers",
+      label: "Achievers",
+      icon: <CrownOutlined />,
+      href: "/admin/achievers",
+      subItems: [],
+    },
+    {
       id: "team",
       label: "Team Management",
       icon: <TeamOutlined />,
       href: "/admin/team",
       subItems: [],
     },
-    // Add more menu items here as needed
+    {
+      id: "contacts",
+      label: "Contacts",
+      icon: <ContactsOutlined />,
+      href: "/admin/contacts",
+      subItems: [],
+    },
+    {
+      id: "gallery",
+      label: "Gallery",
+      icon: <PictureOutlined />,
+      href: "#",
+      subItems: [
+        {
+          id: "gallery-titles",
+          label: "Gallery Titles",
+          href: "/admin/gallery/titles",
+        },
+        {
+          id: "gallery-images",
+          label: "Gallery Images",
+          href: "/admin/gallery/images",
+        },
+      ],
+    },
+    {
+      id: "blog",
+      label: "Blog",
+      icon: <ReadOutlined />,
+      href: "#",
+      subItems: [
+        {
+          id: "blog-posts",
+          label: "Blogs",
+          href: "/admin/blog/posts",
+        },
+        {
+          id: "blog-categories",
+          label: "Blog Categories",
+          href: "/admin/blog/categories",
+        },
+      ],
+    },
   ];
 
   const toggleMenu = (menuId: string) => {
@@ -39,6 +128,13 @@ const AdminSidebar: React.FC = () => {
 
   const isActive = (href: string) => {
     return pathname === href;
+  };
+
+  const isMenuActive = (item: any) => {
+    if (item.subItems.length > 0) {
+      return item.subItems.some((subItem: any) => pathname === subItem.href);
+    }
+    return pathname === item.href;
   };
 
   return (
@@ -57,23 +153,24 @@ const AdminSidebar: React.FC = () => {
           {menuItems.map((item) => (
             <li key={item.id} className="nav-item">
               {item.subItems.length > 0 ? (
-                // Menu with sub-items
                 <div className="menu-group">
                   <button
                     className={`menu-button ${
-                      openMenu === item.id ? "open" : ""
+                      openMenu === item.id || isMenuActive(item) ? "open" : ""
                     }`}
                     onClick={() => toggleMenu(item.id)}
                   >
                     <span className="menu-icon">{item.icon}</span>
                     <span className="menu-label">{item.label}</span>
-                    <span className="menu-arrow">▼</span>
+                    <span className="menu-arrow">
+                      <DownOutlined />
+                    </span>
                   </button>
 
-                  {openMenu === item.id && (
+                  {(openMenu === item.id || isMenuActive(item)) && (
                     <ul className="sub-menu">
                       {item.subItems.map((subItem) => (
-                        <li key={subItem.href}>
+                        <li key={subItem.id}>
                           <Link
                             href={subItem.href}
                             className={`sub-menu-link ${
@@ -88,7 +185,6 @@ const AdminSidebar: React.FC = () => {
                   )}
                 </div>
               ) : (
-                // Single menu item
                 <Link
                   href={item.href}
                   className={`menu-link ${isActive(item.href) ? "active" : ""}`}
