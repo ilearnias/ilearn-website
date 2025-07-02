@@ -1,0 +1,127 @@
+.dashboard {
+  .dashboard-header {
+    margin-bottom: 30px;
+    
+    h1 {
+      color: #1f2937;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+  }
+
+  .stats-grid {
+    margin-bottom: 30px;
+
+    .stat-card {
+      .ant-card-body {
+        padding: 20px;
+      }
+
+      .ant-statistic-title {
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+
+      .ant-statistic-content {
+        .ant-statistic-content-prefix {
+          font-size: 20px;
+          margin-right: 8px;
+        }
+
+        .ant-statistic-content-value {
+          font-size: 24px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+
+  .dashboard-content {
+    .content-card {
+      .ant-card-head {
+        border-bottom: 1px solid #f0f0f0;
+        
+        .ant-card-head-title {
+          font-size: 16px;
+          font-weight: 600;
+        }
+      }
+
+      .ant-card-body {
+        padding: 20px;
+      }
+
+      .ant-list-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .ant-list-item-meta {
+          .ant-list-item-meta-avatar {
+            .ant-avatar {
+              background: #f0f0f0;
+              color: #666;
+            }
+          }
+
+          .ant-list-item-meta-content {
+            .ant-list-item-meta-title {
+              font-size: 14px;
+              font-weight: 500;
+              margin-bottom: 4px;
+            }
+
+            .ant-list-item-meta-description {
+              font-size: 12px;
+              color: #666;
+            }
+          }
+        }
+      }
+
+      .action-button {
+        height: 40px;
+        margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .ant-btn-icon {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+
+  .activity-time {
+    color: #999;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 480px) {
+  .dashboard {
+    .dashboard-header h1 {
+      font-size: 24px;
+    }
+
+    .stats-grid {
+      .ant-col {
+        margin-bottom: 16px;
+      }
+    }
+  }
+} 
