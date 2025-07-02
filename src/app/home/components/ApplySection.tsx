@@ -16,7 +16,7 @@ const ApplySection = () => {
                   Ready to Begin Your <span className="underline">Civil Service</span> Journey?
                 </h1>
                 <p className="text-base md:text-lg mb-6">
-                  Join Kerala's most trusted civil service coaching institute. Schedule a free
+                  Join Kerala&apos;s most trusted civil service coaching institute. Schedule a free
                   counseling session with our experts to discuss your preparation strategy.
                 </p>
                 <div className="cta-buttons flex flex-col sm:flex-row gap-4">

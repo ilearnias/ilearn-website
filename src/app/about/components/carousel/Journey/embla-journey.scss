@@ -1,0 +1,101 @@
+.embla-journey {
+  max-width: 60rem;
+  margin: auto;
+  --slide-height: 19rem;
+  --slide-spacing: 1rem;
+  --slide-size: 100%;
+  position: relative;
+}
+
+.embla-journey__viewport {
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.embla-journey__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  margin-left: calc(var(--slide-spacing) * -1);
+}
+
+.embla-journey__slide {
+  transform: translate3d(0, 0, 0);
+  flex: 0 0 var(--slide-size);
+  min-width: 0;
+  padding-left: var(--slide-spacing);
+  position: relative;
+}
+
+.video-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.video-container iframe {
+  border: none;
+  object-fit: cover;
+}
+
+.milestone-overlay {
+  z-index: 10;
+}
+
+.embla-journey-thumbs {
+  --thumbs-slide-spacing: 0.8rem;
+  --thumbs-slide-height: 3rem;
+  margin-top: var(--thumbs-slide-spacing);
+}
+
+.embla-journey-thumbs__viewport {
+  overflow: hidden;
+}
+
+.embla-journey-thumbs__container {
+  display: flex;
+  flex-direction: row;
+  margin-left: calc(var(--thumbs-slide-spacing) * -1);
+}
+
+.embla-journey-thumbs__slide {
+  flex: 0 0 22%;
+  min-width: 0;
+  padding-left: var(--thumbs-slide-spacing);
+}
+
+@media (min-width: 576px) {
+  .embla-journey-thumbs__slide {
+    flex: 0 0 15%;
+  }
+}
+
+.embla-journey-thumbs__slide__number {
+  border-radius: 1.8rem;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.5);
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  touch-action: manipulation;
+  display: inline-flex;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  box-shadow: inset 0 0 0 0.2rem var(--bs-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bs-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--thumbs-slide-height);
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.embla-journey-thumbs__slide--selected .embla-journey-thumbs__slide__number {
+  background-color: var(--bs-primary);
+  color: white;
+} 

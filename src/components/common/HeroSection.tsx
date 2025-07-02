@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import { twMerge } from 'tailwind-merge';
+import { twMerge } from "tailwind-merge";
 import "./styles.scss";
 
 interface HeroSectionProps {
@@ -12,21 +12,21 @@ interface HeroSectionProps {
   breadcrumbClassName?: string;
 }
 
-const HeroSection = ({ 
-  title, 
+const HeroSection = ({
+  title,
   pageName,
-  className = '',
-  overlayClassName = '',
-  contentClassName = '',
-  titleClassName = '',
-  breadcrumbClassName = ''
+  className = "",
+  overlayClassName = "",
+  contentClassName = "",
+  titleClassName = "",
+  breadcrumbClassName = "",
 }: HeroSectionProps) => {
   // Base styles that should always be applied
   const baseStyles = {
-    hero: 'common-hero',
-    overlay: 'hero-overlay',
-    content: 'hero-content',
-    breadcrumb: 'breadcrumb'
+    hero: "common-hero",
+    overlay: "hero-overlay",
+    content: "hero-content",
+    breadcrumb: "breadcrumb",
   };
 
   return (
@@ -35,9 +35,6 @@ const HeroSection = ({
         <Container>
           <div className={twMerge(baseStyles.content, contentClassName)}>
             <h1 className={titleClassName}>{title}</h1>
-            <div className={twMerge(baseStyles.breadcrumb, breadcrumbClassName)}>
-              Home / <span className="active">{pageName}</span>
-            </div>
           </div>
         </Container>
       </div>
@@ -45,4 +42,4 @@ const HeroSection = ({
   );
 };
 
-export default HeroSection; 
+export default HeroSection;

@@ -11,6 +11,7 @@ export default function MalayalamProgram() {
       <Header />
       <ProgramHero
         title="Malayalam Literature Optional"
+        shortName="Malayalam Literature"
         description="Specialized coaching for Malayalam literature optional covering classical and modern literature, poetry, drama, and literary criticism."
         duration="6 months"
         bgColor="#f0f2f8"

@@ -118,7 +118,7 @@ const AchieversSection = () => {
         >
           <h2 className="section-title">Our Proud Achievers</h2>
           <p className="section-subtitle">
-            Success stories of India's future leaders
+            Success stories of India&apos;s future leaders
           </p>
         </motion.div>
 

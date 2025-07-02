@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState, useRef, useMemo } from "react";
 import "./styles.scss";
 
 // Import section components

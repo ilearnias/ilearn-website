@@ -1,6 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+
+// Create a client-side only motion component
+const MotionDiv = dynamic(() => Promise.resolve(motion.div), {
+  ssr: false,
+});
 
 interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'text' | 'icon';
@@ -31,7 +37,7 @@ const Button: React.FC<ButtonProps> = ({
   const commonStyles = 'px-5 py-3 sm:px-8 sm:py-4 rounded-lg font-light tracking-wide uppercase text-sm inline-flex items-center gap-2 transition-colors';
 
   const buttonContent = (
-    <motion.div
+    <MotionDiv
       className={`
         ${baseStyles[variant]} 
         ${variant !== 'text' ? commonStyles : ''} 
@@ -53,7 +59,7 @@ const Button: React.FC<ButtonProps> = ({
     >
       {children}
       {icon && <span className="ml-2">{icon}</span>}
-    </motion.div>
+    </MotionDiv>
   );
 
   if (href) {

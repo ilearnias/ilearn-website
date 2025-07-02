@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import HeroSection from "@/app/about/components/HeroSection";
+import HeroSection from "@/components/common/HeroSection";
 import { 
   FiBook, FiTarget, FiGlobe, FiClipboard,
   FiClock, FiHelpCircle, FiVideo
@@ -207,7 +207,7 @@ export default function SociologyProgram() {
       <Header />
       <HeroSection
         title="Sociology Optional"
-        subtitle="Expert coaching for Sociology as an optional subject for UPSC Mains examination."
+        pageName="Expert coaching for Sociology as an optional subject for UPSC Mains examination"
         className="program-box1"
       />
       <ProgramHighlights />

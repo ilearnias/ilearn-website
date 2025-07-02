@@ -2,55 +2,54 @@ import { Row, Col } from "react-bootstrap";
 import Container from "@/components/common/Container";
 import { Fade } from "react-awesome-reveal";
 import { useTranslation } from "react-i18next";
-import { FaGraduationCap, FaUsers, FaChartLine, FaHeart } from "react-icons/fa";
-
-const values = [
-  {
-    icon: <FaGraduationCap size={40} />,
-    title: "Academic Excellence",
-    description: "Commitment to providing top-quality education and guidance"
-  },
-  {
-    icon: <FaUsers size={40} />,
-    title: "Personal Mentorship",
-    description: "Individual attention and support for every aspirant"
-  },
-  {
-    icon: <FaChartLine size={40} />,
-    title: "Continuous Growth",
-    description: "Focus on consistent improvement and development"
-  },
-  {
-    icon: <FaHeart size={40} />,
-    title: "Student Care",
-    description: "Nurturing environment that supports holistic growth"
-  }
-];
+import { coreValues, CoreValue } from "../data/coreValues";
+import { useRef, useEffect } from "react";
+import "../styles/coreValues.scss";
 
 const CoreValuesSection = () => {
   const { t } = useTranslation();
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
-    <div className="core-values-section">
+    <section className="core-values-section" aria-labelledby="core-values-title">
       <Container>
         <Fade>
-          <h2 className="section-title">Our Core Values</h2>
+          <h2 className="section-title" id="core-values-title">Our Core Values</h2>
         </Fade>
-        <Row>
-          {values.map((value, index) => (
+        <Row className="g-4">
+          {coreValues.map((value: CoreValue, index: number) => (
             <Col md={6} lg={3} key={index}>
               <Fade direction="up" delay={index * 100}>
-                <div className="value-card">
-                  <div className="icon">{value.icon}</div>
-                  <h3 className="title">{value.title}</h3>
-                  <p className="description">{value.description}</p>
+                <div 
+                  className="value-card"
+                  role="article"
+                  aria-labelledby={`value-title-${index}`}
+                  onMouseMove={handleMouseMove}
+                >
+                  <div className="card-content">
+                    <div className="icon-wrapper" aria-hidden="true">
+                      {value.icon}
+                    </div>
+                    <h3 className="title" id={`value-title-${index}`}>{value.title}</h3>
+                    <p className="description">{value.description}</p>
+                  </div>
+                  <div className="hover-effect"></div>
                 </div>
               </Fade>
             </Col>
           ))}
         </Row>
       </Container>
-    </div>
+    </section>
   );
 };
 

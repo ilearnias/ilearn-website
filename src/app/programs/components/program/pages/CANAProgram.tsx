@@ -57,7 +57,7 @@ const WhyCANAMatters = () => {
         <h2 className="text-3xl font-bold text-center mb-4">Why CANA Matters</h2>
         <p className="text-center text-gray-600 mb-12">
           Current affairs form the backbone of UPSC preparation. Our CANA program
-          ensures you're always updated and analysis-ready.
+          ensures you&apos;re always updated and analysis-ready.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
@@ -223,7 +223,7 @@ const CANASuccess = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-4">CANA Success Impact</h2>
           <p className="text-center text-gray-600 mb-12">
-            Our current affairs program has been instrumental in our students' success
+            Our current affairs program has been instrumental in our students&apos; success
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {stats.map((stat, index) => (
