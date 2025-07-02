@@ -8,6 +8,7 @@ import {
   FiUser, FiUsers, FiCheckCircle, FiClock,
   FiFileText, FiMessageSquare, FiAward, FiStar
 } from "react-icons/fi";
+import Image from 'next/image';
 
 // Expert Faculty Section
 interface FacultyMemberProps {
@@ -151,7 +152,7 @@ interface TestimonialProps {
 const Testimonial: React.FC<TestimonialProps> = ({ name, qualification, text, image }) => (
   <div className="bg-white p-6 rounded-lg shadow-sm">
     <div className="flex items-center gap-4 mb-4">
-      <img src={image} alt={name} className="w-12 h-12 rounded-full" />
+      <Image src={image} alt={name} className="w-12 h-12 rounded-full object-cover" width={48} height={48} />
       <div>
         <h4 className="font-semibold">{name}</h4>
         <p className="text-sm text-gray-500">{qualification}</p>

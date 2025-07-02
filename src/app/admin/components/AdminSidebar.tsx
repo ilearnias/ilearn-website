@@ -11,11 +11,24 @@ import {
 } from "@ant-design/icons";
 import "./AdminSidebar.scss";
 
+interface SubMenuItem {
+  href: string;
+  label: string;
+}
+
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  href: string;
+  subItems: SubMenuItem[];
+}
+
 const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
   const [openMenu, setOpenMenu] = useState<string | null>("dashboard");
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       id: "dashboard",
       label: "Dashboard",
@@ -72,7 +85,7 @@ const AdminSidebar: React.FC = () => {
 
                   {openMenu === item.id && (
                     <ul className="sub-menu">
-                      {item.subItems.map((subItem) => (
+                      {item.subItems.map((subItem: SubMenuItem) => (
                         <li key={subItem.href}>
                           <Link
                             href={subItem.href}

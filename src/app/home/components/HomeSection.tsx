@@ -27,7 +27,7 @@ const HomeSection = () => {
               <Heading
                 text={
                   <>
-                    <span>We don't claim</span>
+                    <span>We don&apos;t claim</span>
                     <br />
                     <span>results,</span>
                     <br />
@@ -44,7 +44,7 @@ const HomeSection = () => {
               <Heading
                 text={
                   <>
-                    <span>We don't claim</span>
+                    <span>We don&apos;t claim</span>
                     <br />
                     <span>results, We</span>
                     <br />
@@ -58,7 +58,7 @@ const HomeSection = () => {
               />
             </div>
             <SubHeading
-              text="Kerala's highest Prelims-cum-Mains & Classroom program success rate."
+              text="Kerala&apos;s highest Prelims-cum-Mains & Classroom program success rate."
               animate={true}
               delay={0.4}
               className="!text-[#1F2937] !font-light !text-[16px] !m-0 !p-0"

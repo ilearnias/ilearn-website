@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState, useRef, useMemo } from "react";
 import "./styles.scss";
 
 // Import section components
@@ -36,52 +37,76 @@ const testimonialData: TestimonialItem[] = [
 ];
 
 export default function PageContainer() {
-<<<<<<< HEAD
-=======
   useEffect(() => {
-    const bottomNav: any = document.querySelector(".section2-position");
-    bottomNav.style.position = "sticky";
-    bottomNav.style.bottom = "0";
+    const bottomNav = document.querySelector(".section2-position") as HTMLElement;
+    if (bottomNav) {
+      bottomNav.style.position = "sticky";
+      bottomNav.style.bottom = "0";
 
-    const handleScroll = () => {
-      const footer: any = document.getElementById("bfooter");
-      const bottomNav: any = document.querySelector(".section2-position");
-      const footerTop: any = footer.getBoundingClientRect().top;
-      const windowHeight: any = window.innerHeight;
-      if (footerTop <= windowHeight) {
-        bottomNav.style.position = "";
-      } else {
-        bottomNav.style.position = "sticky";
-        bottomNav.style.bottom = "0";
-      }
-    };
+      const handleScroll = () => {
+        const footer = document.getElementById("bfooter") as HTMLElement;
+        if (footer && bottomNav) {
+          const footerTop = footer.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+          if (footerTop <= windowHeight) {
+            bottomNav.style.position = "";
+          } else {
+            bottomNav.style.position = "sticky";
+            bottomNav.style.bottom = "0";
+          }
+        }
+      };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
   }, []);
-  const [activeSection, setActiveSection] = useState(null);
-  const sectionRefs: any = {
-    section3: useRef(null),
-    section4: useRef(null),
-    section5: useRef(null),
-    section6: useRef(null),
-    section7: useRef(null),
-    section8: useRef(null),
-    section9: useRef(null),
-    section10: useRef(null),
-    section11: useRef(null),
-    section12: useRef(null),
-    section13: useRef(null),
-    section14: useRef(null),
-    section15: useRef(null),
-    section16: useRef(null),
-    section17: useRef(null),
-    section18: useRef(null),
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  
+  type SectionRefs = {
+    [key: string]: React.RefObject<HTMLElement>;
   };
 
-  const scrollToSection = (sectionId: any) => {
+  // Create refs outside of useMemo
+  const section3Ref = useRef<HTMLElement>(null);
+  const section4Ref = useRef<HTMLElement>(null);
+  const section5Ref = useRef<HTMLElement>(null);
+  const section6Ref = useRef<HTMLElement>(null);
+  const section7Ref = useRef<HTMLElement>(null);
+  const section8Ref = useRef<HTMLElement>(null);
+  const section9Ref = useRef<HTMLElement>(null);
+  const section10Ref = useRef<HTMLElement>(null);
+  const section11Ref = useRef<HTMLElement>(null);
+  const section12Ref = useRef<HTMLElement>(null);
+  const section13Ref = useRef<HTMLElement>(null);
+  const section14Ref = useRef<HTMLElement>(null);
+  const section15Ref = useRef<HTMLElement>(null);
+  const section16Ref = useRef<HTMLElement>(null);
+  const section17Ref = useRef<HTMLElement>(null);
+  const section18Ref = useRef<HTMLElement>(null);
+
+  const sectionRefs = useMemo<SectionRefs>(() => ({
+    section3: section3Ref,
+    section4: section4Ref,
+    section5: section5Ref,
+    section6: section6Ref,
+    section7: section7Ref,
+    section8: section8Ref,
+    section9: section9Ref,
+    section10: section10Ref,
+    section11: section11Ref,
+    section12: section12Ref,
+    section13: section13Ref,
+    section14: section14Ref,
+    section15: section15Ref,
+    section16: section16Ref,
+    section17: section17Ref,
+    section18: section18Ref,
+  }), []);
+
+  const scrollToSection = (sectionId: keyof SectionRefs) => {
     console.log("sectionId -- ", sectionId);
-    sectionRefs[sectionId].current.scrollIntoView({ behavior: "smooth" });
+    sectionRefs[sectionId].current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -117,9 +142,9 @@ export default function PageContainer() {
         }
       });
     };
-  }, []);
+  }, [sectionRefs]);
 
->>>>>>> master
+
   return (
     <div className="Home-Container overflow-x-hidden">
       {/* 1. Home Section */}

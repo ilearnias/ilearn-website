@@ -139,7 +139,7 @@ const SuccessStoriesSection = () => {
             {successStories.map((story, index) => (
               <div 
                 key={`${story.name}-${pathname}`}
-                className="story-card border-2 border-red-500 "
+                className="story-card "
               >
                 <div className="success-badge">SUCCESS</div>
                 <div className="image-container">

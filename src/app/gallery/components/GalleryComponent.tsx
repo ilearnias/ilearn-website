@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 interface GalleryImage {
   src: string;
@@ -51,10 +52,12 @@ export default function GalleryComponent({ images, className = '' }: GalleryProp
                 `}>
                   <div className="relative w-full aspect-square overflow-hidden">
                     {image.src ? (
-                      <img 
+                      <Image 
                         src={image.src} 
                         alt={image.alt || `Gallery image ${index + 1}`}
                         className="w-full h-full object-cover"
+                        width={400}
+                        height={400}
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-200 flex items-center justify-center">

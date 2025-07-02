@@ -11,6 +11,7 @@ export default function FoundationProgram() {
       <Header />
       <ProgramHero
         title="Foundation Course for Civil Services"
+        shortName="Foundation Course"
         description="Comprehensive foundation program for beginners starting their civil services preparation journey with structured learning approach."
         duration="8 months"
         bgColor="#f0f8f8"

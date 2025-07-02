@@ -2,6 +2,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import Image from 'next/image';
 import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import TextLabel from "@/components/common/TextLabel";
@@ -123,10 +124,12 @@ const ResultSection = () => {
             >
               <div className="relative rounded-lg overflow-hidden shadow-lg h-full">
                 <div className="aspect-video relative cursor-pointer group">
-                  <img
+                  <Image
                     src={card.thumbnail}
                     alt={card.title}
                     className="w-full h-full object-cover"
+                    width={300}
+                    height={169}
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
                     <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">

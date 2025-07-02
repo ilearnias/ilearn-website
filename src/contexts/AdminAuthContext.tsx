@@ -6,6 +6,7 @@ import React, {
   useState,
   useEffect,
   ReactNode,
+  useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
 
@@ -46,6 +47,13 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  const logout = useCallback(() => {
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+    setUser(null);
+    router.push("/adminlogin");
+  }, [router]);
+
   useEffect(() => {
     // Check for existing authentication on mount
     const checkAuth = () => {
@@ -66,7 +74,7 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
     };
 
     checkAuth();
-  }, []);
+  }, [logout]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -105,13 +113,6 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
       console.error("Login error:", error);
       return false;
     }
-  };
-
-  const logout = () => {
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminUser");
-    setUser(null);
-    router.push("/adminlogin");
   };
 
   const value: AdminAuthContextType = {

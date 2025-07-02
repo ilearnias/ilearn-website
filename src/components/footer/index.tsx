@@ -46,7 +46,7 @@ export default function Footer() {
               <div className="footer-logo">
                 <Image src={Logo} width={200} height={200} alt="iLearn IAS Logo" />
               </div>
-              <div className="footer-text">Kerala's most successful Civil Services Training Academy —delivering the state's highest success rate through results-driven Prelims-cum-Mains & classroom programs.</div>
+              <div className="footer-text">Kerala&apos;s most successful Civil Services Training Academy —delivering the state&apos;s highest success rate through results-driven Prelims-cum-Mains & classroom programs.</div>
               <div
                 onClick={() => router.push("/about")}
                 className="footer-text footer-txt2 d-flex align-items-center gap-1 text-white mt-2"
@@ -226,7 +226,7 @@ export default function Footer() {
           <Row>
             <Col lg="3"></Col>
             <Col lg="6" sm="12" xs="12">
-              <div className="txt2 mt-4">Kerala's most successful Civil Services Training Academy</div>
+              <div className="txt2 mt-4">Kerala&apos;s most successful Civil Services Training Academy</div>
             </Col>
             <Col lg="3">
               <div className="scroll-btn mt-3">

@@ -92,7 +92,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <div className="dashboard-header">
         <h1>Welcome back, {user?.name}!</h1>
-        <p>Here's what's happening with your admin panel today.</p>
+        <p>Here&apos;s what&apos;s happening with your admin panel today.</p>
       </div>
 
       <Row gutter={[20, 20]} className="stats-grid">

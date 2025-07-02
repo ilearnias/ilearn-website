@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import HeroSection from "@/app/about/components/HeroSection";
+import HeroSection from "@/components/common/HeroSection";
 import { 
   FiBook, FiMap, FiEdit, FiSearch,
   FiClock, FiHelpCircle, FiVideo
@@ -207,7 +207,7 @@ export default function GeographyProgram() {
       <Header />
       <HeroSection
         title="Geography Optional"
-        subtitle="Specialized coaching for Geography as an optional subject for UPSC Mains examination."
+        pageName="Specialized coaching for Geography as an optional subject for UPSC Mains examination"
         className="program-box1"
       />
       <ProgramHighlights />

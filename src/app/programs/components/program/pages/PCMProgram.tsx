@@ -42,7 +42,7 @@ const ProgramOverview = () => {
     {
       icon: <FiAward className="w-full h-full" />,
       title: "Best Results",
-      description: "Kerala's highest success rate"
+      description: "Kerala&apos;s highest success rate"
     },
     {
       icon: <FiCheckCircle className="w-full h-full" />,
@@ -183,9 +183,9 @@ const SuccessStories = () => {
               </h3>
             </div>
             <p className="text-gray-600 italic">
-              "iLearn's PCM program provided me with the perfect foundation and guidance to achieve
+              &quot;iLearn&apos;s PCM program provided me with the perfect foundation and guidance to achieve
               success in UPSC. The comprehensive approach and excellent faculty made all the
-              difference."
+              difference.&quot;
             </p>
           </div>
         </div>
@@ -198,7 +198,7 @@ const SuccessStories = () => {
 
         <div className="text-center mt-12">
           <p className="text-gray-700 mb-8">
-            Join our PCM program and be part of Kerala's most successful civil
+            Join our PCM program and be part of Kerala&apos;s most successful civil
             service coaching institute
           </p>
           <div className="flex justify-center gap-4">

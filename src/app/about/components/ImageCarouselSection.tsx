@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import Container from "@/components/common/Container";
 import { Fade } from "react-awesome-reveal";
+import Image from 'next/image';
 import useEmblaCarousel, { UseEmblaCarouselType } from 'embla-carousel-react';
 import type { EmblaCarouselType as CarouselType } from 'embla-carousel';
 import {
@@ -19,11 +20,11 @@ const academyImages = [
     alt: "iLearn IAS Academy Image 1",
   },
   {
-    src: "/About/Carousel/img2.png",
+    src: "/About/Carousel/img1.jpg",
     alt: "iLearn IAS Academy Image 2",
   },
   {
-    src: "/About/Carousel/img3.jpg",
+    src: "/About/Carousel/img1.jpg",
     alt: "iLearn IAS Academy Image 3",
   }
 ];
@@ -145,10 +146,13 @@ const ImageCarouselSection = () => {
                   <div className="embla__slide" key={index}>
                     <div className="embla__parallax">
                       <div className="embla__parallax__layer">
-                        <img
+                        <Image
                           className="embla__slide__img embla__parallax__img"
                           src={image.src}
                           alt={image.alt}
+                          width={800}
+                          height={600}
+                          priority={index === 0}
                         />
                       </div>
                     </div>

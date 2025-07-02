@@ -46,7 +46,7 @@ const BeginJourneySection = () => {
             </h1>
             <p className="description">
               Join the thousands of students who have transformed their dream of
-              becoming a civil servant into reality with iLearn IAS Academy's guidance.
+              becoming a civil servant into reality with iLearn IAS Academy&apos;s guidance.
             </p>
             <div className="button-group" role="group" aria-label="Journey actions">
               <button 
