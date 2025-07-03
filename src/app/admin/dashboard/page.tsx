@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useSelector } from 'react-redux';
 import { Card, Statistic, List, Button, Row, Col, Space } from "antd";
 import {
   UserOutlined,
@@ -17,7 +17,7 @@ import {
 import "./styles.scss";
 
 const Dashboard = () => {
-  const { user } = useAdminAuth();
+  const { user } = useSelector((state: any) => state.auth);
 
   const stats = [
     {

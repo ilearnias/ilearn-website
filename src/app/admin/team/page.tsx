@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useSelector } from 'react-redux';
 import {
   Table,
   Input,
@@ -38,7 +38,7 @@ import "./styles.scss";
 const { confirm } = Modal;
 
 const Team = () => {
-  const { user } = useAdminAuth();
+  const { user } = useSelector((state: any) => state.auth);
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [teamMembers, setTeamMembers] = useState<ITeamMember[]>([]);

@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '@/redux/slices/authSlice';
 import { Modal, Button, Dropdown, Avatar, Space } from "antd";
 import {
   UserOutlined,
@@ -15,7 +16,8 @@ import type { MenuProps } from "antd";
 import "./AdminHeader.scss";
 
 const AdminHeader: React.FC = () => {
-  const { user, logout } = useAdminAuth();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: any) => state.auth);
   const pathname = usePathname();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -55,7 +57,13 @@ const AdminHeader: React.FC = () => {
   };
 
   const confirmLogout = () => {
-    logout();
+    // Clear localStorage
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    
+    // Dispatch Redux logout action
+    dispatch(logout());
+    
     setShowLogoutConfirm(false);
   };
 
