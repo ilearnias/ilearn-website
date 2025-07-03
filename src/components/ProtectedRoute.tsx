@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode } from "react";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useSelector } from 'react-redux';
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,28 +10,24 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAdminAuth();
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isAuthenticated) {
       router.push("/adminlogin");
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, router]);
 
-  if (isLoading) {
+  if (!isAuthenticated) {
     return (
       <div className="loading-container">
         <div className="loading-spinner">
           <div className="spinner"></div>
-          <p>Loading...</p>
+          <p>Redirecting to login...</p>
         </div>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    return null; // Will redirect to login
   }
 
   return <>{children}</>;

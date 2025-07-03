@@ -1,0 +1,58 @@
+"use client";
+
+import { Provider } from 'react-redux';
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import store from '@/redux/store';
+import { ReactNode, useEffect, useState } from 'react';
+import { initializeAuth } from '@/redux/slices/authSlice';
+
+interface ProvidersProps {
+  children: ReactNode;
+}
+
+const Providers = ({ children }: ProvidersProps) => {
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    // Initialize auth state from localStorage
+    const token = localStorage.getItem('adminToken');
+    const userData = localStorage.getItem('adminUser');
+
+    if (token && userData) {
+      try {
+        const user = JSON.parse(userData);
+        store.dispatch(initializeAuth({ user, token }));
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+        store.dispatch(initializeAuth(null));
+      }
+    } else {
+      store.dispatch(initializeAuth(null));
+    }
+
+    setIsHydrated(true);
+  }, []);
+
+  if (!isHydrated) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Provider store={store}>
+      <AntdRegistry>
+        {children}
+      </AntdRegistry>
+    </Provider>
+  );
+};
+
+export default Providers; 

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { AdminAuthProvider } from "@/contexts/AdminAuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import AdminSidebar from "./components/AdminSidebar";
 import AdminHeader from "./components/AdminHeader";
@@ -13,17 +12,15 @@ interface AdminLayoutProps {
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   return (
-    <AdminAuthProvider>
-      <ProtectedRoute>
-        <div className="admin-layout">
-          <AdminSidebar />
-          <div className="admin-main-container">
-            <AdminHeader />
-            <main className="admin-content">{children}</main>
-          </div>
+    <ProtectedRoute>
+      <div className="admin-layout">
+        <AdminSidebar />
+        <div className="admin-main-container">
+          <AdminHeader />
+          <main className="admin-content">{children}</main>
         </div>
-      </ProtectedRoute>
-    </AdminAuthProvider>
+      </div>
+    </ProtectedRoute>
   );
 };
 
