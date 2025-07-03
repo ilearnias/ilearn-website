@@ -125,6 +125,12 @@ const Contacts = () => {
     form.resetFields();
   };
 
+  const handleAdd = () => {
+    setSelectedContact(null);
+    form.resetFields();
+    setIsModalVisible(true);
+  };
+
   const filteredContacts = contacts.filter(
     (contact) =>
       contact.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -287,6 +293,9 @@ const Contacts = () => {
           onChange={(e) => setSearchText(e.target.value)}
           style={{ maxWidth: 300 }}
         />
+        <Button type="primary" onClick={handleAdd} style={{ marginLeft: 8 }}>
+          Add Contact
+        </Button>
       </div>
 
       <Table
@@ -298,9 +307,29 @@ const Contacts = () => {
       />
 
       <Modal
-        title="Contact Details"
+        title={selectedContact ? "Contact Details" : "Add New Contact"}
         open={isModalVisible}
-        onOk={handleModalOk}
+        onOk={async () => {
+          if (selectedContact) {
+            await handleModalOk();
+          } else {
+            // Add contact logic
+            try {
+              const values = await form.validateFields();
+              const response = await contactService.createContact(values);
+              if (response.success) {
+                message.success(response.message || 'Contact added successfully');
+                setIsModalVisible(false);
+                fetchContacts();
+              } else {
+                message.error(response.message || 'Failed to add contact');
+              }
+            } catch (error: any) {
+              message.error(error.message || 'Failed to add contact');
+              console.error('Error adding contact:', error);
+            }
+          }
+        }}
         onCancel={handleModalCancel}
         width={600}
       >
@@ -313,27 +342,28 @@ const Contacts = () => {
               <Form.Item
                 name="name"
                 label="Name"
+                rules={[{ required: true, message: "Please enter name" }]}
               >
-                <Input readOnly />
+                <Input readOnly={!!selectedContact} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
                 name="email"
                 label="Email"
+                rules={[{ required: true, message: "Please enter email" }]}
               >
-                <Input readOnly />
+                <Input readOnly={!!selectedContact} />
               </Form.Item>
             </Col>
           </Row>
-
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
                 name="phone"
                 label="Phone"
               >
-                <Input readOnly />
+                <Input readOnly={!!selectedContact} />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -342,7 +372,7 @@ const Contacts = () => {
                 label="Status"
                 rules={[{ required: true, message: "Please select status" }]}
               >
-                <Select>
+                <Select disabled={false}>
                   <Option value="pending">Pending</Option>
                   <Option value="resolved">Resolved</Option>
                   <Option value="important">Important</Option>
@@ -350,21 +380,20 @@ const Contacts = () => {
               </Form.Item>
             </Col>
           </Row>
-
           <Form.Item
             name="subject"
             label="Subject"
+            rules={[{ required: true, message: "Please enter subject" }]}
           >
-            <Input readOnly />
+            <Input readOnly={!!selectedContact} />
           </Form.Item>
-
           <Form.Item
             name="message"
             label="Message"
+            rules={[{ required: true, message: "Please enter message" }]}
           >
-            <TextArea rows={4} readOnly />
+            <TextArea rows={4} readOnly={!!selectedContact} />
           </Form.Item>
-
           <Form.Item
             name="notes"
             label="Admin Notes"

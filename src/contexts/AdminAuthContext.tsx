@@ -3,12 +3,12 @@
 import React, {
   createContext,
   useContext,
-  useState,
   useEffect,
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import { API_CONFIG, API_ENDPOINTS } from "@/config/api";
+import { useDispatch, useSelector } from 'react-redux';
+import { login as loginAction, logout as logoutAction } from '@/redux/slices/authSlice';
 
 interface AdminUser {
   id: number;
@@ -43,19 +43,26 @@ interface AdminAuthProviderProps {
 export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
   const router = useRouter();
+  
+  // Get auth state from Redux
+  const { user, isAuthenticated, token } = useSelector((state: any) => state.auth);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
     const checkAuth = () => {
       try {
-        const token = localStorage.getItem("adminToken");
+        const storedToken = localStorage.getItem("adminToken");
         const userData = localStorage.getItem("adminUser");
 
-        if (token && userData) {
+        if (storedToken && userData) {
           const parsedUser = JSON.parse(userData);
-          setUser(parsedUser);
+          // Dispatch Redux action to restore auth state
+          dispatch(loginAction({
+            user: parsedUser,
+            token: storedToken
+          }));
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
@@ -66,7 +73,7 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
     };
 
     checkAuth();
-  }, []);
+  }, [dispatch]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -96,8 +103,14 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
       if (token && user) {
         localStorage.setItem('adminToken', token);
         localStorage.setItem('adminUser', JSON.stringify(user));
-        setUser(user);
-      return true;
+        
+        // Dispatch Redux action
+        dispatch(loginAction({
+          user,
+          token
+        }));
+        
+        return true;
       } else {
         console.error('Invalid response format:', responseData);
         throw new Error('Invalid response format');
@@ -111,13 +124,16 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
   const logout = () => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminUser");
-    setUser(null);
+    
+    // Dispatch Redux action
+    dispatch(logoutAction());
+    
     router.push("/adminlogin");
   };
 
   const value: AdminAuthContextType = {
     user,
-    isAuthenticated: !!user,
+    isAuthenticated,
     isLoading,
     login,
     logout,

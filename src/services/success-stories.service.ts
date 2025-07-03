@@ -12,9 +12,15 @@ export interface ISuccessStory {
   company?: string;
   testimonial?: string;
   image?: string;
+  imageUrl?: string;
   featured?: boolean;
   status: 'draft' | 'published';
   views?: number;
+  likes?: number;
+  isActive?: boolean;
+  achievementDate?: string;
+  category?: string;
+  achievement?: string;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -32,7 +32,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { successStoriesService, ISuccessStory } from "@/services/success-stories.service";
+import { successStoryService, ISuccessStory } from "@/services/success-stories.service";
 import dayjs from 'dayjs';
 import "./styles.scss";
 
@@ -55,7 +55,7 @@ const SuccessStories = () => {
   const fetchStories = async () => {
     try {
       setLoading(true);
-      const response = await successStoriesService.getAllStories();
+      const response = await successStoryService.getAllSuccessStories();
       if (response.success) {
         setStories(response.data);
       } else {
@@ -93,7 +93,7 @@ const SuccessStories = () => {
       cancelText: 'No',
       onOk: async () => {
         try {
-          const response = await successStoriesService.deleteStory(record.id);
+          const response = await successStoryService.deleteSuccessStory(record.id);
           if (response.success) {
             message.success(response.message || 'Success story deleted successfully');
             fetchStories();
@@ -118,7 +118,7 @@ const SuccessStories = () => {
       }
 
       if (editingStory) {
-        const response = await successStoriesService.updateStory(editingStory.id, values);
+        const response = await successStoryService.updateSuccessStory(editingStory.id, values);
         if (response.success) {
           message.success(response.message || 'Success story updated successfully');
           setIsModalVisible(false);
@@ -127,7 +127,7 @@ const SuccessStories = () => {
           message.error(response.message || 'Failed to update success story');
         }
       } else {
-        const response = await successStoriesService.createStory(values);
+        const response = await successStoryService.createSuccessStory(values);
         if (response.success) {
           message.success(response.message || 'Success story created successfully');
           setIsModalVisible(false);
@@ -149,9 +149,9 @@ const SuccessStories = () => {
 
   const filteredStories = stories.filter(
     (story) =>
-      story.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      story.studentName.toLowerCase().includes(searchText.toLowerCase()) ||
-      story.category.toLowerCase().includes(searchText.toLowerCase())
+      (story.title?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
+      (story.studentName?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
+      (story.category?.toLowerCase() || "").includes(searchText.toLowerCase())
   );
 
   const columns: ColumnsType<ISuccessStory> = [
@@ -266,7 +266,7 @@ const SuccessStories = () => {
           <Card>
             <Statistic
               title="Total Views"
-              value={stories.reduce((sum, s) => sum + s.views, 0)}
+              value={stories.reduce((sum, s) => sum + (s.views || 0), 0)}
               prefix={<EyeOutlined />}
             />
           </Card>
@@ -275,7 +275,7 @@ const SuccessStories = () => {
           <Card>
             <Statistic
               title="Total Likes"
-              value={stories.reduce((sum, s) => sum + s.likes, 0)}
+              value={stories.reduce((sum, s) => sum + (s.likes || 0), 0)}
               prefix={<LikeOutlined />}
             />
           </Card>

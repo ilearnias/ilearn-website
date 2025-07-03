@@ -50,8 +50,8 @@ const axiosInstance: AxiosInstance = axios.create({
 // Request interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Get token from localStorage
-    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+    // Get token from localStorage (use 'adminToken' as per your storage)
+    const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null;
 
     // Add authorization header if token exists
     if (token && config.headers) {
