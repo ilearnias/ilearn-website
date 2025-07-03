@@ -36,10 +36,10 @@ export default function Header() {
   }, [handleNavigation, lastScrollY]);
 
   return (
-    <div className="w-full">
-      <div className={`${lastScrollY ? "Header scrolled" : "Header"} w-full bg-gray-900 `}>
-        <Container className="w-full h-full px-4 md:px-0">
-          <div className="flex items-center justify-between w-full h-full">
+    <div className="w-full ">
+      <div className={`${lastScrollY ? "Header scrolled" : "Header"} w-full bg-gray-900  `}>
+        <Container className="w-full h-full  ">
+          <div className="flex  justify-between w-full h-full">
             <div className="Header-LogoBox h-full flex items-center" onClick={() => router.push("/")}>
               <Image 
                 src="/new-logo.png" 

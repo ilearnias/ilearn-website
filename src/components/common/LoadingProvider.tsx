@@ -1,7 +1,13 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, createContext, useContext } from 'react'
 import Loader from '@/app/loader/page'
+
+export const LoadingContext = createContext<{ isLoading: boolean }>({ isLoading: true });
+
+export function useLoading() {
+  return useContext(LoadingContext);
+}
 
 export default function LoadingProvider({
   children
@@ -20,9 +26,9 @@ export default function LoadingProvider({
   }, [])
 
   return (
-    <>
+    <LoadingContext.Provider value={{ isLoading }}>
       {isLoading && <Loader />}
       {children}
-    </>
+    </LoadingContext.Provider>
   )
 } 

@@ -44,13 +44,13 @@ export default function SideDrawer(props: any) {
       }}
       footer={
         <div className="Drawer-footer">
-          <a target="_blank" href="https://www.facebook.com/prismnetwrks">
+          <a target="_blank" href="">
             <FaFacebookF className="Drawer-footerIcon" />
           </a>
-          <a target="_blank" href="https://www.instagram.com/prismnetwrks/">
+          <a target="_blank" href="">
             <RiInstagramFill className="Drawer-footerIcon" />
           </a>
-          <a target="_blank" href="https://x.com/prismnetwrks">
+          <a target="_blank" href="">
             <FaXTwitter className="Drawer-footerIcon" />
           </a>
         </div>

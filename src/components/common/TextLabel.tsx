@@ -17,6 +17,8 @@ export default function TextLabel({ text, required = false, color = 'secondary',
         return 'text-white';
       case 'green':
         return 'text-green-600';
+      case 'blue':
+        return 'text-blue-700';
       case 'gray':
         return 'text-gray-600';
       default:

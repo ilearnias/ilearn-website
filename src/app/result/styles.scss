@@ -115,3 +115,61 @@
     }
   }
 }
+
+// Animation for video card scroll-in
+.video-card-scroll-in {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.video-card-scroll-in-active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+// Animation for fade/slide transition on year change
+.results-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.results-fade.results-fade-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media screen and (max-width: 768px) {
+  .grid.grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+  .video-card-scroll-in {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  .aspect-video iframe {
+    width: 100% !important;
+    height: 220px !important;
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+.result-summary-card {
+  transition: box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 2px 16px 0 rgba(30, 58, 138, 0.08);
+  border: 1px solid #e0e7ef;
+  &:hover {
+    box-shadow: 0 4px 24px 0 rgba(30, 58, 138, 0.16);
+    transform: translateY(-4px) scale(1.03);
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

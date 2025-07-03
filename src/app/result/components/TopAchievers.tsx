@@ -1,9 +1,12 @@
 "use client";
-import { Container } from "react-bootstrap";
+
 import Image from "next/image";
 import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import TextLabel from "@/components/common/TextLabel";
+import Container from "@/components/common/Container";
+import { motion, useInView } from "framer-motion";
+import React from "react";
 
 interface Achiever {
   id: number;
@@ -17,49 +20,49 @@ const achievers: Achiever[] = [
   {
     id: 1,
     name: "Midhun Premraj IAS",
-    image: "/src/app/assets/team/man1.avif",
+    image: "/result/dummy.jpg",
     rank: 12,
     year: 2024
   },
   {
     id: 2,
     name: "Dileep Kainikkara IAS",
-    image: "/src/app/assets/team/man2.avif",
+    image: "/result/dummy.jpg",
     rank: 21,
     year: 2024
   },
   {
     id: 3,
     name: "Alfred OV IAS",
-    image: "/src/app/assets/team/man3.avif",
+    image: "/result/dummy.jpg",
     rank: 57,
     year: 2024
   },
   {
     id: 4,
     name: "Reenu Anna Mathew",
-    image: "/src/app/assets/team/man4.avif",
+    image: "/result/dummy.jpg",
     rank: 81,
     year: 2024
   },
   {
     id: 5,
     name: "Annie George",
-    image: "/src/app/assets/team/man5.jpg",
+    image: "/result/dummy.jpg",
     rank: 93,
     year: 2024
   },
   {
     id: 6,
     name: "Devika Priyadersini",
-    image: "/src/app/assets/team/man6.jpg",
+    image: "/result/dummy.jpg",
     rank: 95,
     year: 2024
   },
   {
     id: 7,
     name: "Jayakrishnan IAS",
-    image: "/src/app/assets/team/man7.jpg",
+    image: "/result/dummy.jpg",
     rank: 444,
     year: 2024
   }
@@ -68,7 +71,7 @@ const achievers: Achiever[] = [
 const TopAchievers = () => {
   return (
     <section className="py-16 bg-white">
-      <Container className="top-achievers-section">
+      <Container >
         <div className="achievers-content">
           <div className="flex items-center gap-2 mb-8">
             <div className="w-8 h-8">
@@ -83,27 +86,38 @@ const TopAchievers = () => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {achievers.map((achiever) => (
-              <div key={achiever.id} className="bg-white rounded-lg overflow-hidden shadow-md">
-                <div className="aspect-[4/5] relative">
-                  <Image
-                    src={achiever.image}
-                    alt={achiever.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <SubHeading text={achiever.name} size="small" color="black" />
-                  <div className="flex justify-between items-center mt-2">
-                    <div className="bg-red-100 px-3 py-1 rounded-full">
-                      <TextLabel text={`AIR ${achiever.rank}`} color="green" variant="tag" />
-                    </div>
-                    <TextLabel text={achiever.year} color="gray" variant="tag" />
+            {achievers.map((achiever, idx) => {
+              const ref = React.useRef<HTMLDivElement>(null);
+              const isInView = useInView(ref, { once: false, margin: '-50px' });
+              return (
+                <motion.div
+                  key={achiever.id}
+                  ref={ref}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                  transition={{ duration: 0.6, delay: idx * 0.1 }}
+                  className="bg-white rounded-lg overflow-hidden shadow-md"
+                >
+                  <div className="aspect-[4/5] relative">
+                    <Image
+                      src={achiever.image}
+                      alt={achiever.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                </div>
-              </div>
-            ))}
+                  <div className="p-4">
+                    <SubHeading text={achiever.name} size="small" color="black" />
+                    <div className="flex justify-between items-center mt-2">
+                      <div className="bg-red-100 px-3 py-1 rounded-full">
+                        <TextLabel text={`AIR ${achiever.rank}`} color="blue" variant="tag" />
+                      </div>
+                      <TextLabel text={achiever.year} color="gray" variant="tag" />
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </Container>
