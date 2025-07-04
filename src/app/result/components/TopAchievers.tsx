@@ -68,6 +68,40 @@ const achievers: Achiever[] = [
   },
 ];
 
+const AchieverCard = ({ achiever, idx }: { achiever: Achiever; idx: number }) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false, margin: '-50px' });
+
+  return (
+    <motion.div
+      key={achiever.id}
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+      transition={{ duration: 0.6, delay: idx * 0.1 }}
+      className="bg-white rounded-lg overflow-hidden shadow-md"
+    >
+      <div className="aspect-[4/5] relative">
+        <Image
+          src={achiever.image}
+          alt={achiever.name}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="p-4">
+        <SubHeading text={achiever.name} size="small" color="black" />
+        <div className="flex justify-between items-center mt-2">
+          <div className="bg-red-100 px-3 py-1 rounded-full">
+            <TextLabel text={`AIR ${achiever.rank}`} color="blue" variant="tag" />
+          </div>
+          <TextLabel text={achiever.year} color="gray" variant="tag" />
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const TopAchievers = () => {
   // Create individual refs for each achiever
   const ref1 = React.useRef<HTMLDivElement>(null);
@@ -111,52 +145,9 @@ const TopAchievers = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {achievers.map((achiever, idx) => {
-              return (
-                <motion.div
-                  key={achiever.id}
-                  ref={refs[idx]}
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={
-                    isInViews[idx]
-                      ? { opacity: 1, y: 0 }
-                      : { opacity: 0, y: 40 }
-                  }
-                  transition={{ duration: 0.6, delay: idx * 0.1 }}
-                  className="bg-white rounded-lg overflow-hidden shadow-md"
-                >
-                  <div className="aspect-[4/5] relative">
-                    <Image
-                      src={achiever.image}
-                      alt={achiever.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <SubHeading
-                      text={achiever.name}
-                      size="small"
-                      color="black"
-                    />
-                    <div className="flex justify-between items-center mt-2">
-                      <div className="bg-red-100 px-3 py-1 rounded-full">
-                        <TextLabel
-                          text={`AIR ${achiever.rank}`}
-                          color="blue"
-                          variant="tag"
-                        />
-                      </div>
-                      <TextLabel
-                        text={achiever.year}
-                        color="gray"
-                        variant="tag"
-                      />
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+            {achievers.map((achiever, idx) => (
+              <AchieverCard key={achiever.id} achiever={achiever} idx={idx} />
+            ))}
           </div>
         </div>
       </Container>

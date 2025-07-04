@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import ProgramHero from "../ProgramHero";
+import HeroSection from "@/components/common/HeroSection";
 import { 
   FiClock, FiRefreshCw, FiSearch, FiTarget,
   FiCheckCircle, FiBook, FiGlobe, FiDollarSign,
@@ -253,16 +253,24 @@ const CANASuccess = () => {
 };
 
 export default function CANAProgram() {
+  const buttons = (
+    <div className="flex justify-center gap-4">
+      <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+        Join CANA
+      </button>
+      <button className="bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+        Learn More
+      </button>
+    </div>
+  );
+
   return (
     <div className="program-page">
       <Header />
-      <ProgramHero
+      <HeroSection
         title="Current Affairs and News Analysis (CANA)"
-        shortName="CANA"
         description="Stay ahead with daily current affairs coverage and analytical skills for UPSC success"
-        duration="Ongoing"
-        bgColor="#e31837"
-        textColor="text-white"
+        buttons={buttons}
       />
       <WhyCANAMatters />
       <CANAFeatures />

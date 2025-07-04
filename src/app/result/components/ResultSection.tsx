@@ -69,6 +69,10 @@ const ResultSection = () => {
 
   useEffect(() => {
     if (!fadeActive) return;
+    
+    // Store current refs to avoid closure issues
+    const currentRefs = cardRefs.current;
+    
     const observer = new window.IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -82,21 +86,24 @@ const ResultSection = () => {
       },
       { threshold: 0.2 }
     );
-    cardRefs.current.forEach((ref) => {
+
+    currentRefs.forEach((ref) => {
       if (ref) observer.observe(ref);
     });
+
     return () => {
-      cardRefs.current.forEach((ref) => {
+      currentRefs.forEach((ref) => {
         if (ref) observer.unobserve(ref);
       });
       observer.disconnect();
     };
-  }, [fadeActive, selectedYear]);
+  }, [fadeActive]);
 
   return (
     <div className="results-section py-16 ">
       <Container >
         <div className="text-center mb-12">
+         
           <div className="inline-block bg-[#1e3a8a] px-8 py-3 rounded-full">
             <SubHeading text="The Most Genuine Results in Kerala" color="white" size="medium" />
           </div>

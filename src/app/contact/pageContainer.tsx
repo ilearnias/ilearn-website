@@ -2,8 +2,8 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { useTranslation } from "react-i18next";
-import { Container } from "react-bootstrap";
-import { FaPhone, FaWhatsapp, FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { FaPhone, FaWhatsapp, FaEnvelope, FaMapMarkerAlt, FaClock, FaArrowRight } from "react-icons/fa";
+import Container from "@/components/common/Container";
 import HeroSection from "@/components/common/HeroSection";
 import "./styles.scss";
 
@@ -11,77 +11,126 @@ const PageContainer = () => {
   const { t } = useTranslation();
 
   return (
-    <>
+    <div className="min-h-screen bg-gray-50">
       <Header />
       <HeroSection title="Get in Touch" pageName="Contact Us" />
-      <div className="contact-container">
-        <Container>
-          <div className="contact-header text-center">
-            <h2>
+      
+      <section className="contact-section py-16">
+        <Container className="space-y-12">
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Contact <span className="text-primary">Us</span>
             </h2>
-            <p className="subtitle">
+            <p className="text-gray-600 text-lg">
               Get in touch with us for inquiries about our programs, admission process,
               or to schedule a counselling session.
             </p>
           </div>
 
-          <div className="contact-details">
-            <div className="location-info">
-              <div className="info-item">
-                <FaMapMarkerAlt className="icon" />
-                <div className="info-content">
-                  <h2>Our Location</h2>
-                  <p>iLearn IAS Academy, Minchin Road, Chakka, Thiruvananthapuram, Kerala 695011</p>
-                </div>
-              </div>
-              <div className="info-item">
-                <FaClock className="icon" />
-                <div className="info-content">
-                  <h2>Working Hours</h2>
-                  <p>Monday to Saturday: 9:00 AM - 8:00 PM</p>
-                  <p>Sunday: Closed (Online support available)</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="contact-methods">
-              <div className="contact-method">
-                <FaPhone className="icon" />
-                <div className="method-content">
-                  <h3>Phone</h3>
-                  <p>8089166792</p>
-                  <a href="tel:8089166792" className="contact-link">
-                    Call Now
-                  </a>
-                </div>
-              </div>
-
-              <div className="contact-method">
-                <FaWhatsapp className="icon" />
-                <div className="method-content">
-                  <h3>WhatsApp</h3>
-                  <p>Chat with us for quick responses</p>
-                  <div className="whatsapp-links">
-                    <a href="#" className="contact-link">Chat Now</a>
-                    <a href="#" className="contact-link">Send Inquiry</a>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+            <div className="contact-info-container space-y-8">
+              <div className="contact-card bg-white rounded-xl p-6 shadow-md transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="icon-container p-3 bg-primary/10 rounded-lg transition-all duration-300">
+                    <FaMapMarkerAlt className="text-2xl text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Our Location</h3>
+                    <p className="text-gray-600">
+                      iLearn IAS Academy, Minchin Road, Chakka,<br />
+                      Thiruvananthapuram, Kerala 695011
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="contact-method">
-                <FaEnvelope className="icon" />
-                <div className="method-content">
-                  <h3>Email</h3>
-                  <p>ilearnoffic@gmail.com</p>
-                  <a href="mailto:ilearnoffic@gmail.com" className="contact-link">
-                    Send Email
-                  </a>
+              <div className="contact-card bg-white rounded-xl p-6 shadow-md transition-all duration-300">
+                <div className="flex items-start space-x-4">
+                  <div className="icon-container p-3 bg-primary/10 rounded-lg transition-all duration-300">
+                    <FaClock className="text-2xl text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2">Working Hours</h3>
+                    <p className="text-gray-600">Monday to Saturday: 9:00 AM - 8:00 PM</p>
+                    <p className="text-gray-600">Sunday: Closed (Online support available)</p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="map-container mt-5">
+            <div className="grid grid-cols-1 gap-6">
+              <div className="contact-card bg-white rounded-xl p-6 shadow-md transition-all duration-300">
+                <div className="flex items-start space-x-4 h-full">
+                  <div className="icon-container p-3 bg-primary/10 rounded-lg transition-all duration-300">
+                    <FaPhone className="text-2xl text-primary" />
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2">Phone</h3>
+                      <p className="text-gray-600 mb-3">8089166792</p>
+                    </div>
+                    <div className="mt-auto">
+                      <a 
+                        href="tel:8089166792" 
+                        className="inline-flex items-center text-primary hover:text-primary-dark font-medium group"
+                      >
+                        Call Now <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="contact-card bg-white rounded-xl p-6 shadow-md transition-all duration-300">
+                <div className="flex items-start space-x-4 h-full">
+                  <div className="icon-container p-3 bg-primary/10 rounded-lg transition-all duration-300">
+                    <FaWhatsapp className="text-2xl text-primary" />
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2">WhatsApp</h3>
+                      <p className="text-gray-600 mb-3">Chat with us for quick responses</p>
+                    </div>
+                    <div className="mt-auto">
+                      <a 
+                        href="https://wa.me/918089166792" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="inline-flex items-center text-primary hover:text-primary-dark font-medium group"
+                      >
+                        Chat Now <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="contact-card bg-white rounded-xl p-6 shadow-md transition-all duration-300">
+                <div className="flex items-start space-x-4 h-full">
+                  <div className="icon-container p-3 bg-primary/10 rounded-lg transition-all duration-300">
+                    <FaEnvelope className="text-2xl text-primary" />
+                  </div>
+                  <div className="flex-1 flex flex-col">
+                    <div>
+                      <h3 className="text-xl font-semibold mb-2">Email</h3>
+                      <p className="text-gray-600 mb-3">ilearnoffic@gmail.com</p>
+                    </div>
+                    <div className="mt-auto">
+                      <a 
+                        href="mailto:ilearnoffic@gmail.com" 
+                        className="inline-flex items-center text-primary hover:text-primary-dark font-medium group"
+                      >
+                        Send Email <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="map-container mt-12">
+            <div className="bg-white rounded-xl p-2 shadow-lg">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3945.8943246953245!2d76.91642631478386!3d8.482843793901775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b05bbed1cc8f575%3A0x3a9fb8736d3e8590!2siLearn%20IAS%20Academy!5e0!3m2!1sen!2sin!4v1647887817943!5m2!1sen!2sin"
                 width="100%"
@@ -90,13 +139,13 @@ const PageContainer = () => {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
+                className="rounded-lg"
               ></iframe>
             </div>
           </div>
         </Container>
-      </div>
-     
-    </>
+      </section>
+    </div>
   );
 };
 

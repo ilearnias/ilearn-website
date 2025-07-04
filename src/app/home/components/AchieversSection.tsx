@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import "./styles.scss";
 import Image from "next/image";
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
@@ -48,7 +49,7 @@ const AchieverCard: React.FC<AchieverCardProps> = ({
       </div>
       <div className="achiever-info">
         <div className="air-rank">{airRank}</div>
-        <h3 className="achiever-name">{name}</h3>
+        <Heading text={name} className="!text-lg !font-semibold !leading-normal" />
       </div>
     </motion.div>
   );
@@ -116,7 +117,7 @@ const AchieversSection = () => {
           viewport={{ once: false }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="section-title">Our Proud Achievers</h2>
+          <Heading text="Our Proud Achievers" className="!text-center !mb-4" animate={true} />
           <p className="section-subtitle">
             Success stories of India&apos;s future leaders
           </p>

@@ -4,13 +4,14 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
+import Image from "next/image";
 import HeroSection from "@/components/common/HeroSection";
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import Container from "@/components/common/Container";
 import { Drawer } from "antd";
 import { FiFilter } from "react-icons/fi";
-import Image from "next/image";
+import Heading from "@/components/common/Heading";
 
 // Dummy blog data
 const blogPosts = [
@@ -75,9 +76,22 @@ function BlogCard({
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       {/* <img src={image} alt={title} className="blog-card-img" /> */}
-      <Image src={image} alt={title} className="blog-card-img" />
+      {/* <Image src={image} alt={title} className="blog-card-img" /> */}
+      <div className="relative w-full aspect-[16/9]">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+      </div>
       <div className="blog-card-content">
-        <h3 className="blog-card-title">{title}</h3>
+        <Heading 
+          text={title}
+          className="!text-xl !font-semibold !leading-normal"
+          animate={false}
+        />
         <p className="blog-card-desc">{description}</p>
       </div>
     </motion.div>
@@ -171,7 +185,11 @@ export default function BlogPage() {
                 >
                   <div className="sidebar-mobile-wrap">
                     <div className="categories-section">
-                      <h2>Categories</h2>
+                      <Heading 
+                        text="Categories"
+                        className="!text-xl !font-semibold !mb-4"
+                        animate={false}
+                      />
                       <div className="category-list ">
                         {categories.map((cat) => (
                           <button
@@ -190,8 +208,14 @@ export default function BlogPage() {
                       </div>
                     </div>
                     <div className="tags-section">
-                      <h2>Popular Tags</h2>
-                      <div className="tags-list">{/* Add tags here */}</div>
+                      <Heading 
+                        text="Popular Tags"
+                        className="!text-xl !font-semibold !mb-4"
+                        animate={false}
+                      />
+                      <div className="tags-list">
+                        {/* Add tags here */}
+                      </div>
                     </div>
                   </div>
                 </Drawer>
@@ -200,7 +224,11 @@ export default function BlogPage() {
               <div className="blog-sidebar">
                 <div className="sidebar-mobile-wrap  mt-[1rem]">
                   <div className="categories-section ">
-                    <h2>Categories</h2>
+                    <Heading 
+                      text="Categories"
+                      className="!text-xl !font-semibold !mb-4"
+                      animate={false}
+                    />
                     <div className="category-list ">
                       {categories.map((cat) => (
                         <button
@@ -216,8 +244,14 @@ export default function BlogPage() {
                     </div>
                   </div>
                   <div className="tags-section">
-                    <h2>Popular Tags</h2>
-                    <div className="tags-list">{/* Add tags here */}</div>
+                    <Heading 
+                      text="Popular Tags"
+                      className="!text-xl !font-semibold !mb-4"
+                      animate={false}
+                    />
+                    <div className="tags-list">
+                      {/* Add tags here */}
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Merriweather } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
@@ -8,7 +8,11 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Providers from "@/components/Providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const merriweather = Merriweather({
+  weight: ['300', '400', '700', '900'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "iLearn - Your Path to UPSC Success",
@@ -58,7 +62,7 @@ export default function RootLayout({
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
       </head>
-      <body className={inter.className}>
+      <body className={merriweather.className}>
         <AntdRegistry>
           <LoadingProvider>
             <Header />

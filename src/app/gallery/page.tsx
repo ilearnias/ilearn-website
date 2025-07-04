@@ -3,6 +3,8 @@ import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Container from "@/components/common/Container";
+import HeroSection from "@/components/common/HeroSection";
+import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
 import GalleryComponent from "./components/GalleryComponent";
 import "./styles.scss";
@@ -63,46 +65,50 @@ const GalleryPage = () => {
   return (
     <div className="gallery-page">
       <Header />
-      <div className="hero-section bg-gray-900">
+      
+      <HeroSection
+        title={t('gallery-HeaderTxt')}
+        description={t('gallery-HeaderSubTxt')}
+        className="gallery-hero"
+      />
+
+      <div className="gallery-content">
         <Container>
-          <Fade direction="up">
-            <div className="hero-content">
-              <h1 className="hero-title text-white">{t('gallery-HeaderTxt')}</h1>
-              <p className="hero-subtitle text-gray-300">{t('gallery-HeaderSubTxt')}</p>
-            </div>
-          </Fade>
+          <section className="gallery-section">
+            <Fade direction="up">
+              <div className="section-header">
+                <Heading 
+                  text={t("Onam_Celebration")} 
+                  color="white"
+                  className="section-title"
+                />
+                <p className="section-subtitle">
+                  {t("Onam_Celebration_Subtitle")}
+                </p>
+              </div>
+            </Fade>
+            <GalleryComponent images={galleryImages} />
+          </section>
+
+          <section className="gallery-section">
+            <Fade direction="up">
+              <div className="section-header">
+                <Heading 
+                  text={t("Life_At_iLearn")} 
+                  color="white"
+                  className="section-title"
+                />
+                <p className="section-subtitle">
+                  {t("Life_At_iLearn_Subtitle")}
+                </p>
+              </div>
+            </Fade>
+            <GalleryComponent images={galleryImages} />
+          </section>
         </Container>
       </div>
 
-      <section className="gallery-section">
-        <Container>
-          <Fade direction="up">
-            <div className="section-header">
-              <h2 className="section-title">{t("Onam_Celebration")}</h2>
-              <p className="section-subtitle">
-                {t("Onam_Celebration_Subtitle")}
-              </p>
-            </div>
-          </Fade>
-        </Container>
-        <GalleryComponent images={galleryImages} />
-      </section>
-
-      <section className="gallery-section bg-gray-50">
-        <Container>
-          <Fade direction="up">
-            <div className="section-header">
-              <h2 className="section-title">{t("Life_At_iLearn")}</h2>
-              <p className="section-subtitle">
-                {t("Life_At_iLearn_Subtitle")}
-              </p>
-            </div>
-          </Fade>
-        </Container>
-        <GalleryComponent images={galleryImages} />
-      </section>
-
-      <Footer />
+   
     </div>
   );
 }

@@ -165,10 +165,10 @@
   padding-top: 15vh;
   background-image: url("../assets/images/bg-abt.png"),
     linear-gradient(to right, vars.$primary, vars.$primary);
-  // background-image: linear-gradient(to right, vars.$primary, vars.$primary);
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+  
   @media screen and (min-width: 320px) and (max-width: 768px) {
     padding: 10px;
     padding-top: 15vh;
@@ -381,6 +381,56 @@ a {
         .active {
           color: #f04c24;
         }
+      }
+    }
+  }
+}
+
+.contact-section {
+  .text-primary {
+    color: vars.$primary;
+  }
+
+  .bg-primary\/10 {
+    background-color: rgba(vars.$primary, 0.1);
+  }
+
+  .text-primary-dark:hover {
+    color: darken(vars.$primary, 10%);
+  }
+
+  .contact-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
+
+      .icon-container {
+        background-color: vars.$primary;
+        
+        svg {
+          color: white;
+          transform: scale(1.1);
+        }
+      }
+    }
+
+    .icon-container {
+      svg {
+        transition: all 0.3s ease;
+      }
+    }
+  }
+
+  .map-container {
+    iframe {
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: scale(1.005);
       }
     }
   }

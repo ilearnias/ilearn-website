@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 import { useLoading } from '@/components/common/LoadingProvider';
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 
 const HeroSection = () => {
   const cardRef = useRef<HTMLDivElement | null>(null);
@@ -34,7 +35,11 @@ const HeroSection = () => {
         <Row className="align-items-center">
           <Col md={6}>
             <div className="app-content">
-              <h1>Learn Anytime, Anywhere</h1>
+              <Heading 
+                text="Learn Anytime, Anywhere"
+                className="!text-4xl md:!text-5xl lg:!text-6xl !font-bold !mb-4"
+                animate={true}
+              />
               <p>Download the iLearn IAS app and start your UPSC preparation journey today.</p>
               <div className="app-store-buttons">
                 <a href="#" className="store-button google-play">

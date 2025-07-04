@@ -3,6 +3,7 @@ import React from 'react';
 import './styles.scss';
 import Button from '@/components/common/Button';
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { FaPhone } from 'react-icons/fa6';
 import { HiDownload } from 'react-icons/hi';
 
@@ -12,9 +13,11 @@ const ApplySection = () => {
         <div className="apply-section w-full mx-0 border-2 border-green-200 p-4 md:p-8">
             <div className="apply-content flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
               <div className="apply-text w-full md:w-2/3">
-                <h1 className="text-2xl md:text-3xl lg:text-4xl mb-4">
-                  Ready to Begin Your <span className="underline">Civil Service</span> Journey?
-                </h1>
+                <Heading 
+                  text={<>Ready to Begin Your <span className="underline">Civil Service</span> Journey?</>}
+                  className="!text-2xl md:!text-3xl lg:!text-4xl !mb-4"
+                  animate={true}
+                />
                 <p className="text-base md:text-lg mb-6">
                   Join Kerala&apos;s most trusted civil service coaching institute. Schedule a free
                   counseling session with our experts to discuss your preparation strategy.

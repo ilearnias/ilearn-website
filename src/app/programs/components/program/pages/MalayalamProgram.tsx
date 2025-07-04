@@ -3,18 +3,27 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import ProgramHero from "../ProgramHero";
+import HeroSection from "@/components/common/HeroSection";
 
 export default function MalayalamProgram() {
+  const buttons = (
+    <div className="flex justify-center gap-4">
+      <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+        Join Malayalam Literature
+      </button>
+      <button className="bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+        Learn More
+      </button>
+    </div>
+  );
+
   return (
     <div className="program-page">
       <Header />
-      <ProgramHero
-        title="Malayalam Literature Optional"
-        shortName="Malayalam Literature"
-        description="Specialized coaching for Malayalam literature optional covering classical and modern literature, poetry, drama, and literary criticism."
-        duration="6 months"
-        bgColor="#f0f2f8"
+      <HeroSection
+        title="Malayalam Literature"
+        description="Expert guidance for Malayalam Literature optional"
+        buttons={buttons}
       />
       {/* Additional sections will be added here based on the details you provide */}
       <Footer />

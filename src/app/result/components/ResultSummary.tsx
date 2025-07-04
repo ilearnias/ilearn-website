@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import Heading from '@/components/common/Heading';
 import SubHeading from '@/components/common/SubHeading';
 import TextLabel from '@/components/common/TextLabel';
 import Container from '@/components/common/Container';
@@ -77,7 +78,11 @@ const ResultSummary = () => {
   return (
     <Container className="py-12  ">
       <div className="bg-white rounded-lg  py-6 ">
-        <h2 className='font-bold text-5xl'  >Results Summary</h2>
+        <Heading 
+          text="Results Summary"
+          className="!text-3xl md:!text-4xl lg:!text-5xl !font-bold"
+          animate={true}
+        />
         {/* Mobile List View */}
         <div className="block md:hidden mt-8">
           <div className="bg-blue-50 rounded-lg divide-y">

@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import ProgramHero from "../ProgramHero";
+import HeroSection from "@/components/common/HeroSection";
 import { 
   FiUsers, FiUserPlus, FiMessageCircle, FiCheckCircle,
   FiClock, FiHelpCircle, FiVideo
@@ -155,15 +155,24 @@ const CallToAction = () => {
 };
 
 export default function IGProgram() {
+  const buttons = (
+    <div className="flex justify-center gap-4">
+      <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+        Join Interview Guidance
+      </button>
+      <button className="bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+        Learn More
+      </button>
+    </div>
+  );
+
   return (
     <div className="program-page">
       <Header />
-      <ProgramHero
-        title="Interview Guidance Program (IGP)"
-        shortName="IGP"
-        description="Specialized program for UPSC Personality Test preparation with mock interviews and expert guidance."
-        duration="2 months"
-        bgColor="#f8f0f0"
+      <HeroSection
+        title="Interview Guidance"
+        description="Expert guidance for UPSC personality test"
+        buttons={buttons}
       />
       <ProgramHighlights />
       <StudentTestimonials />

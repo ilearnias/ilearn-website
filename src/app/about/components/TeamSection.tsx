@@ -1,5 +1,6 @@
 import { Row, Col } from "react-bootstrap";
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
@@ -53,7 +54,13 @@ const TeamSection = () => {
     <section className="team-section" aria-labelledby="team-section-title">
       <Container>
         <Fade>
-          <h2 className="section-title" id="team-section-title">Our Leadership Team</h2>
+          <div id="team-section-title">
+            <Heading 
+              text="Our Leadership Team"
+              className="!text-center !mb-4"
+              animate={true}
+            />
+          </div>
           <p className="section-subtitle text-center mb-5">
             Meet the experts who guide aspirants towards their UPSC dreams
           </p>
@@ -97,7 +104,13 @@ const TeamSection = () => {
                     </div>
                   </div>
                   <div className="member-info">
-                    <h3 className="member-name" id={`member-name-${index}`}>{member.name}</h3>
+                    <div id={`member-name-${index}`}>
+                      <Heading 
+                        text={member.name}
+                        className="!text-lg !font-semibold !leading-normal"
+                        animate={false}
+                      />
+                    </div>
                     <div className="member-role">{member.role}</div>
                     <p className="member-description">{member.description}</p>
                   </div>

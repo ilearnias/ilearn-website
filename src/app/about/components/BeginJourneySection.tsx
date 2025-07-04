@@ -1,4 +1,5 @@
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -41,9 +42,13 @@ const BeginJourneySection = () => {
       <Container>
         <div className="text-center">
           <Fade cascade damping={0.2}>
-            <h1 className="main-title" id="journey-title">
-              Ready to Begin Your <span className="text-red">UPSC Journey</span> With Us?
-            </h1>
+            <div id="journey-title">
+              <Heading 
+                text={<>Ready to Begin Your <span className="text-red">UPSC Journey</span> With Us?</>}
+                className="!text-3xl md:!text-4xl lg:!text-5xl !mb-4"
+                animate={true}
+              />
+            </div>
             <p className="description">
               Join the thousands of students who have transformed their dream of
               becoming a civil servant into reality with iLearn IAS Academy&apos;s guidance.

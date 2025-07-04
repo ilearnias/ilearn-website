@@ -202,13 +202,24 @@ const CallToAction = () => {
 };
 
 export default function SociologyProgram() {
+  const buttons = (
+    <div className="flex justify-center gap-4">
+      <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+        Join Sociology Optional
+      </button>
+      <button className="bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+        Learn More
+      </button>
+    </div>
+  );
+
   return (
     <div className="program-page">
       <Header />
       <HeroSection
         title="Sociology Optional"
-        pageName="Expert coaching for Sociology as an optional subject for UPSC Mains examination"
-        className="program-box1"
+        description="Master sociology with our comprehensive optional course"
+        buttons={buttons}
       />
       <ProgramHighlights />
       <StudentTestimonials />

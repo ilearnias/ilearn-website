@@ -3,6 +3,7 @@ import { FaStar, FaMobileAlt, FaLock, FaRocket } from "react-icons/fa";
 import { IconType } from "react-icons";
 import Container from "@/components/common/Container";
 import { motion } from "framer-motion";
+import Heading from "@/components/common/Heading";
 
 type Feature = {
   title: string;
@@ -16,7 +17,11 @@ const defaultIcons: IconType[] = [FaStar, FaMobileAlt, FaLock, FaRocket];
 const FeaturesSection = ({ features }: { features: Feature[] }) => (
   <section className="features-section">
     <Container>
-      <h2 className="font-bold text-center text-5xl pb-2">App Features</h2>
+      <Heading 
+        text="App Features"
+        className="!text-center !text-4xl !font-bold !mb-8"
+        animate={true}
+      />
       <Row className="feature-row">
         {features.map((feature, index) => {
           const Icon = feature.icon || defaultIcons[index % defaultIcons.length];
@@ -32,7 +37,10 @@ const FeaturesSection = ({ features }: { features: Feature[] }) => (
                 <div className="feature-icon">
                   <Icon />
                 </div>
-                <h3>{feature.title}</h3>
+                <Heading 
+                  text={feature.title}
+                  className="!text-xl !font-semibold !mb-2"
+                />
                 <p>{feature.description}</p>
               </motion.div>
             </Col>

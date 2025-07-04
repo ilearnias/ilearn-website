@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import './styles.scss';
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 
 const ProgramsSection = () => {
   useEffect(() => {
@@ -41,7 +42,11 @@ const ProgramsSection = () => {
     <div className="programs-section">
       <Container>
         <div className="section-header">
-          <h2><span className="text-primary">Our</span> <span className="text-accent">Programs</span></h2>
+          <Heading 
+            text={<><span className="text-primary">Our</span> <span className="text-accent">Programs</span></>}
+            className="!text-center !mb-4"
+            animate={true}
+          />
           <p className="description">
             Specialized training programs designed for your success in civil service examinations with proven results.
           </p>
@@ -53,7 +58,10 @@ const ProgramsSection = () => {
               <i className="fas fa-university"></i>
             </div>
             <div className="content">
-              <h3>Prelims Cum Mains <span className="highlight">(PCM Program)</span></h3>
+              <Heading 
+                text={<>Prelims Cum Mains <span className="highlight">(PCM Program)</span></>}
+                className="!text-xl !font-semibold !leading-normal"
+              />
               <p>
                 Comprehensive classroom program covering both preliminary and main examinations with proven methodology.
               </p>
@@ -71,7 +79,10 @@ const ProgramsSection = () => {
               <i className="fas fa-newspaper"></i>
             </div>
             <div className="content">
-              <h3>Current Affairs and News Analysis <span className="highlight">(CANA)</span></h3>
+              <Heading 
+                text={<>Current Affairs and News Analysis <span className="highlight">(CANA)</span></>}
+                className="!text-xl !font-semibold !leading-normal"
+              />
               <p>
                 Stay updated with the latest current affairs and develop analytical skills essential for UPSC examinations.
               </p>

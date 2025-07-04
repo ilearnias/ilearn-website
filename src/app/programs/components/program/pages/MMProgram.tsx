@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import ProgramHero from "../ProgramHero";
+import HeroSection from "@/components/common/HeroSection";
 import { 
   FiUser, FiUsers, FiCheckCircle, FiClock,
   FiFileText, FiMessageSquare, FiAward, FiStar
@@ -238,16 +238,25 @@ const FAQSection = () => {
   );
 };
 
-const MMProgram = () => {
+export default function MMProgram() {
+  const buttons = (
+    <div className="flex justify-center gap-4">
+      <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+        Join Mains Mastery
+      </button>
+      <button className="bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+        Learn More
+      </button>
+    </div>
+  );
+
   return (
     <div className="program-page">
       <Header />
-      <ProgramHero
-        title="Mains Test Series"
-        shortName="MTS"
-        description="Comprehensive test series to prepare for the UPSC CSE Mains examination with detailed evaluation and feedback."
-        duration="4 months"
-        bgColor="#f0f8f4"
+      <HeroSection
+        title="Mains Mastery Program"
+        description="Master UPSC Mains with our comprehensive program"
+        buttons={buttons}
       />
       <ExpertFaculty />
       <ProgramHighlights />
@@ -256,6 +265,4 @@ const MMProgram = () => {
       <Footer />
     </div>
   );
-};
-
-export default MMProgram; 
+} 

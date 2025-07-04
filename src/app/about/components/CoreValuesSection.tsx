@@ -1,5 +1,6 @@
 import { Row, Col } from "react-bootstrap";
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
 import { useTranslation } from "react-i18next";
 import { coreValues, CoreValue } from "../data/coreValues";
@@ -23,7 +24,13 @@ const CoreValuesSection = () => {
     <section className="core-values-section" aria-labelledby="core-values-title">
       <Container>
         <Fade>
-          <h2 className="section-title" id="core-values-title">Our Core Values</h2>
+          <div id="core-values-title">
+            <Heading 
+              text="Our Core Values"
+              className="!text-center !mb-8"
+              animate={true}
+            />
+          </div>
         </Fade>
         <Row className="g-4">
           {coreValues.map((value: CoreValue, index: number) => (
@@ -39,7 +46,13 @@ const CoreValuesSection = () => {
                     <div className="icon-wrapper" aria-hidden="true">
                       {value.icon}
                     </div>
-                    <h3 className="title" id={`value-title-${index}`}>{value.title}</h3>
+                    <div id={`value-title-${index}`}>
+                      <Heading 
+                        text={value.title}
+                        className="!text-lg !font-semibold !leading-normal"
+                        animate={false}
+                      />
+                    </div>
                     <p className="description">{value.description}</p>
                   </div>
                   <div className="hover-effect"></div>

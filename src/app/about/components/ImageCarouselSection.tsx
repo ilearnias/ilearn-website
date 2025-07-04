@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
 import Image from 'next/image';
 import useEmblaCarousel, { UseEmblaCarouselType } from 'embla-carousel-react';
@@ -133,7 +134,11 @@ const ImageCarouselSection = () => {
     <div className="image-carousel-section">
       <Container>
         <Fade cascade triggerOnce>
-          <h2 className="section-title">Our Academy</h2>
+          <Heading 
+            text="Our Academy"
+            className="!text-center !mb-4"
+            animate={true}
+          />
           <p className="section-subtitle text-center mb-2">
             Take a virtual tour of our state-of-the-art facilities
           </p>

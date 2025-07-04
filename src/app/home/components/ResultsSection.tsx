@@ -2,6 +2,7 @@
 import React from 'react';
 import './styles.scss';
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { FaTrophy, FaChalkboardTeacher, FaUserGraduate } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
@@ -18,7 +19,7 @@ const ResultCard = ({ icon: Icon, title, description, index }: { icon: React.Ele
         <Icon size={32} />
       </div>
       <div className="card-content">
-        <h3>{title}</h3>
+        <Heading text={title} className="!text-xl !font-semibold !uppercase !leading-normal" />
         <p>{description}</p>
       </div>
     </motion.div>
@@ -47,16 +48,11 @@ const ResultsSection = () => {
   return (
     <section className="results-section w-full">
       <Container className='w-full'>
-        <motion.h2 
-          className="section-title"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.5 }}
-        >
-          Civil Service Examination 2024<br />
-          <span>Result Highlights</span>
-        </motion.h2>
+        <Heading 
+          text={<>Civil Service Examination 2024<br /><span>Result Highlights</span></>}
+          className="!text-center !mb-8"
+          animate={true}
+        />
         <div className="results-grid !w-full">
           {results.map((result, index) => (
             <ResultCard

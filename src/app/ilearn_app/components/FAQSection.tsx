@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Container from "@/components/common/Container";
 import { FiChevronDown } from "react-icons/fi";
-
+import Heading from "@/components/common/Heading";
 
 type FAQ = {
   question: string;
@@ -18,7 +18,11 @@ const FAQSection = ({ faqs }: { faqs: FAQ[] }) => {
   return (
     <section className="faq-section">
       <Container>
-        <h2 className="section-title text-center">Frequently Asked Questions</h2>
+        <Heading 
+          text="Frequently Asked Questions"
+          className="!text-center !text-4xl !font-bold !mb-8"
+          animate={true}
+        />
         <div className="faq-container">
           {faqs.map((faq, index) => (
             <div

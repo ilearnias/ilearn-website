@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import './styles.scss';
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 import { usePathname } from 'next/navigation';
 
 interface SuccessStory {
@@ -105,10 +106,11 @@ const SuccessStoriesSection = () => {
     <div className="success-stories-section ">
       <Container noPadding className="mx-0 md:mx-4 ">
         <div className="section-header">
-          <h2>
-            <span className="text-primary">Success</span>
-            <span className="text-accent"> Stories</span>
-          </h2>
+          <Heading 
+            text={<><span className="text-primary">Success</span><span className="text-accent"> Stories</span></>}
+            className="!text-center !mb-4"
+            animate={true}
+          />
           <p className="subtitle">
             See how our students achieved remarkable results in the civil services examination
           </p>
@@ -153,7 +155,7 @@ const SuccessStoriesSection = () => {
                   />
                 </div>
                 <div className="text-overlay">
-                  <h3>{story.name}</h3>
+                  <Heading text={story.name} className="!text-lg !font-semibold !leading-normal !text-white" />
                   <p className="achievement">{story.achievement}</p>
                   <p className="caption">{story.caption}</p>
                 </div>

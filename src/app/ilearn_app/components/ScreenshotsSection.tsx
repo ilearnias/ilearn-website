@@ -10,6 +10,7 @@ import {
 import { DotButton, useDotButton } from "../../about/components/carousel/EmblaCarouselDotButton";
 import "./styles/embla.scss";
 import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
 
 const TWEEN_FACTOR = 0.7;
 
@@ -143,7 +144,11 @@ const ScreenshotsSection = () => {
   return (
     <div className="image-carousel-section">
       <Container>
-        <h2 className="section-title text-center">App Screenshots</h2>
+        <Heading 
+          text="App Screenshots"
+          className="!text-center !text-4xl !font-bold !mb-4"
+          animate={true}
+        />
         <p className="section-subtitle text-center">Take a look at the intuitive interface and features of the iLearn IAS App.</p>
         <div className="screenshot-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
           {categories.map((cat) => (

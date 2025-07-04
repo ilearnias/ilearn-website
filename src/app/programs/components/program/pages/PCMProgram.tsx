@@ -3,7 +3,7 @@
 import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import ProgramHero from "../ProgramHero";
+import HeroSection from "@/components/common/HeroSection";
 import { 
   FiClock, FiUsers, FiAward, FiCheckCircle,
   FiBook, FiTarget, FiClipboard, FiMessageSquare,
@@ -216,15 +216,24 @@ const SuccessStories = () => {
 };
 
 export default function PCMProgram() {
+  const buttons = (
+    <div className="flex justify-center gap-4">
+      <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+        Join PCM Program
+      </button>
+      <button className="bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+        Learn More
+      </button>
+    </div>
+  );
+
   return (
     <div className="program-page">
       <Header />
-      <ProgramHero
-        title="Prelims Cum Mains (PCM) Program"
-        shortName="PCM Program"
-        description="Comprehensive classroom program with proven methodology and Kerala's highest success rate"
-        duration="12 months"
-        bgColor="#f0f4f8"
+      <HeroSection
+        title="Prelims Cum Mains Program"
+        description="Comprehensive preparation for both UPSC Prelims and Mains"
+        buttons={buttons}
       />
       <ProgramOverview />
       <ProgramFeatures />
