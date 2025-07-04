@@ -19,6 +19,7 @@ import {
   Select,
   InputNumber,
   DatePicker,
+  Switch,
 } from "antd";
 import {
   SearchOutlined,
@@ -56,7 +57,7 @@ const Results = () => {
     try {
       setLoading(true);
       const response = await resultService.getAllResults();
-      if (response.success) {
+      if (response.status) {
         setResults(response.data);
       } else {
         message.error(response.message || 'Failed to fetch results');
@@ -94,7 +95,7 @@ const Results = () => {
       onOk: async () => {
         try {
           const response = await resultService.deleteResult(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Result deleted successfully');
             fetchResults();
           } else {
@@ -111,6 +112,8 @@ const Results = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
+      // Ensure isActive is boolean (Switch already does this, but for safety)
+      values.isActive = Boolean(values.isActive);
       
       // Format dates
       if (values.examDate) {
@@ -119,7 +122,7 @@ const Results = () => {
 
       if (editingResult) {
         const response = await resultService.updateResult(editingResult.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Result updated successfully');
           setIsModalVisible(false);
           fetchResults();
@@ -128,10 +131,15 @@ const Results = () => {
         }
       } else {
         const response = await resultService.createResult(values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Result created successfully');
           setIsModalVisible(false);
-          fetchResults();
+          // If response.data is an array, update results with it, else refetch
+          if (Array.isArray(response.data)) {
+            setResults(response.data);
+          } else {
+            fetchResults();
+          }
         } else {
           message.error(response.message || 'Failed to create result');
         }
@@ -150,7 +158,7 @@ const Results = () => {
   const handleExportResults = async () => {
     try {
       const response = await resultService.exportResults();
-      if (response.success) {
+      if (response.status) {
         // Handle the export file download
         const blob = new Blob([response.data], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
@@ -173,13 +181,13 @@ const Results = () => {
 
   const filteredResults = results.filter(
     (result) =>
-      result.studentName.toLowerCase().includes(searchText.toLowerCase()) ||
-      result.subject.toLowerCase().includes(searchText.toLowerCase()) ||
-      result.examType.toLowerCase().includes(searchText.toLowerCase())
+      (result.studentName || '').toLowerCase().includes(searchText.toLowerCase()) ||
+      (result.subject || '').toLowerCase().includes(searchText.toLowerCase()) ||
+      (result.examType || '').toLowerCase().includes(searchText.toLowerCase())
   );
 
   const getGradeColor = (grade: string) => {
-    switch (grade.toUpperCase()) {
+    switch ((grade || '').toUpperCase()) {
       case 'A':
         return 'green';
       case 'B':
@@ -197,47 +205,27 @@ const Results = () => {
 
   const columns: ColumnsType<IResult> = [
     {
-      title: "Student",
-      key: "student",
-      render: (_, record) => (
-        <Space direction="vertical" size={0}>
-          <div style={{ fontWeight: 500 }}>{record.studentName}</div>
-          <div style={{ fontSize: "12px", color: "#666" }}>
-            ID: {record.studentId}
-          </div>
-        </Space>
+      title: "Year",
+      dataIndex: "year",
+      key: "year",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+    },
+    {
+      title: "Is Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive) => (
+        <Tag color={isActive ? "green" : "red"}>{isActive ? "Active" : "Inactive"}</Tag>
       ),
-    },
-    {
-      title: "Subject",
-      dataIndex: "subject",
-      key: "subject",
-      render: (subject) => (
-        <Tag color="blue">{subject}</Tag>
-      ),
-    },
-    {
-      title: "Exam Type",
-      dataIndex: "examType",
-      key: "examType",
-    },
-    {
-      title: "Score",
-      key: "score",
-      render: (_, record) => (
-        <Space>
-          <span style={{ fontWeight: 500 }}>{record.score}%</span>
-          <Tag color={getGradeColor(record.grade)}>{record.grade}</Tag>
-        </Space>
-      ),
-      sorter: (a, b) => a.score - b.score,
-    },
-    {
-      title: "Exam Date",
-      dataIndex: "examDate",
-      key: "examDate",
-      render: (date) => dayjs(date).format('YYYY-MM-DD'),
-      sorter: (a, b) => dayjs(a.examDate).unix() - dayjs(b.examDate).unix(),
     },
     {
       title: "Actions",
@@ -370,20 +358,20 @@ const Results = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="studentName"
-                label="Student Name"
-                rules={[{ required: true, message: "Please enter student name" }]}
+                name="year"
+                label="Year"
+                rules={[{ required: true, message: "Please enter year" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="studentId"
-                label="Student ID"
-                rules={[{ required: true, message: "Please enter student ID" }]}
+                name="description"
+                label="Description"
+                rules={[{ required: true, message: "Please enter description" }]}
               >
-                <Input />
+                <TextArea rows={4} />
               </Form.Item>
             </Col>
           </Row>
@@ -391,71 +379,24 @@ const Results = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="subject"
-                label="Subject"
-                rules={[{ required: true, message: "Please enter subject" }]}
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
               >
-                <Input />
+                <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="examType"
-                label="Exam Type"
-                rules={[{ required: true, message: "Please select exam type" }]}
+                name="isActive"
+                label="Is Active"
+                valuePropName="checked"
+                rules={[{ required: true, message: "Please select isActive" }]}
               >
-                <Select>
-                  <Option value="Midterm">Midterm</Option>
-                  <Option value="Final">Final</Option>
-                  <Option value="Quiz">Quiz</Option>
-                  <Option value="Assignment">Assignment</Option>
-                </Select>
+                <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
               </Form.Item>
             </Col>
           </Row>
-
-          <Row gutter={16}>
-            <Col span={8}>
-              <Form.Item
-                name="score"
-                label="Score (%)"
-                rules={[{ required: true, message: "Please enter score" }]}
-              >
-                <InputNumber min={0} max={100} style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                name="grade"
-                label="Grade"
-                rules={[{ required: true, message: "Please select grade" }]}
-              >
-                <Select>
-                  <Option value="A">A</Option>
-                  <Option value="B">B</Option>
-                  <Option value="C">C</Option>
-                  <Option value="D">D</Option>
-                  <Option value="F">F</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                name="examDate"
-                label="Exam Date"
-                rules={[{ required: true, message: "Please select exam date" }]}
-              >
-                <DatePicker style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item
-            name="remarks"
-            label="Remarks"
-          >
-            <TextArea rows={4} />
-          </Form.Item>
         </Form>
       </Modal>
     </div>

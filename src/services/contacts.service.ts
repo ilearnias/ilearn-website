@@ -47,7 +47,7 @@ export const contactService = {
 
   updateContact: async (id: string, data: Partial<IContact>) => {
     try {
-      const response = await apiRequest.put(`${API_ENDPOINTS.ADMIN.CONTACTS.UPDATE}/${id}`, data);
+      const response = await apiRequest.patch(`${API_ENDPOINTS.ADMIN.CONTACTS.UPDATE}/${id}`, data);
       return response;
     } catch (error) {
       console.error('Error updating contact:', error);
@@ -57,7 +57,7 @@ export const contactService = {
 
   deleteContact: async (id: string) => {
     try {
-      const response = await apiRequest.delete(`${API_ENDPOINTS.ADMIN.CONTACTS.DELETE}/${id}`);
+      const response = await apiRequest.delete(API_ENDPOINTS.ADMIN.CONTACTS.DELETE(id));
       return response;
     } catch (error) {
       console.error('Error deleting contact:', error);

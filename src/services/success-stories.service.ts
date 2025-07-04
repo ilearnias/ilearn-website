@@ -3,29 +3,18 @@ import { apiRequest, ApiResponse } from '../config/apiRequest';
 
 export interface ISuccessStory {
   id: string;
-  title: string;
-  content: string;
-  studentName: string;
-  course: string;
-  graduationYear: number;
-  currentPosition?: string;
-  company?: string;
-  testimonial?: string;
-  image?: string;
-  imageUrl?: string;
-  featured?: boolean;
-  status: 'draft' | 'published';
-  views?: number;
-  likes?: number;
-  isActive?: boolean;
-  achievementDate?: string;
-  category?: string;
-  achievement?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  name: string | null;
+  description: string | null;
+  details: string | null;
+  image: string | null;
+  order: number | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 }
 
-export interface ISuccessStoryCreate extends Omit<ISuccessStory, 'id' | 'createdAt' | 'updatedAt' | 'views'> {}
+export interface ISuccessStoryCreate extends Omit<ISuccessStory, 'id' | 'createdAt' | 'updatedAt'> {}
 export interface ISuccessStoryUpdate extends Partial<ISuccessStoryCreate> {}
 
 class SuccessStoryService {
@@ -58,7 +47,7 @@ class SuccessStoryService {
 
   async updateSuccessStory(id: string, data: ISuccessStoryUpdate): Promise<ApiResponse<ISuccessStory>> {
     try {
-      return await apiRequest.put<ISuccessStory>(API_ENDPOINTS.ADMIN.SUCCESS_STORIES.UPDATE(id), data);
+      return await apiRequest.patch<ISuccessStory>(API_ENDPOINTS.ADMIN.SUCCESS_STORIES.UPDATE(id), data);
     } catch (error) {
       console.error('Error updating success story:', error);
       throw error;

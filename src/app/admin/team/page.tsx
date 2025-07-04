@@ -19,6 +19,8 @@ import {
   Form,
   message,
   Select,
+  InputNumber,
+  Switch,
 } from "antd";
 import {
   SearchOutlined,
@@ -55,7 +57,7 @@ const Team = () => {
     try {
       setLoading(true);
       const response = await teamService.getAllTeamMembers();
-      if (response.success) {
+      if (response.status) {
         setTeamMembers(response.data);
       } else {
         message.error(response.message || 'Failed to fetch team members');
@@ -90,7 +92,7 @@ const Team = () => {
       onOk: async () => {
         try {
           const response = await teamService.deleteTeamMember(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Team member deleted successfully');
             fetchTeamMembers();
           } else {
@@ -107,10 +109,11 @@ const Team = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
+      values.order = Number(values.order);
+      values.isActive = Boolean(values.isActive);
       if (editingMember) {
         const response = await teamService.updateTeamMember(editingMember.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Team member updated successfully');
           setIsModalVisible(false);
           fetchTeamMembers();
@@ -119,7 +122,7 @@ const Team = () => {
         }
       } else {
         const response = await teamService.createTeamMember(values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Team member created successfully');
           setIsModalVisible(false);
           fetchTeamMembers();
@@ -149,46 +152,75 @@ const Team = () => {
     return status === 'active' ? "green" : "red";
   };
 
-  const columns: ColumnsType<ITeamMember> = [
+  const columns: ColumnsType<any> = [
     {
-      title: "Member",
-      key: "member",
-      render: (_, record) => (
-        <Space>
-          <Avatar src={record.image} icon={<UserOutlined />} />
-          <div>
-            <div style={{ fontWeight: 500 }}>{record.name}</div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              {record.email}
-            </div>
-          </div>
-        </Space>
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <img src={image || "/placeholder.png"} alt="Image" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
       ),
     },
     {
-      title: "Position",
-      dataIndex: "position",
-      key: "position",
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
-      render: (department) => (
-        <Tag color="blue">{department}</Tag>
-      ),
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag
-          color={getStatusColor(status)}
-          icon={status === "active" ? <CheckCircleOutlined /> : undefined}
-        >
-          {status.charAt(0).toUpperCase() + status.slice(1)}
-        </Tag>
+      title: "LinkedIn",
+      dataIndex: "linkedin",
+      key: "linkedin",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">LinkedIn</a> : null,
+    },
+    {
+      title: "Twitter",
+      dataIndex: "twitter",
+      key: "twitter",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">Twitter</a> : null,
+    },
+    {
+      title: "Facebook",
+      dataIndex: "facebook",
+      key: "facebook",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">Facebook</a> : null,
+    },
+    {
+      title: "Instagram",
+      dataIndex: "instagram",
+      key: "instagram",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">Instagram</a> : null,
+    },
+    {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+    },
+    {
+      title: "Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive) => (
+        <Tag color={isActive ? "green" : "red"}>{isActive ? "Active" : "Inactive"}</Tag>
       ),
     },
     {
@@ -291,7 +323,7 @@ const Team = () => {
         <Form
           form={form}
           layout="vertical"
-          initialValues={{ status: "active" }}
+          initialValues={{ isActive: true }}
         >
           <Row gutter={16}>
             <Col span={12}>
@@ -301,6 +333,35 @@ const Team = () => {
                 rules={[{ required: true, message: "Please enter name" }]}
               >
                 <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="designation"
+                label="Designation"
+                rules={[{ required: true, message: "Please enter designation" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: "Please enter description" }]}
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="image"
+                label="Image URL"
+                rules={[{ required: true, message: "Please enter image URL" }]}
+              >
+                <Input placeholder="https://example.com/image.jpg" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -320,35 +381,6 @@ const Team = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="position"
-                label="Position"
-                rules={[{ required: true, message: "Please enter position" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="department"
-                label="Department"
-                rules={[{ required: true, message: "Please enter department" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item
-            name="bio"
-            label="Bio"
-            rules={[{ required: true, message: "Please enter bio" }]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
                 name="phone"
                 label="Phone"
               >
@@ -357,47 +389,64 @@ const Team = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="status"
-                label="Status"
-                rules={[{ required: true, message: "Please select status" }]}
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
               >
-                <Select>
-                  <Select.Option value="active">Active</Select.Option>
-                  <Select.Option value="inactive">Inactive</Select.Option>
-                </Select>
+                <InputNumber min={0} style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="linkedin"
+                label="LinkedIn"
+                rules={[{ type: "url", message: "LinkedIn must be a URL address" }]}
+              >
+                <Input placeholder="https://linkedin.com/in/username" type="url" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="twitter"
+                label="Twitter"
+                rules={[{ type: "url", message: "Twitter must be a URL address" }]}
+              >
+                <Input placeholder="https://twitter.com/username" type="url" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="facebook"
+                label="Facebook"
+                rules={[{ type: "url", message: "Facebook must be a URL address" }]}
+              >
+                <Input placeholder="https://facebook.com/username" type="url" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="instagram"
+                label="Instagram"
+                rules={[{ type: "url", message: "Instagram must be a URL address" }]}
+              >
+                <Input placeholder="https://instagram.com/username" type="url" />
               </Form.Item>
             </Col>
           </Row>
 
           <Form.Item
-            name="image"
-            label="Image URL"
+            name="isActive"
+            label="Active Status"
+            valuePropName="checked"
+            rules={[{ required: true, message: "Please select active status" }]}
           >
-            <Input placeholder="https://example.com/image.jpg" />
-          </Form.Item>
-
-          <Form.Item label="Social Links" style={{ marginBottom: 0 }}>
-            <Form.Item
-              name={['socialLinks', 'linkedin']}
-              label="LinkedIn"
-              style={{ display: 'inline-block', width: 'calc(33% - 8px)' }}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name={['socialLinks', 'twitter']}
-              label="Twitter"
-              style={{ display: 'inline-block', width: 'calc(33% - 8px)', margin: '0 8px' }}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              name={['socialLinks', 'facebook']}
-              label="Facebook"
-              style={{ display: 'inline-block', width: 'calc(33% - 8px)' }}
-            >
-              <Input />
-            </Form.Item>
+            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
           </Form.Item>
         </Form>
       </Modal>

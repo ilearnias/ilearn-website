@@ -56,7 +56,7 @@ const BlogPosts = () => {
     try {
       setLoading(true);
       const response = await blogService.getAllPosts();
-      if (response.success) {
+      if (response.status) {
         setPosts(response.data);
       } else {
         message.error(response.message || 'Failed to fetch blog posts');
@@ -72,7 +72,7 @@ const BlogPosts = () => {
   const fetchCategories = async () => {
     try {
       const response = await blogService.getAllCategories();
-      if (response.success) {
+      if (response.status) {
         setCategories(response.data);
       } else {
         message.error(response.message || 'Failed to fetch categories');
@@ -108,7 +108,7 @@ const BlogPosts = () => {
       onOk: async () => {
         try {
           const response = await blogService.deletePost(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Post deleted successfully');
             fetchPosts();
           } else {
@@ -133,7 +133,7 @@ const BlogPosts = () => {
 
       if (editingPost) {
         const response = await blogService.updatePost(editingPost.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Post updated successfully');
           setIsModalVisible(false);
           fetchPosts();
@@ -142,7 +142,7 @@ const BlogPosts = () => {
         }
       } else {
         const response = await blogService.createPost(values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Post created successfully');
           setIsModalVisible(false);
           fetchPosts();

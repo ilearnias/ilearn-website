@@ -58,7 +58,7 @@ const Programmes = () => {
     try {
       setLoading(true);
       const response = await programmeService.getAllProgrammes();
-      if (response.success) {
+      if (response.status) {
         setProgrammes(response.data);
       } else {
         message.error(response.message || 'Failed to fetch programmes');
@@ -97,10 +97,15 @@ const Programmes = () => {
       onOk: async () => {
         try {
           const response = await programmeService.deleteProgramme(record.id);
-          if (response.success) {
+          console.log("response", response);
+          if (response.status) {
             message.success(response.message || 'Programme deleted successfully');
-            fetchProgrammes();
+            // Optimistically remove the deleted record:
+            setProgrammes((prev) =>
+              prev.filter((p) => p.id !== record.id)
+            );
           } else {
+            console.error('Delete error:', response);
             message.error(response.message || 'Failed to delete programme');
           }
         } catch (error: any) {
@@ -110,11 +115,11 @@ const Programmes = () => {
       },
     });
   };
+  
 
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
       // Format dates
       if (values.startDate) {
         values.startDate = values.startDate.format('YYYY-MM-DD');
@@ -122,22 +127,32 @@ const Programmes = () => {
       if (values.endDate) {
         values.endDate = values.endDate.format('YYYY-MM-DD');
       }
-
+      // Ensure price is a number
+      values.price = Number(values.price);
+      // Only send allowed fields
+      const allowedFields = [
+        'title', 'description', 'duration', 'status', 'price', 'order', 'isActive',
+        'category', 'startDate', 'endDate', 'instructor', 'enrollments', 'thumbnail'
+      ];
+      const filteredValues = Object.fromEntries(
+        Object.entries(values).filter(([key, value]) => allowedFields.includes(key) && value !== undefined)
+      );
       if (editingProgramme) {
         const response = await programmeService.updateProgramme(
           editingProgramme.id,
-          values
+          (filteredValues as unknown) as IProgrammeUpdate
         );
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Programme updated successfully');
           setIsModalVisible(false);
           fetchProgrammes();
         } else {
+          console.error('Update error:', response);
           message.error(response.message || 'Failed to update programme');
         }
       } else {
-        const response = await programmeService.createProgramme(values);
-        if (response.success) {
+        const response = await programmeService.createProgramme((filteredValues as unknown) as IProgrammeCreate);
+        if (response.status) {
           message.success(response.message || 'Programme created successfully');
           setIsModalVisible(false);
           fetchProgrammes();
@@ -159,7 +174,7 @@ const Programmes = () => {
   const filteredProgrammes = programmes.filter(
     (programme) =>
       programme.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      programme.category.toLowerCase().includes(searchText.toLowerCase())
+      (programme.description && programme.description.toLowerCase().includes(searchText.toLowerCase()))
   );
 
   const getCategoryColor = (category: string) => {
@@ -232,7 +247,7 @@ const Programmes = () => {
       dataIndex: "price",
       key: "price",
       render: (price) => `$${price}`,
-      sorter: (a, b) => a.price - b.price,
+      sorter: (a, b) => Number(a.price) - Number(b.price),
     },
     {
       title: "Actions",
@@ -304,7 +319,7 @@ const Programmes = () => {
           <Card>
             <Statistic
               title="Average Price"
-              value={programmes.length ? programmes.reduce((sum, p) => sum + p.price, 0) / programmes.length : 0}
+              value={programmes.length ? programmes.reduce((sum, p) => sum + Number(p.price), 0) / programmes.length : 0}
               prefix={<DollarOutlined />}
               precision={2}
             />
@@ -391,7 +406,6 @@ const Programmes = () => {
                 <Select>
                   <Option value="Active">Active</Option>
                   <Option value="Inactive">Inactive</Option>
-                  <Option value="Upcoming">Upcoming</Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -402,20 +416,21 @@ const Programmes = () => {
               <Form.Item
                 name="price"
                 label="Price"
-                rules={[{ required: true, message: "Please enter price" }]}
+                rules={[{ required: true, message: "Please enter price" }, { type: 'number', min: 0.01, message: 'Price must be a positive number' }]}
               >
                 <InputNumber
                   style={{ width: "100%" }}
-                  formatter={(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+                  formatter={(value: string | number | undefined) => `$ ${value ?? ''}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                  parser={(value: string | undefined) => (value ? value.replace(/\$\s?|(\,*)/g, "") : '')}
+                  min={0.01}
                 />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="maxEnrollments"
-                label="Maximum Enrollments"
-                rules={[{ required: true, message: "Please enter maximum enrollments" }]}
+                name="enrollments"
+                label="Enrollments"
+                rules={[{ required: true, message: "Please enter enrollments" }]}
               >
                 <InputNumber style={{ width: "100%" }} min={1} />
               </Form.Item>

@@ -19,6 +19,8 @@ import {
   Select,
   Image,
   DatePicker,
+  Switch,
+  InputNumber,
 } from "antd";
 import {
   SearchOutlined,
@@ -56,7 +58,7 @@ const SuccessStories = () => {
     try {
       setLoading(true);
       const response = await successStoryService.getAllSuccessStories();
-      if (response.success) {
+      if (response.status) {
         setStories(response.data);
       } else {
         message.error(response.message || 'Failed to fetch success stories');
@@ -79,7 +81,6 @@ const SuccessStories = () => {
     setEditingStory(record);
     form.setFieldsValue({
       ...record,
-      achievementDate: record.achievementDate ? dayjs(record.achievementDate) : undefined,
     });
     setIsModalVisible(true);
   };
@@ -94,7 +95,7 @@ const SuccessStories = () => {
       onOk: async () => {
         try {
           const response = await successStoryService.deleteSuccessStory(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Success story deleted successfully');
             fetchStories();
           } else {
@@ -111,15 +112,11 @@ const SuccessStories = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
-      // Format dates
-      if (values.achievementDate) {
-        values.achievementDate = values.achievementDate.format('YYYY-MM-DD');
-      }
-
+      values.isActive = Boolean(values.isActive);
+      values.order = Number(values.order);
       if (editingStory) {
         const response = await successStoryService.updateSuccessStory(editingStory.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Success story updated successfully');
           setIsModalVisible(false);
           fetchStories();
@@ -128,7 +125,7 @@ const SuccessStories = () => {
         }
       } else {
         const response = await successStoryService.createSuccessStory(values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Success story created successfully');
           setIsModalVisible(false);
           fetchStories();
@@ -149,68 +146,45 @@ const SuccessStories = () => {
 
   const filteredStories = stories.filter(
     (story) =>
-      (story.title?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-      (story.studentName?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-      (story.category?.toLowerCase() || "").includes(searchText.toLowerCase())
+      (story.name?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
+      (story.description?.toLowerCase() || "").includes(searchText.toLowerCase())
   );
 
   const columns: ColumnsType<ISuccessStory> = [
     {
-      title: "Story",
-      key: "story",
-      render: (_, record) => (
-        <Space>
-          <Image
-            src={record.imageUrl}
-            alt={record.title}
-            width={80}
-            height={80}
-            style={{ objectFit: 'cover', borderRadius: 4 }}
-            fallback="/placeholder-image.png"
-          />
-          <Space direction="vertical" size={0}>
-            <div style={{ fontWeight: 500 }}>{record.title}</div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              {record.studentName}
-            </div>
-          </Space>
-        </Space>
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Details",
+      dataIndex: "details",
+      key: "details",
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <Image src={image || "/placeholder-image.png"} alt="Image" width={80} height={80} style={{ objectFit: 'cover', borderRadius: 4 }} fallback="/placeholder-image.png" />
       ),
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category) => (
-        <Tag color="blue">{category}</Tag>
-      ),
-    },
-    {
-      title: "Achievement",
-      dataIndex: "achievement",
-      key: "achievement",
-      render: (achievement) => (
-        <Tag color="gold" icon={<StarOutlined />}>{achievement}</Tag>
-      ),
-    },
-    {
-      title: "Stats",
-      key: "stats",
-      render: (_, record) => (
-        <Space>
-          <Tag icon={<LikeOutlined />}>{record.likes}</Tag>
-          <Tag icon={<EyeOutlined />}>{record.views}</Tag>
-        </Space>
-      ),
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
     },
     {
       title: "Status",
       dataIndex: "isActive",
       key: "isActive",
       render: (isActive) => (
-        <Tag color={isActive ? "green" : "red"}>
-          {isActive ? "Active" : "Inactive"}
-        </Tag>
+        <Tag color={isActive ? "green" : "red"}>{isActive ? "Active" : "Inactive"}</Tag>
       ),
     },
     {
@@ -265,24 +239,6 @@ const SuccessStories = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
-              title="Total Views"
-              value={stories.reduce((sum, s) => sum + (s.views || 0), 0)}
-              prefix={<EyeOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Total Likes"
-              value={stories.reduce((sum, s) => sum + (s.likes || 0), 0)}
-              prefix={<LikeOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
               title="Active Stories"
               value={stories.filter(s => s.isActive).length}
               prefix={<UserOutlined />}
@@ -304,10 +260,10 @@ const SuccessStories = () => {
         </Button>
       </div>
 
-        <Table
+      <Table
         className="success-stories-table"
-          columns={columns}
-          dataSource={filteredStories}
+        columns={columns}
+        dataSource={filteredStories}
         rowKey="id"
         loading={loading}
       />
@@ -317,7 +273,7 @@ const SuccessStories = () => {
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
-        width={800}
+        width={600}
       >
         <Form
           form={form}
@@ -327,49 +283,19 @@ const SuccessStories = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="title"
-                label="Title"
-                rules={[{ required: true, message: "Please enter title" }]}
+                name="name"
+                label="Name"
+                rules={[{ required: true, message: "Please enter name" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                name="studentName"
-                label="Student Name"
-                rules={[{ required: true, message: "Please enter student name" }]}
+                name="image"
+                label="Image URL"
               >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Form.Item
-            name="imageUrl"
-            label="Image URL"
-            rules={[{ required: true, message: "Please enter image URL" }]}
-          >
-            <Input placeholder="https://example.com/image.jpg" />
-          </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="category"
-                label="Category"
-                rules={[{ required: true, message: "Please enter category" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="achievement"
-                label="Achievement"
-                rules={[{ required: true, message: "Please enter achievement" }]}
-              >
-                <Input />
+                <Input placeholder="https://example.com/image.jpg" />
               </Form.Item>
             </Col>
           </Row>
@@ -382,53 +308,34 @@ const SuccessStories = () => {
             <TextArea rows={4} />
           </Form.Item>
 
+          <Form.Item
+            name="details"
+            label="Details"
+          >
+            <TextArea rows={4} placeholder="Additional details (optional)" />
+          </Form.Item>
+
           <Row gutter={16}>
-            <Col span={8}>
+            <Col span={12}>
               <Form.Item
-                name="achievementDate"
-                label="Achievement Date"
-                rules={[{ required: true, message: "Please select date" }]}
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
               >
-                <DatePicker style={{ width: '100%' }} />
+                <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={12}>
               <Form.Item
-                name="likes"
-                label="Likes"
-                rules={[{ required: true, message: "Please enter likes count" }]}
+                name="isActive"
+                label="Status"
+                valuePropName="checked"
+                rules={[{ required: true, message: "Please select status" }]}
               >
-                <Input type="number" min={0} />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                name="views"
-                label="Views"
-                rules={[{ required: true, message: "Please enter views count" }]}
-              >
-                <Input type="number" min={0} />
+                <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
               </Form.Item>
             </Col>
           </Row>
-
-          <Form.Item
-            name="isActive"
-            label="Status"
-            valuePropName="checked"
-          >
-            <Select>
-              <Option value={true}>Active</Option>
-              <Option value={false}>Inactive</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="testimonial"
-            label="Testimonial"
-          >
-            <TextArea rows={4} placeholder="Student's testimonial or quote" />
-          </Form.Item>
         </Form>
       </Modal>
     </div>

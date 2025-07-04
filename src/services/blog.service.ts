@@ -68,7 +68,7 @@ class BlogService {
 
   async updatePost(id: string, data: IBlogPostUpdate): Promise<ApiResponse<IBlogPost>> {
     try {
-      return await apiRequest.put<IBlogPost>(API_ENDPOINTS.ADMIN.BLOG.POSTS.UPDATE(id), data);
+      return await apiRequest.patch<IBlogPost>(API_ENDPOINTS.ADMIN.BLOG.POSTS.UPDATE(id), data);
     } catch (error) {
       console.error('Error updating blog post:', error);
       throw error;
@@ -114,7 +114,7 @@ class BlogService {
 
   async updateCategory(id: string, data: IBlogCategoryUpdate): Promise<ApiResponse<IBlogCategory>> {
     try {
-      return await apiRequest.put<IBlogCategory>(API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.UPDATE(id), data);
+      return await apiRequest.patch<IBlogCategory>(API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.UPDATE(id), data);
     } catch (error) {
       console.error('Error updating blog category:', error);
       throw error;

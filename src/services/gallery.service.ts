@@ -60,7 +60,7 @@ export const galleryService = {
 
   updateImage: async (id: string, data: Partial<IGalleryImage>) => {
     try {
-      const response = await apiRequest.put(`${API_ENDPOINTS.ADMIN.GALLERY.IMAGES.UPDATE}/${id}`, data);
+      const response = await apiRequest.patch(`${API_ENDPOINTS.ADMIN.GALLERY.IMAGES.UPDATE}/${id}`, data);
       return response;
     } catch (error) {
       console.error('Error updating gallery image:', error);

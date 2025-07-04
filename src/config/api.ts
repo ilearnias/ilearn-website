@@ -35,7 +35,6 @@ export const API_ENDPOINTS = {
       DELETE: (id: string) => `/v1/admin/programs/${id}`,
     },
     
-
     // Success Stories management
     SUCCESS_STORIES: {
       LIST: '/v1/admin/success-stories',

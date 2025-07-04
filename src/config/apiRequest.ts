@@ -10,7 +10,7 @@ import { API_CONFIG } from './api';
 
 // Types for API response
 export interface ApiResponse<T = any> {
-  success: boolean;
+  status: boolean;
   data: T;
   message?: string;
   error?: string;

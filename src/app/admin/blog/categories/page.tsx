@@ -50,7 +50,7 @@ const BlogCategories = () => {
     try {
       setLoading(true);
       const response = await blogService.getAllCategories();
-      if (response.success) {
+      if (response.status) {
         setCategories(response.data);
       } else {
         message.error(response.message || 'Failed to fetch categories');
@@ -85,7 +85,7 @@ const BlogCategories = () => {
       onOk: async () => {
         try {
           const response = await blogService.deleteCategory(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Category deleted successfully');
             fetchCategories();
           } else {
@@ -105,7 +105,7 @@ const BlogCategories = () => {
       
       if (editingCategory) {
         const response = await blogService.updateCategory(editingCategory.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Category updated successfully');
           setIsModalVisible(false);
           fetchCategories();
@@ -114,7 +114,7 @@ const BlogCategories = () => {
         }
       } else {
         const response = await blogService.createCategory(values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Category created successfully');
           setIsModalVisible(false);
           fetchCategories();

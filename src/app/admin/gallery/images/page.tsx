@@ -53,7 +53,7 @@ const GalleryImages = () => {
     try {
       setLoading(true);
       const response = await galleryService.getAllImages();
-      if (response.success) {
+      if (response.status) {
         setImages(response.data);
       } else {
         message.error(response.message || 'Failed to fetch images');
@@ -88,7 +88,7 @@ const GalleryImages = () => {
       onOk: async () => {
         try {
           const response = await galleryService.deleteImage(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Image deleted successfully');
             fetchImages();
           } else {
@@ -108,7 +108,7 @@ const GalleryImages = () => {
       
       if (editingImage) {
         const response = await galleryService.updateImage(editingImage.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Image updated successfully');
           setIsModalVisible(false);
           fetchImages();
@@ -117,7 +117,7 @@ const GalleryImages = () => {
         }
       } else {
         const response = await galleryService.createImage(values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Image created successfully');
           setIsModalVisible(false);
           fetchImages();

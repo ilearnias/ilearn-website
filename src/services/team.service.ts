@@ -54,7 +54,7 @@ class TeamService {
 
   async updateTeamMember(id: string, data: ITeamMemberUpdate): Promise<ApiResponse<ITeamMember>> {
     try {
-      return await apiRequest.put<ITeamMember>(API_ENDPOINTS.ADMIN.TEAM.UPDATE(id), data);
+      return await apiRequest.patch<ITeamMember>(API_ENDPOINTS.ADMIN.TEAM.UPDATE(id), data);
     } catch (error) {
       console.error('Error updating team member:', error);
       throw error;

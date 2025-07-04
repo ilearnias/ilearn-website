@@ -54,7 +54,7 @@ const Contacts = () => {
     try {
       setLoading(true);
       const response = await contactService.getAllContacts();
-      if (response.success) {
+      if (response.status) {
         setContacts(response.data);
       } else {
         message.error(response.message || 'Failed to fetch contacts');
@@ -86,7 +86,7 @@ const Contacts = () => {
       onOk: async () => {
         try {
           const response = await contactService.deleteContact(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Contact deleted successfully');
             fetchContacts();
           } else {
@@ -106,7 +106,7 @@ const Contacts = () => {
       
       if (selectedContact) {
         const response = await contactService.updateContact(selectedContact.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Contact updated successfully');
           setIsModalVisible(false);
           fetchContacts();
@@ -165,39 +165,26 @@ const Contacts = () => {
     }
   };
 
-  const columns: ColumnsType<IContact> = [
+  const columns: ColumnsType<any> = [
     {
-      title: "Contact",
-      key: "contact",
-      render: (_, record) => (
-        <Space direction="vertical" size={0}>
-          <div style={{ fontWeight: 500 }}>{record.name}</div>
-          <Space size="small" style={{ color: '#666' }}>
-            <MailOutlined />
-            {record.email}
-          </Space>
-          {record.phone && (
-            <Space size="small" style={{ color: '#666' }}>
-              <PhoneOutlined />
-              {record.phone}
-            </Space>
-          )}
-        </Space>
-      ),
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: "Subject",
-      key: "subject",
-      render: (_, record) => (
-        <Space direction="vertical" size={0}>
-          <div>{record.subject}</div>
-          <div style={{ color: '#666', fontSize: '12px' }}>
-            {record.message.length > 100
-              ? `${record.message.substring(0, 100)}...`
-              : record.message}
-          </div>
-        </Space>
-      ),
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
     },
     {
       title: "Status",
@@ -208,13 +195,6 @@ const Contacts = () => {
           {status.charAt(0).toUpperCase() + status.slice(1)}
         </Tag>
       ),
-    },
-    {
-      title: "Date",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (date) => dayjs(date).format('YYYY-MM-DD HH:mm'),
-      sorter: (a, b) => dayjs(a.createdAt).unix() - dayjs(b.createdAt).unix(),
     },
     {
       title: "Actions",
@@ -309,15 +289,15 @@ const Contacts = () => {
       <Modal
         title={selectedContact ? "Contact Details" : "Add New Contact"}
         open={isModalVisible}
-        onOk={async () => {
-          if (selectedContact) {
-            await handleModalOk();
-          } else {
-            // Add contact logic
+        footer={selectedContact ? [
+          <Button key="update" type="primary" onClick={handleModalOk}>Update</Button>,
+          <Button key="cancel" onClick={handleModalCancel}>Cancel</Button>
+        ] : [
+          <Button key="add" type="primary" onClick={async () => {
             try {
               const values = await form.validateFields();
               const response = await contactService.createContact(values);
-              if (response.success) {
+              if (response.status) {
                 message.success(response.message || 'Contact added successfully');
                 setIsModalVisible(false);
                 fetchContacts();
@@ -328,8 +308,9 @@ const Contacts = () => {
               message.error(error.message || 'Failed to add contact');
               console.error('Error adding contact:', error);
             }
-          }
-        }}
+          }}>Add Contact</Button>,
+          <Button key="cancel" onClick={handleModalCancel}>Cancel</Button>
+        ]}
         onCancel={handleModalCancel}
         width={600}
       >
@@ -351,7 +332,10 @@ const Contacts = () => {
               <Form.Item
                 name="email"
                 label="Email"
-                rules={[{ required: true, message: "Please enter email" }]}
+                rules={[
+                  { required: true, message: "Please enter email" },
+                  { type: "email", message: "Please enter a valid email" }
+                ]}
               >
                 <Input readOnly={!!selectedContact} />
               </Form.Item>
@@ -363,7 +347,7 @@ const Contacts = () => {
                 name="phone"
                 label="Phone"
               >
-                <Input readOnly={!!selectedContact} />
+                <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -381,22 +365,9 @@ const Contacts = () => {
             </Col>
           </Row>
           <Form.Item
-            name="subject"
-            label="Subject"
-            rules={[{ required: true, message: "Please enter subject" }]}
-          >
-            <Input readOnly={!!selectedContact} />
-          </Form.Item>
-          <Form.Item
-            name="message"
-            label="Message"
-            rules={[{ required: true, message: "Please enter message" }]}
-          >
-            <TextArea rows={4} readOnly={!!selectedContact} />
-          </Form.Item>
-          <Form.Item
-            name="notes"
-            label="Admin Notes"
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: "Please enter description" }]}
           >
             <TextArea rows={4} />
           </Form.Item>

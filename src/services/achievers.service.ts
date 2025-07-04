@@ -6,8 +6,8 @@ export interface IAchiever {
   name: string;
   achievement: string;
   description: string;
-  year: number;
-  category: string;
+  year?: number;
+  category?: string;
   image?: string;
   institution?: string;
   score?: number;
@@ -15,6 +15,10 @@ export interface IAchiever {
   testimonial?: string;
   createdAt?: string;
   updatedAt?: string;
+  isActive?: boolean;
+  details?: string | null;
+  order?: number | null;
+  deletedAt?: string | null;
 }
 
 export interface IAchieverCreate extends Omit<IAchiever, 'id' | 'createdAt' | 'updatedAt'> {}
@@ -50,7 +54,7 @@ class AchieverService {
 
   async updateAchiever(id: string, data: IAchieverUpdate): Promise<ApiResponse<IAchiever>> {
     try {
-      return await apiRequest.put<IAchiever>(API_ENDPOINTS.ADMIN.ACHIEVERS.UPDATE(id), data);
+      return await apiRequest.patch<IAchiever>(API_ENDPOINTS.ADMIN.ACHIEVERS.UPDATE(id), data);
     } catch (error) {
       console.error('Error updating achiever:', error);
       throw error;

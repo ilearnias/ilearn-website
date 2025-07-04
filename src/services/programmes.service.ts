@@ -5,21 +5,40 @@ export interface IProgramme {
   id: string;
   title: string;
   description: string;
-  category: string;
   duration: string;
-  status: 'Active' | 'Inactive';
+  status: 'Active' | 'Inactive' | 'active' | 'inactive';
   price: number;
+  enrollments: number;
+  order?: number | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+  // Optional fields that might not be in all responses
+  category?: string;
   startDate?: string;
   endDate?: string;
   instructor?: string;
-  maxEnrollments?: number;
-  enrollments?: number;
   thumbnail?: string;
-  createdAt?: string;
-  updatedAt?: string;
 }
 
-export interface IProgrammeCreate extends Omit<IProgramme, 'id' | 'createdAt' | 'updatedAt' | 'enrollments'> {}
+export interface IProgrammeCreate {
+  title: string;
+  description: string;
+  duration: string;
+  status: 'Active' | 'Inactive' | 'active' | 'inactive';
+  price: number;
+  order?: number;
+  isActive?: boolean;
+  // Optional fields
+  category?: string;
+  startDate?: string;
+  endDate?: string;
+  instructor?: string;
+  enrollments?: number;
+  thumbnail?: string;
+}
+
 export interface IProgrammeUpdate extends Partial<IProgrammeCreate> {}
 
 class ProgrammeService {
@@ -52,7 +71,7 @@ class ProgrammeService {
 
   async updateProgramme(id: string, data: IProgrammeUpdate): Promise<ApiResponse<IProgramme>> {
     try {
-      return await apiRequest.put<IProgramme>(API_ENDPOINTS.ADMIN.PROGRAMS.UPDATE(id), data);
+      return await apiRequest.patch<IProgramme>(API_ENDPOINTS.ADMIN.PROGRAMS.UPDATE(id), data);
     } catch (error) {
       console.error('Error updating programme:', error);
       throw error;

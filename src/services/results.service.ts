@@ -16,6 +16,10 @@ export interface IResult {
   year?: number;
   createdAt?: string;
   updatedAt?: string;
+  isActive?: boolean;
+  order?: number | null;
+  deletedAt?: string | null;
+  description?: string | null;
 }
 
 export interface IResultSummary {
@@ -51,9 +55,9 @@ class ResultService {
     }
   }
 
-  async createResult(data: IResultCreate): Promise<ApiResponse<IResult>> {
+  async createResult(data: IResultCreate): Promise<ApiResponse<IResult[]>> {
     try {
-      return await apiRequest.post<IResult>(API_ENDPOINTS.ADMIN.RESULTS.CREATE, data);
+      return await apiRequest.post<IResult[]>(API_ENDPOINTS.ADMIN.RESULTS.CREATE, data);
     } catch (error) {
       console.error('Error creating result:', error);
       throw error;
@@ -62,7 +66,7 @@ class ResultService {
 
   async updateResult(id: string, data: IResultUpdate): Promise<ApiResponse<IResult>> {
     try {
-      return await apiRequest.put<IResult>(API_ENDPOINTS.ADMIN.RESULTS.UPDATE(id), data);
+      return await apiRequest.patch<IResult>(API_ENDPOINTS.ADMIN.RESULTS.UPDATE(id), data);
     } catch (error) {
       console.error('Error updating result:', error);
       throw error;

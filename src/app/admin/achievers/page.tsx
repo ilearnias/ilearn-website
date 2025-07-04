@@ -18,6 +18,7 @@ import {
   message,
   Select,
   InputNumber,
+  Switch,
 } from "antd";
 import {
   SearchOutlined,
@@ -51,7 +52,7 @@ const Achievers = () => {
     try {
       setLoading(true);
       const response = await achieverService.getAllAchievers();
-      if (response.success) {
+      if (response.status) {
         setAchievers(response.data);
       } else {
         message.error(response.message || 'Failed to fetch achievers');
@@ -86,7 +87,7 @@ const Achievers = () => {
       onOk: async () => {
         try {
           const response = await achieverService.deleteAchiever(record.id);
-          if (response.success) {
+          if (response.status) {
             message.success(response.message || 'Achiever deleted successfully');
             fetchAchievers();
           } else {
@@ -103,10 +104,11 @@ const Achievers = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
+      values.order = Number(values.order);
+      values.isActive = Boolean(values.isActive);
       if (editingAchiever) {
         const response = await achieverService.updateAchiever(editingAchiever.id, values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Achiever updated successfully');
           setIsModalVisible(false);
           fetchAchievers();
@@ -115,7 +117,7 @@ const Achievers = () => {
         }
       } else {
         const response = await achieverService.createAchiever(values);
-        if (response.success) {
+        if (response.status) {
           message.success(response.message || 'Achiever created successfully');
           setIsModalVisible(false);
           fetchAchievers();
@@ -136,14 +138,15 @@ const Achievers = () => {
 
   const filteredAchievers = achievers.filter(
     (achiever) =>
-      achiever.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      achiever.achievement.toLowerCase().includes(searchText.toLowerCase()) ||
-      achiever.category.toLowerCase().includes(searchText.toLowerCase())
+      (achiever.name || '').toLowerCase().includes(searchText.toLowerCase()) ||
+      (achiever.details || '').toLowerCase().includes(searchText.toLowerCase()) ||
+      (achiever.description || '').toLowerCase().includes(searchText.toLowerCase())
   );
 
   const columns: ColumnsType<IAchiever> = [
     {
       title: "Name",
+      dataIndex: "name",
       key: "name",
       render: (_, record) => (
         <Space>
@@ -153,45 +156,40 @@ const Achievers = () => {
             style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = '/placeholder.png'; // Replace with your placeholder image
+              target.src = '/placeholder.png';
             }}
           />
           <div>
             <div style={{ fontWeight: 500 }}>{record.name}</div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              {record.institution}
-            </div>
+            <div style={{ fontSize: "12px", color: "#666" }}>{record.details}</div>
           </div>
         </Space>
       ),
     },
     {
-      title: "Achievement",
-      dataIndex: "achievement",
-      key: "achievement",
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category) => (
-        <Tag color="blue">{category}</Tag>
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <img src={image || "/placeholder.png"} alt="Image" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
       ),
     },
     {
-      title: "Year",
-      dataIndex: "year",
-      key: "year",
-      sorter: (a, b) => a.year - b.year,
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
     },
     {
-      title: "Score/Rank",
-      key: "score",
-      render: (_, record) => (
-        <Space>
-          {record.score && <span>{record.score}%</span>}
-          {record.rank && <Tag color="gold">Rank {record.rank}</Tag>}
-        </Space>
+      title: "Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive) => (
+        <Tag color={isActive ? "green" : "red"}>{isActive ? "Active" : "Inactive"}</Tag>
       ),
     },
     {
@@ -246,8 +244,8 @@ const Achievers = () => {
         <Col xs={24} sm={12} md={8}>
           <Card>
             <Statistic
-              title="Categories"
-              value={new Set(achievers.map(a => a.category)).size}
+              title="Active Achievers"
+              value={achievers.filter(a => a.isActive).length}
               prefix={<StarOutlined />}
             />
           </Card>
@@ -255,11 +253,9 @@ const Achievers = () => {
         <Col xs={24} sm={12} md={8}>
           <Card>
             <Statistic
-              title="Average Score"
-              value={achievers.reduce((sum, a) => sum + (a.score || 0), 0) / achievers.length || 0}
-              precision={2}
+              title="Highest Order"
+              value={achievers.reduce((max, a) => a.order && a.order > max ? a.order : max, 0)}
               prefix={<UserOutlined />}
-              suffix="%"
             />
           </Card>
         </Col>
@@ -309,32 +305,11 @@ const Achievers = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="achievement"
-                label="Achievement"
-                rules={[{ required: true, message: "Please enter achievement" }]}
+                name="image"
+                label="Image URL"
+                rules={[{ required: true, message: "Please enter image URL" }]}
               >
-                <Input />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="category"
-                label="Category"
-                rules={[{ required: true, message: "Please enter category" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="year"
-                label="Year"
-                rules={[{ required: true, message: "Please enter year" }]}
-              >
-                <InputNumber style={{ width: '100%' }} min={1900} max={2100} />
+                <Input placeholder="https://example.com/image.jpg" />
               </Form.Item>
             </Col>
           </Row>
@@ -347,50 +322,34 @@ const Achievers = () => {
             <Input.TextArea rows={4} />
           </Form.Item>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="institution"
-                label="Institution"
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="score"
-                label="Score (%)"
-              >
-                <InputNumber style={{ width: '100%' }} min={0} max={100} />
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="rank"
-                label="Rank"
-              >
-                <InputNumber style={{ width: '100%' }} min={1} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="image"
-                label="Image URL"
-              >
-                <Input placeholder="https://example.com/image.jpg" />
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Form.Item
-            name="testimonial"
-            label="Testimonial"
+            name="details"
+            label="Details"
           >
-            <Input.TextArea rows={4} />
+            <Input />
           </Form.Item>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
+              >
+                <InputNumber min={1} style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="isActive"
+                label="Active Status"
+                valuePropName="checked"
+                rules={[{ required: true, message: "Please select active status" }]}
+              >
+                <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Modal>
     </div>
