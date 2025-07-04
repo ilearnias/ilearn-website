@@ -3,12 +3,16 @@
 import React, {
   createContext,
   useContext,
-  useState,
   useEffect,
   ReactNode,
   useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  login as loginAction,
+  logout as logoutAction,
+} from "@/redux/slices/authSlice";
 
 interface AdminUser {
   id: number;
@@ -43,27 +47,40 @@ interface AdminAuthProviderProps {
 export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
   children,
 }) => {
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
   const router = useRouter();
+
+  // Get auth state from Redux
+  const { user, isAuthenticated, token } = useSelector(
+    (state: any) => state.auth
+  );
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const logout = useCallback(() => {
     localStorage.removeItem("adminToken");
     localStorage.removeItem("adminUser");
-    setUser(null);
+
+    // Dispatch Redux action
+    dispatch(logoutAction());
+
     router.push("/adminlogin");
-  }, [router]);
+  }, [dispatch, router]);
 
   useEffect(() => {
-    // Check for existing authentication on mount
     const checkAuth = () => {
       try {
-        const token = localStorage.getItem("adminToken");
+        const storedToken = localStorage.getItem("adminToken");
         const userData = localStorage.getItem("adminUser");
 
-        if (token && userData) {
+        if (storedToken && userData) {
           const parsedUser = JSON.parse(userData);
-          setUser(parsedUser);
+          // Dispatch Redux action to restore auth state
+          dispatch(
+            loginAction({
+              user: parsedUser,
+              token: storedToken,
+            })
+          );
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
@@ -74,50 +91,59 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
     };
 
     checkAuth();
-  }, [logout]);
+  }, [dispatch, logout]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/admin/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password })
-      // });
+      console.log("Attempting login with email:", email);
 
-      // const data = await response.json();
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+      });
 
-      // if (!response.ok) {
-      //   throw new Error(data.message || 'Login failed');
-      // }
+      console.log("Login response status:", response.status);
 
-      // Mock authentication for now
-      if (email === "admin@ilearn.com" && password === "admin123") {
-        const mockUser = {
-          id: 1,
-          email,
-          name: "Admin User",
-        };
+      const responseData = await response.json();
+      console.log("Login response data:", responseData);
 
-        const mockToken = "mock-jwt-token";
+      if (!response.ok || !responseData.status) {
+        throw new Error(responseData.message || "Login failed");
+      }
 
-        localStorage.setItem("adminToken", mockToken);
-        localStorage.setItem("adminUser", JSON.stringify(mockUser));
+      // Extract data from the nested structure
+      const { user, accessToken: token } = responseData.data;
 
-        setUser(mockUser);
+      if (token && user) {
+        localStorage.setItem("adminToken", token);
+        localStorage.setItem("adminUser", JSON.stringify(user));
+
+        // Dispatch Redux action
+        dispatch(
+          loginAction({
+            user,
+            token,
+          })
+        );
+
         return true;
       } else {
-        throw new Error("Invalid credentials");
+        console.error("Invalid response format:", responseData);
+        throw new Error("Invalid response format");
       }
     } catch (error) {
       console.error("Login error:", error);
-      return false;
+      throw error;
     }
   };
 
   const value: AdminAuthContextType = {
     user,
-    isAuthenticated: !!user,
+    isAuthenticated,
     isLoading,
     login,
     logout,

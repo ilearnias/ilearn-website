@@ -1,9 +1,9 @@
 "use client";
-
 import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '@/redux/slices/authSlice';
 import { Form, Input, Button, Card, message } from "antd";
 import {
   UserOutlined,
@@ -21,20 +21,46 @@ interface LoginForm {
 const AdminLogin = () => {
   const [loading, setLoading] = React.useState(false);
   const router = useRouter();
-  const { login } = useAdminAuth();
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state: any) => state.auth);
   const [form] = Form.useForm();
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/admin/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
   const handleSubmit = async (values: LoginForm) => {
     setLoading(true);
 
     try {
-      const success = await login(values.email, values.password);
+      // Make API call to login
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
 
-      if (success) {
+      const data = await response.json();
+
+      if (response.ok && data.status) {
+        // Store token in localStorage
+        localStorage.setItem('adminToken', data.data.token);
+        
+        // Dispatch Redux action to update state
+        dispatch(login({
+          user: data.data.user,
+          token: data.data.token
+        }));
+
         message.success("Login successful!");
         router.push("/admin/dashboard");
       } else {
-        message.error("Invalid credentials");
+        message.error(data.message || "Invalid credentials");
       }
     } catch (err) {
       message.error("Login failed. Please try again.");

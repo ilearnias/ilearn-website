@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import {
   Table,
   Input,
@@ -15,6 +15,12 @@ import {
   Avatar,
   Dropdown,
   Menu,
+  Modal,
+  Form,
+  message,
+  Select,
+  InputNumber,
+  Switch,
 } from "antd";
 import {
   SearchOutlined,
@@ -28,144 +34,193 @@ import {
   CrownOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
+import { teamService, ITeamMember } from "@/services/team.service";
 import "./styles.scss";
 
-interface TeamMember {
-  key: string;
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  avatar: string;
-}
+const { confirm } = Modal;
 
 const Team = () => {
-  const { user } = useAdminAuth();
+  const { user } = useSelector((state: any) => state.auth);
   const [searchText, setSearchText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [teamMembers, setTeamMembers] = useState<ITeamMember[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingMember, setEditingMember] = useState<ITeamMember | null>(null);
+  const [form] = Form.useForm();
 
-  const teamMembers: TeamMember[] = [
-    {
-      key: "1",
-      id: 1,
-      name: "John Doe",
-      email: "john@ilearn.com",
-      role: "Admin",
-      status: "Active",
-      avatar: "👨‍💼",
-    },
-    {
-      key: "2",
-      id: 2,
-      name: "Jane Smith",
-      email: "jane@ilearn.com",
-      role: "Manager",
-      status: "Active",
-      avatar: "👩‍💼",
-    },
-    {
-      key: "3",
-      id: 3,
-      name: "Mike Johnson",
-      email: "mike@ilearn.com",
-      role: "Editor",
-      status: "Inactive",
-      avatar: "👨‍💻",
-    },
-    {
-      key: "4",
-      id: 4,
-      name: "Sarah Wilson",
-      email: "sarah@ilearn.com",
-      role: "Support",
-      status: "Active",
-      avatar: "👩‍💻",
-    },
-    {
-      key: "5",
-      id: 5,
-      name: "David Brown",
-      email: "david@ilearn.com",
-      role: "Developer",
-      status: "Active",
-      avatar: "👨‍🔧",
-    },
-  ];
+  // Fetch team members on component mount
+  useEffect(() => {
+    fetchTeamMembers();
+  }, []);
+
+  const fetchTeamMembers = async () => {
+    try {
+      setLoading(true);
+      const response = await teamService.getAllTeamMembers();
+      if (response.status) {
+        setTeamMembers(response.data);
+      } else {
+        message.error(response.message || 'Failed to fetch team members');
+      }
+    } catch (error: any) {
+      message.error(error.message || 'Failed to fetch team members');
+      console.error('Error fetching team members:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAdd = () => {
+    setEditingMember(null);
+    form.resetFields();
+    setIsModalVisible(true);
+  };
+
+  const handleEdit = (record: ITeamMember) => {
+    setEditingMember(record);
+    form.setFieldsValue(record);
+    setIsModalVisible(true);
+  };
+
+  const handleDelete = (record: ITeamMember) => {
+    confirm({
+      title: 'Are you sure you want to delete this team member?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk: async () => {
+        try {
+          const response = await teamService.deleteTeamMember(record.id);
+          if (response.status) {
+            message.success(response.message || 'Team member deleted successfully');
+            fetchTeamMembers();
+          } else {
+            message.error(response.message || 'Failed to delete team member');
+          }
+        } catch (error: any) {
+          message.error(error.message || 'Failed to delete team member');
+          console.error('Error deleting team member:', error);
+        }
+      },
+    });
+  };
+
+  const handleModalOk = async () => {
+    try {
+      const values = await form.validateFields();
+      values.order = Number(values.order);
+      values.isActive = Boolean(values.isActive);
+      if (editingMember) {
+        const response = await teamService.updateTeamMember(editingMember.id, values);
+        if (response.status) {
+          message.success(response.message || 'Team member updated successfully');
+          setIsModalVisible(false);
+          fetchTeamMembers();
+        } else {
+          message.error(response.message || 'Failed to update team member');
+        }
+      } else {
+        const response = await teamService.createTeamMember(values);
+        if (response.status) {
+          message.success(response.message || 'Team member created successfully');
+          setIsModalVisible(false);
+          fetchTeamMembers();
+        } else {
+          message.error(response.message || 'Failed to create team member');
+        }
+      }
+    } catch (error: any) {
+      message.error(error.message || 'Failed to save team member');
+      console.error('Error saving team member:', error);
+    }
+  };
+
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    form.resetFields();
+  };
 
   const filteredMembers = teamMembers.filter(
     (member) =>
       member.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchText.toLowerCase()) ||
-      member.role.toLowerCase().includes(searchText.toLowerCase())
+      member.position.toLowerCase().includes(searchText.toLowerCase()) ||
+      member.department.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const getRoleColor = (role: string) => {
-    switch (role.toLowerCase()) {
-      case "admin":
-        return "red";
-      case "manager":
-        return "blue";
-      case "editor":
-        return "orange";
-      case "support":
-        return "green";
-      case "developer":
-        return "purple";
-      default:
-        return "default";
-    }
-  };
-
   const getStatusColor = (status: string) => {
-    return status === "Active" ? "green" : "red";
+    return status === 'active' ? "green" : "red";
   };
 
-  const handleEdit = (record: TeamMember) => {
-    console.log("Edit:", record);
-  };
-
-  const handleDelete = (record: TeamMember) => {
-    console.log("Delete:", record);
-  };
-
-  const columns: ColumnsType<TeamMember> = [
+  const columns: ColumnsType<any> = [
     {
-      title: "Member",
-      key: "member",
-      render: (_, record) => (
-        <Space>
-          <Avatar icon={<UserOutlined />} />
-          <div>
-            <div style={{ fontWeight: 500 }}>{record.name}</div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              {record.email}
-            </div>
-          </div>
-        </Space>
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => (
+        <img src={image || "/placeholder.png"} alt="Image" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
       ),
     },
     {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
-      render: (role) => (
-        <Tag color={getRoleColor(role)}>
-          {role === "Admin" && <CrownOutlined style={{ marginRight: 4 }} />}
-          {role}
-        </Tag>
-      ),
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag
-          color={getStatusColor(status)}
-          icon={status === "Active" ? <CheckCircleOutlined /> : undefined}
-        >
-          {status}
-        </Tag>
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone",
+    },
+    {
+      title: "LinkedIn",
+      dataIndex: "linkedin",
+      key: "linkedin",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">LinkedIn</a> : null,
+    },
+    {
+      title: "Twitter",
+      dataIndex: "twitter",
+      key: "twitter",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">Twitter</a> : null,
+    },
+    {
+      title: "Facebook",
+      dataIndex: "facebook",
+      key: "facebook",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">Facebook</a> : null,
+    },
+    {
+      title: "Instagram",
+      dataIndex: "instagram",
+      key: "instagram",
+      render: (url) => url ? <a href={url} target="_blank" rel="noopener noreferrer">Instagram</a> : null,
+    },
+    {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+    },
+    {
+      title: "Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive) => (
+        <Tag color={isActive ? "green" : "red"}>{isActive ? "Active" : "Inactive"}</Tag>
       ),
     },
     {
@@ -200,27 +255,6 @@ const Team = () => {
     },
   ];
 
-  const stats = [
-    {
-      title: "Total Members",
-      value: teamMembers.length,
-      icon: <TeamOutlined />,
-      color: "#3b82f6",
-    },
-    {
-      title: "Active Members",
-      value: teamMembers.filter((m) => m.status === "Active").length,
-      icon: <CheckCircleOutlined />,
-      color: "#10b981",
-    },
-    {
-      title: "Admins",
-      value: teamMembers.filter((m) => m.role === "Admin").length,
-      icon: <CrownOutlined />,
-      color: "#ef4444",
-    },
-  ];
-
   return (
     <div className="team-page">
       <div className="team-header">
@@ -228,49 +262,194 @@ const Team = () => {
         <p>Manage your team members and their roles</p>
       </div>
 
+      <Row gutter={[16, 16]} className="team-stats">
+        <Col xs={24} sm={12} md={8}>
+          <Card>
+            <Statistic
+              title="Total Members"
+              value={teamMembers.length}
+              prefix={<TeamOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={8}>
+          <Card>
+            <Statistic
+              title="Active Members"
+              value={teamMembers.filter((m) => m.status === 'active').length}
+              prefix={<CheckCircleOutlined />}
+            />
+          </Card>
+        </Col>
+        <Col xs={24} sm={12} md={8}>
+          <Card>
+            <Statistic
+              title="Departments"
+              value={new Set(teamMembers.map(m => m.department)).size}
+              prefix={<CrownOutlined />}
+            />
+          </Card>
+        </Col>
+      </Row>
+
       <div className="team-controls">
         <Input
           placeholder="Search team members..."
           prefix={<SearchOutlined />}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 400 }}
-          allowClear
+          style={{ maxWidth: 300 }}
         />
-        <Button type="primary" icon={<PlusOutlined />}>
+        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           Add Member
         </Button>
       </div>
 
-      <Row gutter={[16, 16]} className="team-stats">
-        {stats.map((stat, index) => (
-          <Col xs={24} sm={8} key={index}>
-            <Card>
-              <Statistic
-                title={stat.title}
-                value={stat.value}
-                prefix={stat.icon}
-                valueStyle={{ color: stat.color }}
-              />
-            </Card>
-          </Col>
-        ))}
-      </Row>
-
-      <Card className="team-table">
         <Table
+        className="team-table"
           columns={columns}
           dataSource={filteredMembers}
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total, range) =>
-              `${range[0]}-${range[1]} of ${total} items`,
-          }}
-          rowKey="key"
-        />
-      </Card>
+        rowKey="id"
+        loading={loading}
+      />
+
+      <Modal
+        title={editingMember ? "Edit Team Member" : "Add New Team Member"}
+        open={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        width={800}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={{ isActive: true }}
+        >
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="name"
+                label="Name"
+                rules={[{ required: true, message: "Please enter name" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="designation"
+                label="Designation"
+                rules={[{ required: true, message: "Please enter designation" }]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: "Please enter description" }]}
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="image"
+                label="Image URL"
+                rules={[{ required: true, message: "Please enter image URL" }]}
+              >
+                <Input placeholder="https://example.com/image.jpg" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  { required: true, message: "Please enter email" },
+                  { type: "email", message: "Please enter a valid email" }
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="phone"
+                label="Phone"
+              >
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
+              >
+                <InputNumber min={0} style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="linkedin"
+                label="LinkedIn"
+                rules={[{ type: "url", message: "LinkedIn must be a URL address" }]}
+              >
+                <Input placeholder="https://linkedin.com/in/username" type="url" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="twitter"
+                label="Twitter"
+                rules={[{ type: "url", message: "Twitter must be a URL address" }]}
+              >
+                <Input placeholder="https://twitter.com/username" type="url" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="facebook"
+                label="Facebook"
+                rules={[{ type: "url", message: "Facebook must be a URL address" }]}
+              >
+                <Input placeholder="https://facebook.com/username" type="url" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                name="instagram"
+                label="Instagram"
+                rules={[{ type: "url", message: "Instagram must be a URL address" }]}
+              >
+                <Input placeholder="https://instagram.com/username" type="url" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            name="isActive"
+            label="Active Status"
+            valuePropName="checked"
+            rules={[{ required: true, message: "Please select active status" }]}
+          >
+            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

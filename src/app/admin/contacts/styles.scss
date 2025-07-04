@@ -1,0 +1,79 @@
+.contacts-page {
+  padding: 24px;
+
+  .contacts-header {
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: #666;
+    }
+  }
+
+  .contacts-stats {
+    margin-bottom: 24px;
+
+    .ant-card {
+      height: 100%;
+      
+      .ant-statistic {
+        .ant-statistic-title {
+          color: #666;
+          font-size: 14px;
+        }
+
+        .ant-statistic-content {
+          font-size: 24px;
+          
+          .anticon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  .contacts-controls {
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+
+    .ant-input-affix-wrapper {
+      flex: 1;
+      max-width: 400px;
+    }
+  }
+
+  .contacts-table {
+    .ant-table {
+      .ant-table-thead > tr > th {
+        background: #fafafa;
+        font-weight: 600;
+      }
+
+      .ant-table-tbody > tr > td {
+        vertical-align: top;
+      }
+    }
+  }
+
+  .contact-form {
+    margin-top: 16px;
+
+    .ant-form-item-label {
+      font-weight: 500;
+    }
+
+    .ant-input-textarea {
+      resize: none;
+    }
+  }
+} 

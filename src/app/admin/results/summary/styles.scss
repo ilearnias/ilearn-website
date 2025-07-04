@@ -1,0 +1,112 @@
+.results-summary-page {
+  padding: 24px;
+
+  .results-summary-header {
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: #666;
+    }
+  }
+
+  .results-summary-stats {
+    margin-bottom: 24px;
+
+    .ant-card {
+      height: 100%;
+      
+      .ant-statistic {
+        .ant-statistic-title {
+          color: #666;
+          font-size: 14px;
+        }
+
+        .ant-statistic-content {
+          font-size: 24px;
+          
+          .anticon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+
+  .results-summary-filters {
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+    label {
+      color: #666;
+      font-weight: 500;
+    }
+  }
+
+  .results-summary-table {
+    margin-bottom: 24px;
+
+    .ant-table {
+      .ant-table-thead > tr > th {
+        background: #fafafa;
+        font-weight: 600;
+      }
+
+      .ant-table-tbody > tr > td {
+        vertical-align: middle;
+      }
+    }
+
+    .ant-progress {
+      width: 120px;
+      margin: 0;
+    }
+  }
+
+  .results-summary-charts {
+    .ant-card {
+      height: 100%;
+
+      .ant-card-head {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .grade-distribution {
+        .grade-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 12px;
+
+          .ant-tag {
+            min-width: 40px;
+            text-align: center;
+            margin-right: 12px;
+          }
+
+          .ant-progress {
+            flex: 1;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .ant-tag {
+    margin: 0 4px 4px 0;
+    
+    .anticon {
+      margin-right: 4px;
+    }
+  }
+} 

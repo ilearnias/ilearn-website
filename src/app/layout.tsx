@@ -6,6 +6,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import LoadingProvider from "@/components/common/LoadingProvider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import Providers from "@/components/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -52,15 +53,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
       </head>
       <body className={inter.className}>
         <AntdRegistry>
           <LoadingProvider>
             <Header />
-            <main className="min-h-screen">
-              {children}
-            </main>
+            <Providers>
+              <main className="min-h-screen">{children}</main>
+            </Providers>
             <Footer />
           </LoadingProvider>
         </AntdRegistry>

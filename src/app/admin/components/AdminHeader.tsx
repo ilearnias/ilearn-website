@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useAdminAuth } from "@/contexts/AdminAuthContext";
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '@/redux/slices/authSlice';
 import { Modal, Button, Dropdown, Avatar, Space } from "antd";
 import {
   UserOutlined,
@@ -15,7 +16,8 @@ import type { MenuProps } from "antd";
 import "./AdminHeader.scss";
 
 const AdminHeader: React.FC = () => {
-  const { user, logout } = useAdminAuth();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: any) => state.auth);
   const pathname = usePathname();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
@@ -23,8 +25,28 @@ const AdminHeader: React.FC = () => {
     switch (pathname) {
       case "/admin/dashboard":
         return "Dashboard";
+      case "/admin/programmes":
+        return "Programmes Management";
+      case "/admin/results":
+        return "Results Management";
+      case "/admin/results/summary":
+        return "Results Summary";
+      case "/admin/success-stories":
+        return "Success Stories";
+      case "/admin/achievers":
+        return "Achievers";
       case "/admin/team":
         return "Team Management";
+      case "/admin/contacts":
+        return "Contacts Management";
+      case "/admin/gallery/titles":
+        return "Gallery Titles";
+      case "/admin/gallery/images":
+        return "Gallery Images";
+      case "/admin/blog/posts":
+        return "Blog Posts";
+      case "/admin/blog/categories":
+        return "Blog Categories";
       default:
         return "Dashboard";
     }
@@ -35,7 +57,13 @@ const AdminHeader: React.FC = () => {
   };
 
   const confirmLogout = () => {
-    logout();
+    // Clear localStorage
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    
+    // Dispatch Redux logout action
+    dispatch(logout());
+    
     setShowLogoutConfirm(false);
   };
 
