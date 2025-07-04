@@ -409,13 +409,13 @@ const Team = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
+          <Form.Item
                 name="twitter"
                 label="Twitter"
                 rules={[{ type: "url", message: "Twitter must be a URL address" }]}
-              >
+          >
                 <Input placeholder="https://twitter.com/username" type="url" />
-              </Form.Item>
+          </Form.Item>
             </Col>
           </Row>
 
@@ -445,7 +445,7 @@ const Team = () => {
             label="Active Status"
             valuePropName="checked"
             rules={[{ required: true, message: "Please select active status" }]}
-          >
+            >
             <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
           </Form.Item>
         </Form>

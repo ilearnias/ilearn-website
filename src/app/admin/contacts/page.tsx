@@ -6,13 +6,8 @@ import {
   Input,
   Button,
   Card,
-  Statistic,
-  Row,
-  Col,
   Space,
   Tag,
-  Dropdown,
-  Menu,
   Modal,
   Form,
   message,
@@ -20,18 +15,15 @@ import {
 } from "antd";
 import {
   SearchOutlined,
+  PlusOutlined,
+  EditOutlined,
   DeleteOutlined,
-  MoreOutlined,
-  MessageOutlined,
-  PhoneOutlined,
-  MailOutlined,
   CheckCircleOutlined,
   ClockCircleOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { contactService, IContact } from "@/services/contacts.service";
-import dayjs from 'dayjs';
 import "./styles.scss";
 
 const { confirm } = Modal;
@@ -67,10 +59,13 @@ const Contacts = () => {
     }
   };
 
-  const handleView = (record: IContact) => {
+  const handleEdit = (record: IContact) => {
     setSelectedContact(record);
     form.setFieldsValue({
-      ...record,
+      name: record.name,
+      email: record.email,
+      phone: record.phone,
+      description: record.description,
       status: record.status || 'pending',
     });
     setIsModalVisible(true);
@@ -113,6 +108,15 @@ const Contacts = () => {
         } else {
           message.error(response.message || 'Failed to update contact');
         }
+      } else {
+        const response = await contactService.createContact(values);
+        if (response.status) {
+          message.success(response.message || 'Contact created successfully');
+          setIsModalVisible(false);
+          fetchContacts();
+        } else {
+          message.error(response.message || 'Failed to create contact');
+        }
       }
     } catch (error: any) {
       message.error(error.message || 'Failed to save contact');
@@ -122,12 +126,14 @@ const Contacts = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setSelectedContact(null);
     form.resetFields();
   };
 
   const handleAdd = () => {
     setSelectedContact(null);
     form.resetFields();
+    form.setFieldsValue({ status: 'pending' });
     setIsModalVisible(true);
   };
 
@@ -135,8 +141,7 @@ const Contacts = () => {
     (contact) =>
       contact.name.toLowerCase().includes(searchText.toLowerCase()) ||
       contact.email.toLowerCase().includes(searchText.toLowerCase()) ||
-      contact.subject.toLowerCase().includes(searchText.toLowerCase()) ||
-      contact.message.toLowerCase().includes(searchText.toLowerCase())
+      contact.description.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const getStatusColor = (status: string) => {
@@ -165,31 +170,36 @@ const Contacts = () => {
     }
   };
 
-  const columns: ColumnsType<any> = [
+  const columns: ColumnsType<IContact> = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: '15%',
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      width: '20%',
     },
     {
       title: "Phone",
       dataIndex: "phone",
       key: "phone",
+      width: '15%',
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
+      width: '25%',
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      width: '15%',
       render: (status) => (
         <Tag color={getStatusColor(status)} icon={getStatusIcon(status)}>
           {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -199,180 +209,118 @@ const Contacts = () => {
     {
       title: "Actions",
       key: "actions",
+      width: '10%',
       render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item
-                key="view"
-                icon={<MessageOutlined />}
-                onClick={() => handleView(record)}
-              >
-                View Details
-              </Menu.Item>
-              <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined />}
-                danger
-                onClick={() => handleDelete(record)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
+        <Space>
+          <Button 
+            type="link" 
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          >
+            Edit
+          </Button>
+          <Button 
+            type="link" 
+            danger 
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record)}
+          >
+            Delete
+          </Button>
+        </Space>
       ),
     },
   ];
 
   return (
     <div className="contacts-page">
-      <div className="contacts-header">
-        <h1>Contact Messages</h1>
-        <p>Manage and respond to contact form submissions</p>
-      </div>
+      <Card>
+        <div className="table-header" style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Input
+            placeholder="Search contacts..."
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 300 }}
+          />
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            Add Contact
+          </Button>
+        </div>
 
-      <Row gutter={[16, 16]} className="contacts-stats">
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Total Messages"
-              value={contacts.length}
-              prefix={<MessageOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Pending"
-              value={contacts.filter(c => c.status === 'pending').length}
-              prefix={<ClockCircleOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Resolved"
-              value={contacts.filter(c => c.status === 'resolved').length}
-              prefix={<CheckCircleOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      <div className="contacts-controls">
-        <Input
-          placeholder="Search messages..."
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 300 }}
+        <Table
+          columns={columns}
+          dataSource={filteredContacts}
+          rowKey="id"
+          loading={loading}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showTotal: (total) => `Total ${total} contacts`,
+          }}
         />
-        <Button type="primary" onClick={handleAdd} style={{ marginLeft: 8 }}>
-          Add Contact
-        </Button>
-      </div>
 
-      <Table
-        className="contacts-table"
-        columns={columns}
-        dataSource={filteredContacts}
-        rowKey="id"
-        loading={loading}
-      />
-
-      <Modal
-        title={selectedContact ? "Contact Details" : "Add New Contact"}
-        open={isModalVisible}
-        footer={selectedContact ? [
-          <Button key="update" type="primary" onClick={handleModalOk}>Update</Button>,
-          <Button key="cancel" onClick={handleModalCancel}>Cancel</Button>
-        ] : [
-          <Button key="add" type="primary" onClick={async () => {
-            try {
-              const values = await form.validateFields();
-              const response = await contactService.createContact(values);
-              if (response.status) {
-                message.success(response.message || 'Contact added successfully');
-                setIsModalVisible(false);
-                fetchContacts();
-              } else {
-                message.error(response.message || 'Failed to add contact');
-              }
-            } catch (error: any) {
-              message.error(error.message || 'Failed to add contact');
-              console.error('Error adding contact:', error);
-            }
-          }}>Add Contact</Button>,
-          <Button key="cancel" onClick={handleModalCancel}>Cancel</Button>
-        ]}
-        onCancel={handleModalCancel}
-        width={600}
-      >
-        <Form
-          form={form}
-          layout="vertical"
+        <Modal
+          title={selectedContact ? "Edit Contact" : "Add New Contact"}
+          open={isModalVisible}
+          onOk={handleModalOk}
+          onCancel={handleModalCancel}
+          width={600}
         >
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="name"
-                label="Name"
-                rules={[{ required: true, message: "Please enter name" }]}
-              >
-                <Input readOnly={!!selectedContact} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="email"
-                label="Email"
-                rules={[
-                  { required: true, message: "Please enter email" },
-                  { type: "email", message: "Please enter a valid email" }
-                ]}
-              >
-                <Input readOnly={!!selectedContact} />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="phone"
-                label="Phone"
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="status"
-                label="Status"
-                rules={[{ required: true, message: "Please select status" }]}
-              >
-                <Select disabled={false}>
-                  <Option value="pending">Pending</Option>
-                  <Option value="resolved">Resolved</Option>
-                  <Option value="important">Important</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
+          <Form
+            form={form}
+            layout="vertical"
+            initialValues={{ status: 'pending' }}
           >
-            <TextArea rows={4} />
-          </Form.Item>
-        </Form>
-      </Modal>
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: 'Please enter the name' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                { required: true, message: 'Please enter the email' },
+                { type: 'email', message: 'Please enter a valid email' }
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="phone"
+              label="Phone"
+              rules={[{ required: true, message: 'Please enter the phone number' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[{ required: true, message: 'Please enter the description' }]}
+            >
+              <TextArea rows={4} />
+            </Form.Item>
+
+            <Form.Item
+              name="status"
+              label="Status"
+              rules={[{ required: true, message: 'Please select the status' }]}
+            >
+              <Select>
+                <Option value="pending">Pending</Option>
+                <Option value="resolved">Resolved</Option>
+                <Option value="important">Important</Option>
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </Card>
     </div>
   );
 };

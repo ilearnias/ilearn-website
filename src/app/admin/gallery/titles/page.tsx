@@ -6,17 +6,14 @@ import {
   Input,
   Button,
   Card,
-  Statistic,
-  Row,
-  Col,
   Space,
-  Tag,
   Dropdown,
   Menu,
   Modal,
   Form,
   message,
-  Select,
+  Switch,
+  InputNumber,
 } from "antd";
 import {
   SearchOutlined,
@@ -24,17 +21,12 @@ import {
   EditOutlined,
   DeleteOutlined,
   MoreOutlined,
-  FontSizeOutlined,
-  OrderedListOutlined,
-  EyeOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { galleryService, IGalleryTitle } from "@/services/gallery.service";
 import "./styles.scss";
 
 const { confirm } = Modal;
-const { Option } = Select;
-const { TextArea } = Input;
 
 const GalleryTitles = () => {
   const [searchText, setSearchText] = useState("");
@@ -52,14 +44,13 @@ const GalleryTitles = () => {
     try {
       setLoading(true);
       const response = await galleryService.getAllTitles();
-      if (response.success) {
+      if (response.status) {
         setTitles(response.data);
       } else {
         message.error(response.message || 'Failed to fetch titles');
       }
     } catch (error: any) {
       message.error(error.message || 'Failed to fetch titles');
-      console.error('Error fetching titles:', error);
     } finally {
       setLoading(false);
     }
@@ -87,15 +78,14 @@ const GalleryTitles = () => {
       onOk: async () => {
         try {
           const response = await galleryService.deleteTitle(record.id);
-          if (response.success) {
-            message.success(response.message || 'Title deleted successfully');
+          if (response.status) {
+            message.success('Title deleted successfully');
             fetchTitles();
           } else {
             message.error(response.message || 'Failed to delete title');
           }
         } catch (error: any) {
           message.error(error.message || 'Failed to delete title');
-          console.error('Error deleting title:', error);
         }
       },
     });
@@ -107,8 +97,8 @@ const GalleryTitles = () => {
       
       if (editingTitle) {
         const response = await galleryService.updateTitle(editingTitle.id, values);
-        if (response.success) {
-          message.success(response.message || 'Title updated successfully');
+        if (response.status) {
+          message.success('Title updated successfully');
           setIsModalVisible(false);
           fetchTitles();
         } else {
@@ -116,8 +106,8 @@ const GalleryTitles = () => {
         }
       } else {
         const response = await galleryService.createTitle(values);
-        if (response.success) {
-          message.success(response.message || 'Title created successfully');
+        if (response.status) {
+          message.success('Title created successfully');
           setIsModalVisible(false);
           fetchTitles();
         } else {
@@ -126,7 +116,6 @@ const GalleryTitles = () => {
       }
     } catch (error: any) {
       message.error(error.message || 'Failed to save title');
-      console.error('Error saving title:', error);
     }
   };
 
@@ -135,48 +124,33 @@ const GalleryTitles = () => {
     form.resetFields();
   };
 
-  const filteredTitles = titles.filter(
-    (title) =>
-      title.text.toLowerCase().includes(searchText.toLowerCase()) ||
-      title.description.toLowerCase().includes(searchText.toLowerCase()) ||
-      title.category.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filteredTitles = searchText
+    ? titles.filter((title) =>
+        title.title?.toLowerCase().includes(searchText.toLowerCase())
+      )
+    : titles;
 
   const columns: ColumnsType<IGalleryTitle> = [
     {
       title: "Title",
+      dataIndex: "title",
       key: "title",
-      render: (_, record) => (
-        <Space direction="vertical" size={0}>
-          <div style={{ fontWeight: 500 }}>{record.text}</div>
-          <div style={{ fontSize: "12px", color: "#666" }}>
-            {record.description}
-          </div>
-        </Space>
-      ),
-    },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category) => (
-        <Tag color="blue">{category}</Tag>
+      render: (text) => (
+        <div style={{ fontWeight: 500 }}>{text}</div>
       ),
     },
     {
       title: "Order",
-      dataIndex: "displayOrder",
-      key: "displayOrder",
-      sorter: (a, b) => a.displayOrder - b.displayOrder,
+      dataIndex: "order",
+      key: "order",
+      sorter: (a, b) => a.order - b.order,
     },
     {
       title: "Status",
       dataIndex: "isActive",
       key: "isActive",
       render: (isActive) => (
-        <Tag color={isActive ? "green" : "red"}>
-          {isActive ? "Active" : "Inactive"}
-        </Tag>
+        <Switch checked={isActive} disabled />
       ),
     },
     {
@@ -218,53 +192,25 @@ const GalleryTitles = () => {
         <p>Manage your gallery section titles</p>
       </div>
 
-      <Row gutter={[16, 16]} className="gallery-titles-stats">
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Total Titles"
-              value={titles.length}
-              prefix={<FontSizeOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Categories"
-              value={new Set(titles.map(t => t.category)).size}
-              prefix={<OrderedListOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Active Titles"
-              value={titles.filter(t => t.isActive).length}
-              prefix={<EyeOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <Card className="gallery-titles-controls">
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Input
+            placeholder="Search titles..."
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ maxWidth: 300 }}
+          />
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            Add Title
+          </Button>
+        </Space>
+      </Card>
 
-      <div className="gallery-titles-controls">
-        <Input
-          placeholder="Search titles..."
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 300 }}
-        />
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          Add Title
-        </Button>
-      </div>
-
-        <Table
+      <Table
         className="gallery-titles-table"
-          columns={columns}
-          dataSource={filteredTitles}
+        columns={columns}
+        dataSource={filteredTitles}
         rowKey="id"
         loading={loading}
       />
@@ -279,61 +225,30 @@ const GalleryTitles = () => {
         <Form
           form={form}
           layout="vertical"
-          initialValues={{ isActive: true }}
+          initialValues={{ isActive: true, order: 1 }}
         >
           <Form.Item
-            name="text"
-            label="Title Text"
-            rules={[{ required: true, message: "Please enter title text" }]}
+            name="title"
+            label="Title"
+            rules={[{ required: true, message: "Please enter title" }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
+            name="order"
+            label="Display Order"
+            rules={[{ required: true, message: "Please enter display order" }]}
           >
-            <TextArea rows={4} />
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="category"
-                label="Category"
-                rules={[{ required: true, message: "Please enter category" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="displayOrder"
-                label="Display Order"
-                rules={[{ required: true, message: "Please enter display order" }]}
-              >
-                <Input type="number" min={0} />
-              </Form.Item>
-            </Col>
-          </Row>
 
           <Form.Item
             name="isActive"
             label="Status"
             valuePropName="checked"
           >
-            <Select>
-              <Option value={true}>Active</Option>
-              <Option value={false}>Inactive</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="style"
-            label="CSS Style"
-          >
-            <TextArea rows={3} placeholder="color: #000; font-size: 24px;" />
+            <Switch />
           </Form.Item>
         </Form>
       </Modal>

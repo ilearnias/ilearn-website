@@ -5,13 +5,20 @@ export interface IContact {
   id: string;
   name: string;
   email: string;
-  phone?: string;
-  subject: string;
-  message: string;
+  phone: string;
+  description: string;
   status: 'pending' | 'resolved' | 'important';
-  notes?: string;
   createdAt: string;
   updatedAt: string;
+  deletedAt: string | null;
+}
+
+export interface IContactCreate {
+  name: string;
+  email: string;
+  phone: string;
+  description: string;
+  status: 'pending' | 'resolved' | 'important';
 }
 
 export const contactService = {
@@ -27,7 +34,7 @@ export const contactService = {
 
   getContactById: async (id: string) => {
     try {
-      const response = await apiRequest.get(`${API_ENDPOINTS.ADMIN.CONTACTS.DETAIL}/${id}`);
+      const response = await apiRequest.get(API_ENDPOINTS.ADMIN.CONTACTS.DETAIL(id));
       return response;
     } catch (error) {
       console.error('Error fetching contact:', error);
@@ -35,7 +42,7 @@ export const contactService = {
     }
   },
 
-  createContact: async (data: Partial<IContact>) => {
+  createContact: async (data: IContactCreate) => {
     try {
       const response = await apiRequest.post(API_ENDPOINTS.ADMIN.CONTACTS.CREATE, data);
       return response;
@@ -45,9 +52,9 @@ export const contactService = {
     }
   },
 
-  updateContact: async (id: string, data: Partial<IContact>) => {
+  updateContact: async (id: string, data: Partial<IContactCreate>) => {
     try {
-      const response = await apiRequest.patch(`${API_ENDPOINTS.ADMIN.CONTACTS.UPDATE}/${id}`, data);
+      const response = await apiRequest.patch(API_ENDPOINTS.ADMIN.CONTACTS.UPDATE(id), data);
       return response;
     } catch (error) {
       console.error('Error updating contact:', error);

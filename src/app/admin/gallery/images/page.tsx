@@ -6,18 +6,15 @@ import {
   Input,
   Button,
   Card,
-  Statistic,
-  Row,
-  Col,
   Space,
-  Tag,
   Dropdown,
   Menu,
   Modal,
   Form,
   message,
+  Switch,
+  InputNumber,
   Select,
-  Image,
 } from "antd";
 import {
   SearchOutlined,
@@ -25,28 +22,25 @@ import {
   EditOutlined,
   DeleteOutlined,
   MoreOutlined,
-  PictureOutlined,
-  FolderOutlined,
-  EyeOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { galleryService, IGalleryImage } from "@/services/gallery.service";
+import { galleryService, IGalleryImage, IGalleryTitle } from "@/services/gallery.service";
 import "./styles.scss";
 
 const { confirm } = Modal;
-const { Option } = Select;
-const { TextArea } = Input;
 
 const GalleryImages = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<IGalleryImage[]>([]);
+  const [titles, setTitles] = useState<IGalleryTitle[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingImage, setEditingImage] = useState<IGalleryImage | null>(null);
   const [form] = Form.useForm();
 
   useEffect(() => {
     fetchImages();
+    fetchTitles();
   }, []);
 
   const fetchImages = async () => {
@@ -60,9 +54,21 @@ const GalleryImages = () => {
       }
     } catch (error: any) {
       message.error(error.message || 'Failed to fetch images');
-      console.error('Error fetching images:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTitles = async () => {
+    try {
+      const response = await galleryService.getAllTitles();
+      if (response.status) {
+        setTitles(response.data);
+      } else {
+        message.error(response.message || 'Failed to fetch titles');
+      }
+    } catch (error: any) {
+      message.error(error.message || 'Failed to fetch titles');
     }
   };
 
@@ -89,14 +95,13 @@ const GalleryImages = () => {
         try {
           const response = await galleryService.deleteImage(record.id);
           if (response.status) {
-            message.success(response.message || 'Image deleted successfully');
+            message.success('Image deleted successfully');
             fetchImages();
           } else {
             message.error(response.message || 'Failed to delete image');
           }
         } catch (error: any) {
           message.error(error.message || 'Failed to delete image');
-          console.error('Error deleting image:', error);
         }
       },
     });
@@ -109,7 +114,7 @@ const GalleryImages = () => {
       if (editingImage) {
         const response = await galleryService.updateImage(editingImage.id, values);
         if (response.status) {
-          message.success(response.message || 'Image updated successfully');
+          message.success('Image updated successfully');
           setIsModalVisible(false);
           fetchImages();
         } else {
@@ -118,7 +123,7 @@ const GalleryImages = () => {
       } else {
         const response = await galleryService.createImage(values);
         if (response.status) {
-          message.success(response.message || 'Image created successfully');
+          message.success('Image created successfully');
           setIsModalVisible(false);
           fetchImages();
         } else {
@@ -127,7 +132,6 @@ const GalleryImages = () => {
       }
     } catch (error: any) {
       message.error(error.message || 'Failed to save image');
-      console.error('Error saving image:', error);
     }
   };
 
@@ -138,86 +142,76 @@ const GalleryImages = () => {
 
   const filteredImages = images.filter(
     (image) =>
-      image.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      image.description.toLowerCase().includes(searchText.toLowerCase()) ||
-      image.category.toLowerCase().includes(searchText.toLowerCase())
+      image.tags.toLowerCase().includes(searchText.toLowerCase())
   );
 
   const columns: ColumnsType<IGalleryImage> = [
     {
       title: "Image",
-      key: "image",
+      key: "media",
       render: (_, record) => (
-        <Space>
-          <Image
-            src={record.url}
-            alt={record.title}
-            width={80}
-            height={80}
-            style={{ objectFit: 'cover', borderRadius: 4 }}
-            fallback="/placeholder-image.png"
-          />
-          <Space direction="vertical" size={0}>
-            <div style={{ fontWeight: 500 }}>{record.title}</div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              {record.description}
-            </div>
-          </Space>
-        </Space>
+        <img 
+          src={record.media} 
+          alt="Gallery" 
+          style={{ width: '100px', height: '60px', objectFit: 'cover' }} 
+        />
       ),
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category) => (
-        <Tag color="blue">{category}</Tag>
-      ),
+      title: "Title",
+      key: "titleId",
+      render: (_, record) => {
+        const title = titles.find(t => t.id === record.titleId);
+        return title ? title.title : '-';
+      },
+    },
+    {
+      title: "Tags",
+      dataIndex: "tags",
+      key: "tags",
     },
     {
       title: "Order",
-      dataIndex: "displayOrder",
-      key: "displayOrder",
-      sorter: (a, b) => a.displayOrder - b.displayOrder,
+      dataIndex: "order",
+      key: "order",
+      sorter: (a, b) => a.order - b.order,
     },
     {
       title: "Status",
       dataIndex: "isActive",
       key: "isActive",
       render: (isActive) => (
-        <Tag color={isActive ? "green" : "red"}>
-          {isActive ? "Active" : "Inactive"}
-        </Tag>
+        <Switch checked={isActive} disabled />
       ),
     },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item
-                  key="edit"
-                  icon={<EditOutlined />}
-                  onClick={() => handleEdit(record)}
-                >
-                  Edit
-                </Menu.Item>
-                <Menu.Item
-                  key="delete"
-                  icon={<DeleteOutlined />}
-                  danger
-                  onClick={() => handleDelete(record)}
-                >
-                  Delete
-                </Menu.Item>
-              </Menu>
-            }
-            trigger={["click"]}
-          >
-            <Button type="text" icon={<MoreOutlined />} />
-          </Dropdown>
+        <Dropdown
+          overlay={
+            <Menu>
+              <Menu.Item
+                key="edit"
+                icon={<EditOutlined />}
+                onClick={() => handleEdit(record)}
+              >
+                Edit
+              </Menu.Item>
+              <Menu.Item
+                key="delete"
+                icon={<DeleteOutlined />}
+                danger
+                onClick={() => handleDelete(record)}
+              >
+                Delete
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={["click"]}
+        >
+          <Button type="text" icon={<MoreOutlined />} />
+        </Dropdown>
       ),
     },
   ];
@@ -226,56 +220,28 @@ const GalleryImages = () => {
     <div className="gallery-images-page">
       <div className="gallery-images-header">
         <h1>Gallery Images</h1>
-        <p>Manage your gallery images and collections</p>
+        <p>Manage your gallery images</p>
       </div>
 
-      <Row gutter={[16, 16]} className="gallery-images-stats">
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Total Images"
-              value={images.length}
-              prefix={<PictureOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Categories"
-              value={new Set(images.map(i => i.category)).size}
-              prefix={<FolderOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Active Images"
-              value={images.filter(i => i.isActive).length}
-              prefix={<EyeOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <Card className="gallery-images-controls">
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Input
+            placeholder="Search by tags..."
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ maxWidth: 300 }}
+          />
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            Add Image
+          </Button>
+        </Space>
+      </Card>
 
-      <div className="gallery-images-controls">
-        <Input
-          placeholder="Search images..."
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 300 }}
-        />
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          Add Image
-        </Button>
-      </div>
-
-        <Table
+      <Table
         className="gallery-images-table"
-          columns={columns}
-          dataSource={filteredImages}
+        columns={columns}
+        dataSource={filteredImages}
         rowKey="id"
         loading={loading}
       />
@@ -290,69 +256,52 @@ const GalleryImages = () => {
         <Form
           form={form}
           layout="vertical"
-          initialValues={{ isActive: true }}
+          initialValues={{ isActive: true, order: 1 }}
         >
           <Form.Item
-            name="title"
+            name="titleId"
             label="Title"
-            rules={[{ required: true, message: "Please enter title" }]}
+            rules={[{ required: true, message: "Please select a title" }]}
+          >
+            <Select>
+              {titles.map(title => (
+                <Select.Option key={title.id} value={title.id}>
+                  {title.title}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="media"
+            label="Image URL"
+            rules={[{ required: true, message: "Please enter image URL" }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            name="url"
-            label="Image URL"
-            rules={[{ required: true, message: "Please enter image URL" }]}
+            name="tags"
+            label="Tags"
+            rules={[{ required: true, message: "Please enter tags" }]}
           >
-            <Input placeholder="https://example.com/image.jpg" />
+            <Input placeholder="Comma separated tags (e.g., event,2023)" />
           </Form.Item>
 
           <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
+            name="order"
+            label="Display Order"
+            rules={[{ required: true, message: "Please enter display order" }]}
           >
-            <TextArea rows={4} />
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="category"
-                label="Category"
-                rules={[{ required: true, message: "Please enter category" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="displayOrder"
-                label="Display Order"
-                rules={[{ required: true, message: "Please enter display order" }]}
-              >
-                <Input type="number" min={0} />
-              </Form.Item>
-            </Col>
-          </Row>
 
           <Form.Item
             name="isActive"
             label="Status"
             valuePropName="checked"
           >
-            <Select>
-              <Option value={true}>Active</Option>
-              <Option value={false}>Inactive</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            name="altText"
-            label="Alt Text"
-          >
-            <Input />
+            <Switch />
           </Form.Item>
         </Form>
       </Modal>

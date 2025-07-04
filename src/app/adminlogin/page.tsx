@@ -48,8 +48,9 @@ const AdminLogin = () => {
       const data = await response.json();
 
       if (response.ok && data.status) {
+        console.log("data1111", data);
         // Store token in localStorage
-        localStorage.setItem('adminToken', data.data.token);
+        localStorage.setItem('adminToken', data.data.accessToken);
         
         // Dispatch Redux action to update state
         dispatch(login({

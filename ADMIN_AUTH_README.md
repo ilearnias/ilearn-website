@@ -97,6 +97,8 @@ const login = async (email: string, password: string): Promise<boolean> => {
       throw new Error(data.message || "Login failed");
     }
 
+    console.log('is this login',data)
+
     // Store auth token and user data
     localStorage.setItem("adminToken", data.token);
     localStorage.setItem("adminUser", JSON.stringify(data.user));

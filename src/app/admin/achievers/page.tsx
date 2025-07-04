@@ -1,56 +1,39 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Table,
   Input,
   Button,
   Card,
-  Statistic,
-  Row,
-  Col,
   Space,
   Tag,
-  Dropdown,
-  Menu,
   Modal,
   Form,
   message,
-  Select,
   InputNumber,
   Switch,
 } from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  MoreOutlined,
-  TrophyOutlined,
-  StarOutlined,
-  UserOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { achieverService, IAchiever } from "@/services/achievers.service";
 import "./styles.scss";
 
 const { confirm } = Modal;
+const { TextArea } = Input;
 
 const Achievers = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [achievers, setAchievers] = useState<IAchiever[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingAchiever, setEditingAchiever] = useState<IAchiever | null>(
-    null
-  );
+  const [editingAchiever, setEditingAchiever] = useState<IAchiever | null>(null);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    fetchAchievers();
-  }, []);
-
-  const fetchAchievers = async () => {
+  const fetchAchievers = useCallback(async () => {
     try {
       setLoading(true);
       const response = await achieverService.getAllAchievers();
@@ -65,11 +48,43 @@ const Achievers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const response = await achieverService.getAllAchievers();
+        if (mounted && response.status) {
+          setAchievers(response.data);
+        } else if (mounted) {
+          message.error(response.message || "Failed to fetch achievers");
+        }
+      } catch (error: any) {
+        if (mounted) {
+          message.error(error.message || "Failed to fetch achievers");
+          console.error("Error fetching achievers:", error);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleAdd = () => {
     setEditingAchiever(null);
     form.resetFields();
+    form.setFieldsValue({ isActive: true }); // Set default value for isActive
     setIsModalVisible(true);
   };
 
@@ -90,10 +105,8 @@ const Achievers = () => {
         try {
           const response = await achieverService.deleteAchiever(record.id);
           if (response.status) {
-            message.success(
-              response.message || "Achiever deleted successfully"
-            );
-            fetchAchievers();
+            message.success(response.message || "Achiever deleted successfully");
+            await fetchAchievers();
           } else {
             message.error(response.message || "Failed to delete achiever");
           }
@@ -110,15 +123,13 @@ const Achievers = () => {
       const values = await form.validateFields();
       values.order = Number(values.order);
       values.isActive = Boolean(values.isActive);
+
       if (editingAchiever) {
-        const response = await achieverService.updateAchiever(
-          editingAchiever.id,
-          values
-        );
+        const response = await achieverService.updateAchiever(editingAchiever.id, values);
         if (response.status) {
           message.success(response.message || "Achiever updated successfully");
           setIsModalVisible(false);
-          fetchAchievers();
+          await fetchAchievers();
         } else {
           message.error(response.message || "Failed to update achiever");
         }
@@ -127,7 +138,7 @@ const Achievers = () => {
         if (response.status) {
           message.success(response.message || "Achiever created successfully");
           setIsModalVisible(false);
-          fetchAchievers();
+          await fetchAchievers();
         } else {
           message.error(response.message || "Failed to create achiever");
         }
@@ -143,20 +154,19 @@ const Achievers = () => {
     form.resetFields();
   };
 
-  const filteredAchievers = achievers.filter(
-    (achiever) =>
-      (achiever.name || "").toLowerCase().includes(searchText.toLowerCase()) ||
-      (achiever.details || "")
-        .toLowerCase()
-        .includes(searchText.toLowerCase()) ||
-      (achiever.description || "")
-        .toLowerCase()
-        .includes(searchText.toLowerCase())
-  );
+  // Memoize filtered achievers to prevent unnecessary recalculations
+  const filteredAchievers = useMemo(() => {
+    return achievers.filter(
+      (achiever) =>
+        achiever.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        achiever.details.toLowerCase().includes(searchText.toLowerCase()) ||
+        achiever.description.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [achievers, searchText]);
 
   const columns: ColumnsType<IAchiever> = [
     {
-      title: "Name",
+      title: "Name & Details",
       dataIndex: "name",
       key: "name",
       render: (_, record) => (
@@ -190,34 +200,16 @@ const Achievers = () => {
       key: "description",
     },
     {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
-      render: (image) => (
-        <img
-          src={image || "/placeholder.png"}
-          alt="Image"
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = "/placeholder.png";
-          }}
-        />
-      ),
-    },
-    {
       title: "Order",
       dataIndex: "order",
       key: "order",
+      width: 100,
     },
     {
-      title: "Active",
+      title: "Status",
       dataIndex: "isActive",
       key: "isActive",
+      width: 100,
       render: (isActive) => (
         <Tag color={isActive ? "green" : "red"}>
           {isActive ? "Active" : "Inactive"}
@@ -227,162 +219,102 @@ const Achievers = () => {
     {
       title: "Actions",
       key: "actions",
+      width: 100,
       render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item
-                key="edit"
-                icon={<EditOutlined />}
-                onClick={() => handleEdit(record)}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined />}
-                danger
-                onClick={() => handleDelete(record)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
+        <Space>
+          <Button type="link" onClick={() => handleEdit(record)}>
+            Edit
+          </Button>
+          <Button type="link" danger onClick={() => handleDelete(record)}>
+            Delete
+          </Button>
+        </Space>
       ),
     },
   ];
 
   return (
     <div className="achievers-page">
-      <div className="achievers-header">
-        <h1>Achievers Management</h1>
-        <p>Manage student achievements and success stories</p>
-      </div>
+      <Card>
+        <div className="table-header" style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between' }}>
+          <Input
+            placeholder="Search achievers..."
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 300 }}
+          />
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            Add Achiever
+          </Button>
+        </div>
 
-      <Row gutter={[16, 16]} className="achievers-stats">
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Total Achievers"
-              value={achievers.length}
-              prefix={<TrophyOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Active Achievers"
-              value={achievers.filter((a) => a.isActive).length}
-              prefix={<StarOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Highest Order"
-              value={achievers.reduce(
-                (max, a) => (a.order && a.order > max ? a.order : max),
-                0
-              )}
-              prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      <div className="achievers-controls">
-        <Input
-          placeholder="Search achievers..."
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 300 }}
+        <Table
+          columns={columns}
+          dataSource={filteredAchievers}
+          rowKey="id"
+          loading={loading}
         />
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          Add Achiever
-        </Button>
-      </div>
 
-      <Table
-        className="achievers-table"
-        columns={columns}
-        dataSource={filteredAchievers}
-        rowKey="id"
-        loading={loading}
-      />
+        <Modal
+          title={editingAchiever ? "Edit Achiever" : "Add New Achiever"}
+          open={isModalVisible}
+          onOk={handleModalOk}
+          onCancel={handleModalCancel}
+          width={600}
+        >
+          <Form form={form} layout="vertical">
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: "Please enter name" }]}
+            >
+              <Input />
+            </Form.Item>
 
-      <Modal
-        title={editingAchiever ? "Edit Achiever" : "Add New Achiever"}
-        open={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-        width={800}
-      >
-        <Form form={form} layout="vertical">
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="name"
-                label="Name"
-                rules={[{ required: true, message: "Please enter name" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="image"
-                label="Image URL"
-                rules={[{ required: true, message: "Please enter image URL" }]}
-              >
-                <Input placeholder="https://example.com/image.jpg" />
-              </Form.Item>
-            </Col>
-          </Row>
+            <Form.Item
+              name="details"
+              label="Details"
+              rules={[{ required: true, message: "Please enter details" }]}
+            >
+              <Input />
+            </Form.Item>
 
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[{ required: true, message: "Please enter description" }]}
+            >
+              <TextArea rows={4} />
+            </Form.Item>
 
-          <Form.Item name="details" label="Details">
-            <Input />
-          </Form.Item>
+            <Form.Item
+              name="image"
+              label="Image URL"
+              rules={[{ required: true, message: "Please enter image URL" }]}
+            >
+              <Input placeholder="https://example.com/image.jpg" />
+            </Form.Item>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="order"
-                label="Order"
-                rules={[{ required: true, message: "Please enter order" }]}
-              >
-                <InputNumber min={1} style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="isActive"
-                label="Active Status"
-                valuePropName="checked"
-                rules={[
-                  { required: true, message: "Please select active status" },
-                ]}
-              >
-                <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
+            <Form.Item
+              name="order"
+              label="Order"
+              rules={[{ required: true, message: "Please enter order" }]}
+            >
+              <InputNumber min={1} style={{ width: "100%" }} />
+            </Form.Item>
+
+            <Form.Item
+              name="isActive"
+              label="Active Status"
+              valuePropName="checked"
+              initialValue={true}
+            >
+              <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </Card>
     </div>
   );
 };
