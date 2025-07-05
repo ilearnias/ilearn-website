@@ -8,11 +8,12 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Providers from "@/components/Providers";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
+import LayoutWithConditionalHeaderFooter from "@/components/LayoutWithConditionalHeaderFooter";
 
 const merriweather = Merriweather({
-  weight: ['300', '400', '700', '900'],
-  subsets: ['latin'],
-  display: 'swap',
+  weight: ["300", "400", "700", "900"],
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -67,11 +68,9 @@ export default function RootLayout({
         <AntdRegistry>
           <ErrorBoundary>
             <LoadingProvider>
-              <Header />
-              <Providers>
-                <main className="min-h-screen">{children}</main>
-              </Providers>
-              <Footer />
+              <LayoutWithConditionalHeaderFooter>
+                {children}
+              </LayoutWithConditionalHeaderFooter>
             </LoadingProvider>
           </ErrorBoundary>
         </AntdRegistry>
