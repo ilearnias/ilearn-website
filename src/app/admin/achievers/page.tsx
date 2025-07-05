@@ -155,60 +155,60 @@ const Achievers = () => {
   );
 
   const columns: ColumnsType<IAchiever> = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      render: (_, record) => (
-        <Space>
-          <img
-            src={record.image}
-            alt={record.name}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = "/placeholder.png";
-            }}
-          />
-          <div>
-            <div style={{ fontWeight: 500 }}>{record.name}</div>
-            <div style={{ fontSize: "12px", color: "#666" }}>
-              {record.details}
-            </div>
-          </div>
-        </Space>
-      ),
-    },
+    // {
+    //   title: "Name",
+    //   dataIndex: "name",
+    //   key: "name",
+    //   render: (_, record) => (
+    //     <Space>
+    //       <img
+    //         src={record.image}
+    //         alt={record.name}
+    //         style={{
+    //           width: 40,
+    //           height: 40,
+    //           borderRadius: "50%",
+    //           objectFit: "cover",
+    //         }}
+    //         onError={(e) => {
+    //           const target = e.target as HTMLImageElement;
+    //           target.src = "/placeholder.png";
+    //         }}
+    //       />
+    //       <div>
+    //         <div style={{ fontWeight: 500 }}>{record.name}</div>
+    //         <div style={{ fontSize: "12px", color: "#666" }}>
+    //           {record.details}
+    //         </div>
+    //       </div>
+    //     </Space>
+    //   ),
+    // },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
     },
-    {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
-      render: (image) => (
-        <img
-          src={image || "/placeholder.png"}
-          alt="Image"
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = "/placeholder.png";
-          }}
-        />
-      ),
-    },
+    // {
+    //   title: "Image",
+    //   dataIndex: "image",
+    //   key: "image",
+    //   render: (image) => (
+    //     <img
+    //       src={image || "/placeholder.png"}
+    //       alt="Image"
+    //       style={{
+    //         width: 40,
+    //         height: 40,
+    //         borderRadius: "50%",
+    //         objectFit: "cover",
+    //       }}
+    //       onError={(e) => {
+    //         (e.target as HTMLImageElement).src = "/placeholder.png";
+    //       }}
+    //     />
+    //   ),
+    // },
     {
       title: "Order",
       dataIndex: "order",

@@ -1,94 +1,205 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import HeroSection from "@/components/common/HeroSection";
+import Container from "@/components/common/Container";
+import Heading from "@/components/common/Heading";
+import SubText from "@/components/common/SubText";
 import { 
   FiBook, FiTarget, FiGlobe, FiClipboard,
-  FiClock, FiHelpCircle, FiVideo
+  FiClock, FiHelpCircle, FiVideo, FiChevronDown
 } from "react-icons/fi";
+import { TestimonialItem } from "@/app/home/components/TestimonialsSection";
+import TestimonialsSection from "@/app/home/components/TestimonialsSection";
+import { useMediaQuery } from "react-responsive";
+import { motion } from "framer-motion";
+
+// Sample testimonial data for Sociology
+const sociologyTestimonials: TestimonialItem[] = [
+  {
+    id: "soc1",
+    title: "Success in Sociology Optional",
+    subtitle: "How iLearn's comprehensive notes helped me score high marks.",
+    videoId: "Y8Tko2YC5hA",
+    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg"
+  },
+  {
+    id: "soc2",
+    title: "From Basics to Advanced",
+    subtitle: "My journey through the sociology optional preparation.",
+    videoId: "jNQXAC9IVRw",
+    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg"
+  },
+  {
+    id: "soc3",
+    title: "Sociology - The Right Choice",
+    subtitle: "How conceptual clarity and test series made the difference.",
+    videoId: "M7lc1UVf-VE",
+    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg"
+  }
+];
 
 // Program Highlights Section
 interface HighlightProps {
   icon: React.ReactNode;
+  title: string;
   text: string;
 }
 
-const Highlight: React.FC<HighlightProps> = ({ icon, text }) => (
-  <div className="flex items-center gap-4 mb-6">
-    <div className="text-red-500 flex-shrink-0">
-      {icon}
+const Highlight: React.FC<HighlightProps> = ({ icon, title, text }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  };
+
+  if (isMobile) {
+    return (
+      <div className="bg-white rounded-xl overflow-hidden border border-gray-100">
+        <button
+          className="w-full p-4 flex items-center justify-between text-left"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <div className="flex items-center gap-3">
+            <div className="text-blue-600 bg-blue-50 p-3 rounded-xl">
+              {icon}
+            </div>
+            <h3 className="font-semibold">{title}</h3>
+          </div>
+          <FiChevronDown
+            className={`w-5 h-5 transition-transform ${
+              isOpen ? "transform rotate-180" : ""
+            }`}
+          />
+        </button>
+        <div
+          className={`overflow-hidden transition-all duration-300 ${
+            isOpen ? "max-h-40" : "max-h-0"
+          }`}
+        >
+          <p className="px-4 pb-4 text-gray-600">{text}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div 
+      className="feature-card bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 relative overflow-hidden"
+      onMouseMove={handleMouseMove}
+    >
+      <div className="feature-card-content relative z-10">
+        <div className="flex flex-col h-full">
+          <div className="text-blue-600 bg-blue-50 p-4 rounded-xl w-fit mb-4">
+            {icon}
+          </div>
+          <h3 className="text-lg font-semibold mb-2">{title}</h3>
+          <p className="text-gray-600 leading-relaxed">{text}</p>
+        </div>
+      </div>
+      <div className="hover-effect"></div>
     </div>
-    <p className="text-gray-700">{text}</p>
-  </div>
-);
+  );
+};
 
 const ProgramHighlights = () => {
   const highlights = [
     {
       icon: <FiBook className="w-6 h-6" />,
-      text: "Comprehensive notes"
+      title: "Comprehensive Notes",
+      text: "Detailed study material covering all topics of Paper I and Paper II"
     },
     {
       icon: <FiTarget className="w-6 h-6" />,
-      text: "Conceptual clarity"
+      title: "Conceptual Clarity",
+      text: "Focus on building strong theoretical understanding with practical applications"
     },
     {
       icon: <FiGlobe className="w-6 h-6" />,
-      text: "Contemporary application"
+      title: "Contemporary Application",
+      text: "Regular updates on current events and their sociological analysis"
     },
     {
       icon: <FiClipboard className="w-6 h-6" />,
-      text: "Regular test series"
+      title: "Regular Test Series",
+      text: "Periodic assessments with detailed feedback and performance analysis"
     }
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-bold mb-8">Program Highlights</h2>
-        <div className="max-w-2xl">
+    <section className="py-16 bg-gray-50">
+      <style jsx>{`
+        .feature-card {
+          --mouse-x: 0;
+          --mouse-y: 0;
+        }
+        
+        .hover-effect {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.5s;
+          background: radial-gradient(
+            800px circle at var(--mouse-x) var(--mouse-y),
+            rgba(229, 231, 235, 0.1),
+            transparent 40%
+          );
+        }
+
+        .feature-card:hover .hover-effect {
+          opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+          .hover-effect {
+            display: none;
+          }
+        }
+      `}</style>
+      <Container>
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <Heading 
+            text="Program Highlights" 
+            className="mb-4"
+            animate={true}
+          />
+          <p className="text-gray-600 leading-relaxed">
+            Our comprehensive sociology optional program is designed to help you excel in UPSC optional papers
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {highlights.map((highlight, index) => (
             <Highlight key={index} {...highlight} />
           ))}
         </div>
-        <div className="mt-12">
-          <h3 className="text-xl font-semibold mb-4">Program Details</h3>
-          <div className="flex items-center gap-2 text-gray-700">
-            <FiClock className="w-5 h-5" />
-            <span>Duration: 6 months</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
 
-// Student Testimonials Section
-const StudentTestimonials = () => {
-  return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-4">Student Testimonials</h2>
-        <p className="text-center text-gray-600 mb-12">
-          Success stories from Sociology Optional students
-        </p>
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="mb-8">
-            <FiVideo className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No Video Testimonials Yet</h3>
-            <p className="text-gray-600">
-              Video testimonials for this program will appear here in a horizontal carousel, just like on the homepage
-            </p>
-          </div>
-          <div className="flex justify-center gap-4">
-            <div className="w-24 h-12 bg-gray-200 rounded-md"></div>
-            <div className="w-24 h-12 bg-gray-200 rounded-md"></div>
-            <div className="w-24 h-12 bg-gray-200 rounded-md"></div>
+        <div className="mt-12 bg-white p-8 rounded-xl shadow-sm max-w-3xl mx-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <FiClock className="w-6 h-6 text-blue-600" />
+              <div>
+                <h3 className="font-semibold">Program Duration</h3>
+                <p className="text-gray-600">6 months intensive preparation</p>
+              </div>
+            </div>
+            <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+              Enroll Now
+            </button>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
@@ -96,85 +207,89 @@ const StudentTestimonials = () => {
 // FAQ Section
 interface FAQProps {
   question: string;
-  isOpen?: boolean;
-  onClick?: () => void;
+  answer: string;
 }
 
-const FAQ: React.FC<FAQProps> = ({ question, isOpen = false, onClick }) => (
-  <div className="border rounded-lg bg-white mb-4 overflow-hidden">
-    <button 
-      className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50"
-      onClick={onClick}
-    >
-      <div className="flex items-center gap-3">
-        <span className="text-[#27374D] text-lg">{question}</span>
+const FAQ: React.FC<FAQProps> = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  if (isMobile) {
+    return (
+      <div className="bg-white rounded-xl overflow-hidden border border-gray-100">
+        <button
+          className="w-full p-4 flex items-center justify-between text-left"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <span className="font-semibold text-gray-800">{question}</span>
+          <FiChevronDown
+            className={`w-5 h-5 text-blue-600 transition-transform ${
+              isOpen ? "transform rotate-180" : ""
+            }`}
+          />
+        </button>
+        <div
+          className={`overflow-hidden transition-all duration-300 ${
+            isOpen ? "max-h-40" : "max-h-0"
+          }`}
+        >
+          <p className="px-4 pb-4 text-gray-600">{answer}</p>
+        </div>
       </div>
-      <svg
-        className={`w-6 h-6 transform transition-transform ${isOpen ? 'rotate-180' : ''}`}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-  </div>
-);
+    );
+  }
+
+  return (
+    <div className="border-b border-gray-200 py-4">
+      <div className="flex justify-between items-center w-full text-left">
+        <span className="font-semibold text-gray-800">{question}</span>
+        <FiHelpCircle className="w-5 h-5 text-blue-600" />
+      </div>
+      <p className="mt-2 text-gray-600">{answer}</p>
+    </div>
+  );
+};
 
 const FAQSection = () => {
   const faqs = [
     {
-      question: "How do I enroll in a program?",
-      answer: "You can enroll by clicking the 'Enroll Now' button or contacting us directly."
+      question: "How do I enroll in the program?",
+      answer: "You can enroll by clicking the 'Enroll Now' button or contacting us directly through our contact page."
     },
     {
       question: "Are there any scholarships available?",
-      answer: "Yes, we offer merit-based scholarships. Contact us for more details."
+      answer: "Yes, we offer merit-based scholarships. Contact our admissions team for more details."
     },
     {
       question: "Do you offer online classes?",
-      answer: "Yes, we provide both online and offline learning options."
+      answer: "Yes, we provide both online and offline learning options to suit your convenience."
     },
     {
       question: "What is your batch size?",
-      answer: "We maintain small batch sizes to ensure personalized attention."
+      answer: "We maintain small batch sizes of 30-40 students to ensure personalized attention to each student."
     }
   ];
 
   return (
     <section className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="text-[#27374D]">Frequently Asked </span>
-            <span className="text-red-600">Questions</span>
-          </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Find answers to common questions about our programs and admission process.
+      <Container>
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <Heading 
+            text="Frequently Asked Questions"
+            color="black"
+            animate={true}
+            className="text-[#1F2937] font-bold mb-4"
+          />
+          <p className="text-gray-600 leading-relaxed">
+            Get answers to common questions about our Sociology Optional Program
           </p>
         </div>
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto space-y-4">
           {faqs.map((faq, index) => (
-            <FAQ key={index} question={faq.question} />
+            <FAQ key={index} {...faq} />
           ))}
-          <div className="text-center mt-8">
-            <a 
-              href="/contact"
-              className="text-[#27374D] hover:text-blue-800 font-medium inline-flex items-center"
-            >
-              Contact us for more information
-              <svg
-                className="w-5 h-5 ml-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </a>
-          </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
@@ -183,20 +298,22 @@ const FAQSection = () => {
 const CallToAction = () => {
   return (
     <section className="py-16 bg-blue-900 text-white">
-      <div className="container mx-auto px-4 text-center">
-        <p className="text-lg mb-8">
-          Join Sociology Optional at iLearn IAS Academy and take the first step towards
-          achieving your goal of becoming a civil servant.
-        </p>
-        <div className="flex justify-center gap-4">
-          <button className="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700">
-            Enroll Now
-          </button>
-          <button className="border border-white text-white px-6 py-3 rounded-md hover:bg-white/10">
-            Contact for Details
-          </button>
+      <Container>
+        <div className="text-center">
+          <SubText 
+            text="Join Sociology Optional at iLearn IAS Academy and take the first step towards achieving your goal of becoming a civil servant."
+            className="!text-white !text-lg !mb-8"
+          />
+          <div className="flex justify-center gap-4">
+            <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+              Enroll Now
+            </button>
+            <button className="border border-white text-white px-6 py-3 rounded-md hover:bg-white/10 transition-colors">
+              Contact for Details
+            </button>
+          </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
@@ -222,10 +339,9 @@ export default function SociologyProgram() {
         buttons={buttons}
       />
       <ProgramHighlights />
-      <StudentTestimonials />
+      <TestimonialsSection testimonials={sociologyTestimonials} />
       <FAQSection />
       <CallToAction />
-      <Footer />
     </div>
   );
 } 

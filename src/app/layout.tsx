@@ -7,6 +7,7 @@ import LoadingProvider from "@/components/common/LoadingProvider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Providers from "@/components/Providers";
+import ErrorBoundary from "@/components/common/ErrorBoundary";
 
 const merriweather = Merriweather({
   weight: ['300', '400', '700', '900'],
@@ -64,13 +65,15 @@ export default function RootLayout({
       </head>
       <body className={merriweather.className}>
         <AntdRegistry>
-          <LoadingProvider>
-            <Header />
-            <Providers>
-              <main className="min-h-screen">{children}</main>
-            </Providers>
-            <Footer />
-          </LoadingProvider>
+          <ErrorBoundary>
+            <LoadingProvider>
+              <Header />
+              <Providers>
+                <main className="min-h-screen">{children}</main>
+              </Providers>
+              <Footer />
+            </LoadingProvider>
+          </ErrorBoundary>
         </AntdRegistry>
       </body>
     </html>

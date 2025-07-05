@@ -76,7 +76,11 @@ const ILearnAppPage = () => {
   return (
     <>
       <Header />
-      <HeroSection title="iLearn App" pageName="iLearn App" />
+      <HeroSection 
+        title="iLearn App" 
+        pageName="iLearn App"
+        description="Your complete UPSC preparation companion. Access study materials, take tests, track progress, and learn on the go with our feature-rich mobile application."
+      />
       <div className="app-landing-container">
         <AppHeroSection />
         <FeaturesSection features={AppFeatures} />

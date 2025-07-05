@@ -14,8 +14,8 @@ const JourneySection = () => {
           <div id="journey-section-title">
             <Heading 
               text={<>
-                <span className="text-primary">Our </span>
-                <span className="text-danger position-relative">
+                <span >Our </span>
+                <span className=" position-relative">
                   Journey
                   <span className="position-absolute bottom-0 start-0 w-100 journey-underline"></span>
                 </span>

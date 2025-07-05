@@ -22,7 +22,7 @@ const CoreValuesSection = () => {
 
   return (
     <section className="core-values-section" aria-labelledby="core-values-title">
-      <Container>
+      <Container >
         <Fade>
           <div id="core-values-title">
             <Heading 

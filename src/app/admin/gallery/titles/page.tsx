@@ -51,15 +51,15 @@ const GalleryTitles = () => {
   const fetchTitles = async () => {
     try {
       setLoading(true);
-      const response = await galleryService.getAllTitles();
+      const response: any = await galleryService.getAllTitles();
       if (response.success) {
         setTitles(response.data);
       } else {
-        message.error(response.message || 'Failed to fetch titles');
+        message.error(response.message || "Failed to fetch titles");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch titles');
-      console.error('Error fetching titles:', error);
+      message.error(error.message || "Failed to fetch titles");
+      console.error("Error fetching titles:", error);
     } finally {
       setLoading(false);
     }
@@ -79,23 +79,23 @@ const GalleryTitles = () => {
 
   const handleDelete = (record: IGalleryTitle) => {
     confirm({
-      title: 'Are you sure you want to delete this title?',
-      content: 'This action cannot be undone.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      title: "Are you sure you want to delete this title?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: async () => {
         try {
-          const response = await galleryService.deleteTitle(record.id);
+          const response: any = await galleryService.deleteTitle(record.id);
           if (response.success) {
-            message.success(response.message || 'Title deleted successfully');
+            message.success(response.message || "Title deleted successfully");
             fetchTitles();
           } else {
-            message.error(response.message || 'Failed to delete title');
+            message.error(response.message || "Failed to delete title");
           }
         } catch (error: any) {
-          message.error(error.message || 'Failed to delete title');
-          console.error('Error deleting title:', error);
+          message.error(error.message || "Failed to delete title");
+          console.error("Error deleting title:", error);
         }
       },
     });
@@ -104,29 +104,32 @@ const GalleryTitles = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (editingTitle) {
-        const response = await galleryService.updateTitle(editingTitle.id, values);
+        const response: any = await galleryService.updateTitle(
+          editingTitle.id,
+          values
+        );
         if (response.success) {
-          message.success(response.message || 'Title updated successfully');
+          message.success(response.message || "Title updated successfully");
           setIsModalVisible(false);
           fetchTitles();
         } else {
-          message.error(response.message || 'Failed to update title');
+          message.error(response.message || "Failed to update title");
         }
       } else {
-        const response = await galleryService.createTitle(values);
+        const response: any = await galleryService.createTitle(values);
         if (response.success) {
-          message.success(response.message || 'Title created successfully');
+          message.success(response.message || "Title created successfully");
           setIsModalVisible(false);
           fetchTitles();
         } else {
-          message.error(response.message || 'Failed to create title');
+          message.error(response.message || "Failed to create title");
         }
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to save title');
-      console.error('Error saving title:', error);
+      message.error(error.message || "Failed to save title");
+      console.error("Error saving title:", error);
     }
   };
 
@@ -159,9 +162,7 @@ const GalleryTitles = () => {
       title: "Category",
       dataIndex: "category",
       key: "category",
-      render: (category) => (
-        <Tag color="blue">{category}</Tag>
-      ),
+      render: (category) => <Tag color="blue">{category}</Tag>,
     },
     {
       title: "Order",
@@ -232,7 +233,7 @@ const GalleryTitles = () => {
           <Card>
             <Statistic
               title="Categories"
-              value={new Set(titles.map(t => t.category)).size}
+              value={new Set(titles.map((t) => t.category)).size}
               prefix={<OrderedListOutlined />}
             />
           </Card>
@@ -241,7 +242,7 @@ const GalleryTitles = () => {
           <Card>
             <Statistic
               title="Active Titles"
-              value={titles.filter(t => t.isActive).length}
+              value={titles.filter((t) => t.isActive).length}
               prefix={<EyeOutlined />}
             />
           </Card>
@@ -261,10 +262,10 @@ const GalleryTitles = () => {
         </Button>
       </div>
 
-        <Table
+      <Table
         className="gallery-titles-table"
-          columns={columns}
-          dataSource={filteredTitles}
+        columns={columns}
+        dataSource={filteredTitles}
         rowKey="id"
         loading={loading}
       />
@@ -276,11 +277,7 @@ const GalleryTitles = () => {
         onCancel={handleModalCancel}
         width={600}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{ isActive: true }}
-        >
+        <Form form={form} layout="vertical" initialValues={{ isActive: true }}>
           <Form.Item
             name="text"
             label="Title Text"
@@ -311,28 +308,23 @@ const GalleryTitles = () => {
               <Form.Item
                 name="displayOrder"
                 label="Display Order"
-                rules={[{ required: true, message: "Please enter display order" }]}
+                rules={[
+                  { required: true, message: "Please enter display order" },
+                ]}
               >
                 <Input type="number" min={0} />
               </Form.Item>
             </Col>
           </Row>
 
-          <Form.Item
-            name="isActive"
-            label="Status"
-            valuePropName="checked"
-          >
+          <Form.Item name="isActive" label="Status" valuePropName="checked">
             <Select>
               <Option value={true}>Active</Option>
               <Option value={false}>Inactive</Option>
             </Select>
           </Form.Item>
 
-          <Form.Item
-            name="style"
-            label="CSS Style"
-          >
+          <Form.Item name="style" label="CSS Style">
             <TextArea rows={3} placeholder="color: #000; font-size: 24px;" />
           </Form.Item>
         </Form>
@@ -341,4 +333,4 @@ const GalleryTitles = () => {
   );
 };
 
-export default GalleryTitles; 
+export default GalleryTitles;

@@ -13,7 +13,11 @@ const PageContainer = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <HeroSection title="Get in Touch" pageName="Contact Us" />
+      <HeroSection 
+        title="Get in Touch" 
+        pageName="Contact Us"
+        description="Have questions? We're here to help! Connect with our team for program inquiries, counseling sessions, or any assistance you need in your UPSC journey."
+      />
       
       <section className="contact-section py-16">
         <Container className="space-y-12">

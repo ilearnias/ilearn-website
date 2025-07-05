@@ -168,14 +168,14 @@ const Team = () => {
       dataIndex: "description",
       key: "description",
     },
-    {
-      title: "Image",
-      dataIndex: "image",
-      key: "image",
-      render: (image) => (
-        <img src={image || "/placeholder.png"} alt="Image" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
-      ),
-    },
+    // {
+    //   title: "Image",
+    //   dataIndex: "image",
+    //   key: "image",
+    //   render: (image) => (
+    //     <img src={image || "/placeholder.png"} alt="Image" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover' }} onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.png'; }} />
+    //   ),
+    // },
     {
       title: "Email",
       dataIndex: "email",
@@ -305,10 +305,10 @@ const Team = () => {
         </Button>
       </div>
 
-        <Table
+      <Table
         className="team-table"
-          columns={columns}
-          dataSource={filteredMembers}
+        columns={columns}
+        dataSource={filteredMembers}
         rowKey="id"
         loading={loading}
       />

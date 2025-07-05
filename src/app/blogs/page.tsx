@@ -155,7 +155,11 @@ export default function BlogPage() {
 
   return (
     <div>
-      <HeroSection title="Our Blog" pageName="Blog" />
+      <HeroSection 
+        title="Our Blog" 
+        pageName="Blog"
+        description="Stay informed and inspired with our latest articles, success stories, and expert insights on civil service examination preparation."
+      />
       <Container>
         <div className="blog-container">
           {/* Main Content */}

@@ -68,7 +68,8 @@ const GalleryPage = () => {
       
       <HeroSection
         title={t('gallery-HeaderTxt')}
-        description={t('gallery-HeaderSubTxt')}
+        pageName="Gallery"
+        description="Experience the vibrant life at iLearn through our collection of memorable moments, celebrations, and academic milestones."
         className="gallery-hero"
       />
 

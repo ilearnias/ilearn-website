@@ -4,6 +4,8 @@ import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import HeroSection from "@/components/common/HeroSection";
+import Heading from "@/components/common/Heading";
+import Container from "@/components/common/Container";
 import { 
   FiClock, FiUsers, FiAward, FiCheckCircle,
   FiBook, FiTarget, FiClipboard, FiMessageSquare,
@@ -18,12 +20,14 @@ interface OverviewItemProps {
 }
 
 const OverviewItem: React.FC<OverviewItemProps> = ({ icon, title, description }) => (
-  <div className="flex flex-col items-center text-center">
-    <div className="w-12 h-12 mb-4 text-blue-600">
-      {icon}
+  <div className="flex flex-col items-center text-center p-4 sm:p-6 rounded-lg hover:shadow-md transition-all duration-300">
+    <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 sm:mb-4 text-blue-600 bg-blue-50 rounded-full flex items-center justify-center">
+      <div className="w-6 h-6 sm:w-8 sm:h-8">
+        {icon}
+      </div>
     </div>
-    <h3 className="text-xl font-bold mb-2">{title}</h3>
-    <p className="text-gray-600">{description}</p>
+    <h3 className="text-base sm:text-xl font-bold mb-1 sm:mb-2">{title}</h3>
+    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{description}</p>
   </div>
 );
 
@@ -52,19 +56,23 @@ const ProgramOverview = () => {
   ];
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-4">Program Overview</h2>
-        <p className="text-center text-gray-600 mb-12">
+    <section className="py-12 sm:py-16 bg-white">
+      <Container>
+        <Heading 
+          text="Program Overview"
+          className="!text-center !mb-3 sm:!mb-4"
+          animate={true}
+        />
+        <p className="text-center text-sm sm:text-base text-gray-600 mb-8 sm:mb-12">
           Our flagship program designed to take you from basics to success in both
           UPSC Prelims and Mains examinations
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-8">
           {features.map((feature, index) => (
             <OverviewItem key={index} {...feature} />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
@@ -76,19 +84,37 @@ interface FeatureProps {
   description: string;
 }
 
-const Feature: React.FC<FeatureProps> = ({ icon, title, description }) => (
-  <div className="bg-white p-6 rounded-lg shadow-sm">
-    <div className="flex items-start gap-4">
-      <div className="text-green-500">
-        {icon}
+const Feature: React.FC<FeatureProps> = ({ icon, title, description }) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    card.style.setProperty("--mouse-x", `${x}px`);
+    card.style.setProperty("--mouse-y", `${y}px`);
+  };
+
+  return (
+    <div 
+      className="feature-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 relative overflow-hidden"
+      onMouseMove={handleMouseMove}
+    >
+      <div className="feature-card-content relative z-10">
+        <div className="flex items-start gap-4">
+          <div className="text-blue-600 bg-blue-50 p-3 rounded-lg">
+            {icon}
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-2">{title}</h3>
+            <p className="text-gray-600 leading-relaxed">{description}</p>
+          </div>
+        </div>
       </div>
-      <div>
-        <h3 className="text-lg font-semibold mb-2">{title}</h3>
-        <p className="text-gray-600">{description}</p>
-      </div>
+      <div className="hover-effect"></div>
     </div>
-  </div>
-);
+  );
+};
 
 const ProgramFeatures = () => {
   const features = [
@@ -126,8 +152,35 @@ const ProgramFeatures = () => {
 
   return (
     <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-4">Program Features</h2>
+      <style jsx>{`
+        .feature-card {
+          --mouse-x: 0;
+          --mouse-y: 0;
+        }
+        
+        .hover-effect {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.5s;
+          background: radial-gradient(
+            800px circle at var(--mouse-x) var(--mouse-y),
+            rgba(229, 231, 235, 0.1),
+            transparent 40%
+          );
+        }
+
+        .feature-card:hover .hover-effect {
+          opacity: 1;
+        }
+      `}</style>
+      <Container>
+        <Heading 
+          text="Program Features"
+          className="!text-center !mb-4"
+          animate={true}
+        />
         <p className="text-center text-gray-600 mb-12">
           Everything you need to succeed in your UPSC journey
         </p>
@@ -136,7 +189,7 @@ const ProgramFeatures = () => {
             <Feature key={index} {...feature} />
           ))}
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
@@ -172,17 +225,25 @@ const SuccessStories = () => {
 
   return (
     <section className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-4">Success Stories</h2>
+      <Container>
+        <Heading 
+          text="Success Stories"
+          className="!text-center !mb-4"
+          animate={true}
+        />
         <div className="max-w-3xl mx-auto mb-16">
-          <div className="bg-gray-50 p-8 rounded-lg text-center">
+          <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-lg text-center shadow-md">
             <div className="mb-6">
-              <FiStar className="w-12 h-12 mx-auto mb-4 text-yellow-500" />
-              <h3 className="text-xl font-bold mb-4">
-                Athul Janardanan IFS - State Topper
-              </h3>
+              <div className="w-20 h-20 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                <FiStar className="w-10 h-10 text-blue-600" />
+              </div>
+              <Heading 
+                text="Athul Janardanan IFS - State Topper"
+                className="!text-xl !font-bold !mb-4"
+                animate={false}
+              />
             </div>
-            <p className="text-gray-600 italic">
+            <p className="text-gray-600 italic text-lg leading-relaxed">
               &quot;iLearn&apos;s PCM program provided me with the perfect foundation and guidance to achieve
               success in UPSC. The comprehensive approach and excellent faculty made all the
               difference.&quot;
@@ -192,25 +253,27 @@ const SuccessStories = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {stats.map((stat, index) => (
-            <Stat key={index} {...stat} />
+            <div key={index} className="bg-blue-50 p-6 rounded-lg hover:shadow-md transition-all duration-300">
+              <Stat {...stat} />
+            </div>
           ))}
         </div>
 
         <div className="text-center mt-12">
-          <p className="text-gray-700 mb-8">
+          <p className="text-gray-700 mb-8 text-lg">
             Join our PCM program and be part of Kerala&apos;s most successful civil
             service coaching institute
           </p>
           <div className="flex justify-center gap-4">
-            <button className="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700">
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
               Enroll Today
             </button>
-            <button className="border border-blue-600 text-blue-600 px-6 py-3 rounded-md hover:bg-blue-50">
+            <button className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-md hover:bg-blue-50 transition-all duration-300">
               Contact Us
             </button>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
@@ -218,10 +281,10 @@ const SuccessStories = () => {
 export default function PCMProgram() {
   const buttons = (
     <div className="flex justify-center gap-4">
-      <button className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors">
+      <button className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
         Join PCM Program
       </button>
-      <button className="bg-white text-gray-800 px-6 py-3 rounded-md hover:bg-gray-100 transition-colors">
+      <button className="bg-white text-gray-800 px-8 py-3 rounded-md hover:bg-gray-100 transition-all duration-300 border border-gray-200">
         Learn More
       </button>
     </div>
@@ -238,7 +301,7 @@ export default function PCMProgram() {
       <ProgramOverview />
       <ProgramFeatures />
       <SuccessStories />
-      <Footer />
+
     </div>
   );
 } 

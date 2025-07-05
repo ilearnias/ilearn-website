@@ -14,7 +14,11 @@ const PageContainer = () => {
   return (
     <div className="about-Container">
       <Header />
-      <HeroSection title="About Us" pageName="About" />
+      <HeroSection 
+        title="About Us" 
+        pageName="About"
+        description="Discover the story behind iLearn's journey in shaping civil service aspirants. We're committed to excellence, innovation, and your success in the UPSC examination."
+      />
       <ImageCarouselSection />
       <JourneySection />
       <CoreValuesSection />

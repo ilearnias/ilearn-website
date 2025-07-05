@@ -108,7 +108,7 @@ const MediaSection = () => {
             text="iLearn in Media"
             color="black"
             animate={true}
-            className="text-[#1F2937] font-bold mb-4"
+            className="text-[#1F2937] mb-4"
           />
           <SubHeading
             text="Watch our featured videos and success stories"

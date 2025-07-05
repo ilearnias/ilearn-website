@@ -10,7 +10,11 @@ const PageContainer = () => {
   return (
     <>
       <Header />
-      <HeroSection title="Our Programs" pageName="Programs" />
+      <HeroSection 
+        title="Our Programs" 
+        pageName="Programs"
+        description="Find Your Perfect Learning Path. Choose from our comprehensive range of programs tailored to different aspects of civil service examination preparation."
+      />
       <main>
         <ProgramsSection />
         <QuestionsSection />

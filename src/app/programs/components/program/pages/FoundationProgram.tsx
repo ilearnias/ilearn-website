@@ -25,7 +25,13 @@ export default function FoundationProgram() {
         description="Build a strong foundation for your UPSC preparation journey"
         buttons={buttons}
       />
-      {/* Additional sections will be added here based on the details you provide */}
+      <div className="flex flex-col items-center justify-center py-20 px-4 bg-gray-50">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">No Data Available</h2>
+        <p className="text-gray-600 text-center mb-8">The program details are currently being updated. Please check back later or contact us for more information.</p>
+        <a href="/contact" className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors">
+          Contact Us
+        </a>
+      </div>
       <Footer />
     </div>
   );
