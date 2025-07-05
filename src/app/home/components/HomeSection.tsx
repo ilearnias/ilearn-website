@@ -25,6 +25,7 @@ const HomeSection = () => {
           <div className="text-content ">
             <div className="heading-group">
               <Heading
+                color="tricolor"
                 text={
                   <>
                     <span>We don&apos;t claim</span>
@@ -37,9 +38,8 @@ const HomeSection = () => {
                     <span>results.</span>
                   </>
                 }
-                color="black"
                 animate={true}
-                className="text-[#1F2937] md:block hidden font-bold"
+                className="md:block hidden font-bold"
               />
               <Heading
                 text={
@@ -52,13 +52,13 @@ const HomeSection = () => {
                     <span>results.</span>
                   </>
                 }
-                color="black"
+                color="tricolor"
                 animate={true}
-                className="text-[#1F2937] font-bold md:hidden"
+                className=" font-bold md:hidden"
               />
             </div>
             <SubHeading
-              text="Kerala&apos;s highest Prelims-cum-Mains & Classroom program success rate."
+              text="Kerala's highest Prelims-cum-Mains & Classroom program success rate."
               animate={true}
               delay={0.4}
               className="!text-[#1F2937] !font-light !text-[16px] !m-0 !p-0"

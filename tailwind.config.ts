@@ -15,6 +15,7 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "red-white-gradient": "linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))",
       },
       keyframes: {
         'slide-in-right': {
@@ -29,9 +30,21 @@ const config: Config = {
       animation: {
         'slide-in-right': 'slide-in-right 0.5s ease-out',
         'slide-out-left': 'slide-out-left 0.5s ease-out'
+      },
+      textGradient: {
+        'red-white': ['from-red-600', 'to-white'],
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }: { addUtilities: Function }) {
+      const newUtilities = {
+        '.text-gradient-red-white': {
+          '@apply bg-gradient-to-r from-red-600 to-white bg-clip-text text-transparent': {}
+        },
+      }
+      addUtilities(newUtilities)
+    }
+  ],
 };
 export default config;

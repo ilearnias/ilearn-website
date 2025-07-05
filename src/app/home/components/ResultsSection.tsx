@@ -1,14 +1,24 @@
 "use client";
-import React from 'react';
-import './styles.scss';
+import React from "react";
+import "./styles.scss";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
-import { FaTrophy, FaChalkboardTeacher, FaUserGraduate } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { FaTrophy, FaChalkboardTeacher, FaUserGraduate } from "react-icons/fa";
+import { motion } from "framer-motion";
 
-const ResultCard = ({ icon: Icon, title, description, index }: { icon: React.ElementType, title: string, description: string, index: number }) => {
+const ResultCard = ({
+  icon: Icon,
+  title,
+  description,
+  index,
+}: {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  index: number;
+}) => {
   return (
-    <motion.div 
+    <motion.div
       className="result-card"
       initial={{ opacity: 0, x: -100 }}
       whileInView={{ opacity: 1, x: 0 }}
@@ -19,7 +29,10 @@ const ResultCard = ({ icon: Icon, title, description, index }: { icon: React.Ele
         <Icon size={32} />
       </div>
       <div className="card-content">
-        <Heading text={title} className="!text-xl !font-semibold !uppercase !leading-normal" />
+        <Heading
+          text={title}
+          className="!text-xl !font-semibold !uppercase !leading-normal text-gradient-red-white"
+        />
         <p>{description}</p>
       </div>
     </motion.div>
@@ -31,29 +44,37 @@ const ResultsSection = () => {
     {
       icon: FaTrophy,
       title: "Top 100 Ranks",
-      description: "Five of our students secured positions in the top 100 ranks nationwide"
+      description:
+        "Five of our students secured positions in the top 100 ranks nationwide",
     },
     {
       icon: FaChalkboardTeacher,
       title: "Classroom Success",
-      description: "Selections from our Prelims-cum-Mains & Classroom Program"
+      description: "Selections from our Prelims-cum-Mains & Classroom Program",
     },
     {
       icon: FaUserGraduate,
       title: "Total Selections",
-      description: "Overall selections from our institute in CSE 2024"
-    }
+      description: "Overall selections from our institute in CSE 2024",
+    },
   ];
 
   return (
     <section className="results-section w-full">
-      <Container className='w-full'>
-        <Heading 
-          text={<>Civil Service Examination 2024<br /><span>Result Highlights</span></>}
-          className="!text-center !mb-8"
+      <Container className="w-full">
+        <Heading
+          color="tricolor"
+          text={
+            <>
+              Civil Service Examination 2024
+              <br />
+              <span>Result Highlights</span>
+            </>
+          }
+          className="!text-center !mb-8 font-bold"
           animate={true}
         />
-        <div className="results-grid !w-full">
+        <div className="results-grid   !w-full">
           {results.map((result, index) => (
             <ResultCard
               key={index}
@@ -69,4 +90,4 @@ const ResultsSection = () => {
   );
 };
 
-export default ResultsSection; 
+export default ResultsSection;

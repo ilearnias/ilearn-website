@@ -21,18 +21,28 @@ export default function MalayalamProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
+        className="font-bold"
+        titleClassName="font-bold"
         title="Malayalam Literature"
         description="Expert guidance for Malayalam Literature optional"
         buttons={buttons}
       />
       <div className="flex flex-col items-center justify-center py-20 px-4 bg-gray-50">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">No Data Available</h2>
-        <p className="text-gray-600 text-center mb-8">The program details are currently being updated. Please check back later or contact us for more information.</p>
-        <a href="/contact" className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          No Data Available
+        </h2>
+        <p className="text-gray-600 text-center mb-8">
+          The program details are currently being updated. Please check back
+          later or contact us for more information.
+        </p>
+        <a
+          href="/contact"
+          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors"
+        >
           Contact Us
         </a>
       </div>
       <Footer />
     </div>
   );
-} 
+}

@@ -159,7 +159,7 @@
 }
 // .Header-popoverContent:active,
 .Header-popoverContent.selected {
-  color: #ff4000;
+  color: red;
   text-decoration: underline;
 }
 .Header-popoverTxt1 {
@@ -187,22 +187,22 @@
   justify-content: space-between;
   &:hover {
     .Drawer-itemsTxt {
-      color: #ff4000;
+      color: red;
     }
 
     .Drawer-itemsIcon {
-      color: #ff4000;
+      color: red;
     }
   }
 
   &.join-now-mobile {
     margin-top: 20px;
     background-color: transparent;
-    border: 2px solid #ff4000;
+   
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: #ff4000;
+      background-color: red;
       .Drawer-itemsTxt {
         color: white !important;
       }
@@ -238,7 +238,7 @@
   transition: color 0.3s ease;
   
   &:hover {
-    color: #ff4000;
+    color: red;
   }
 }
 

@@ -1,8 +1,8 @@
 "use client";
-import {  Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect, useRef } from "react";
-import Image from 'next/image';
+import Image from "next/image";
 import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import TextLabel from "@/components/common/TextLabel";
@@ -23,11 +23,20 @@ const ResultSection = () => {
   const { t } = useTranslation();
   const [selectedYear, setSelectedYear] = useState<keyof YearData>("2025");
   const [fadeActive, setFadeActive] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<{ [id: number]: boolean }>({});
+  const [visibleCards, setVisibleCards] = useState<{ [id: number]: boolean }>(
+    {}
+  );
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [openCard, setOpenCard] = useState<number | null>(null);
 
-  const years: (keyof YearData)[] = ["2025", "2024", "2023", "2022", "2021", "2020"];
+  const years: (keyof YearData)[] = [
+    "2025",
+    "2024",
+    "2023",
+    "2022",
+    "2021",
+    "2020",
+  ];
 
   // Sample data structure - to be replaced with actual video links later
   const resultCards: YearData = {
@@ -69,14 +78,16 @@ const ResultSection = () => {
 
   useEffect(() => {
     if (!fadeActive) return;
-    
+
     // Store current refs to avoid closure issues
     const currentRefs = cardRefs.current;
-    
+
     const observer = new window.IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const idx = Number((entry.target as HTMLElement).getAttribute('data-index'));
+          const idx = Number(
+            (entry.target as HTMLElement).getAttribute("data-index")
+          );
           if (entry.isIntersecting) {
             setVisibleCards((prev) => ({ ...prev, [idx]: true }));
           } else {
@@ -101,11 +112,14 @@ const ResultSection = () => {
 
   return (
     <div className="results-section py-16 ">
-      <Container >
+      <Container>
         <div className="text-center mb-12">
-         
-          <div className="inline-block bg-[#1e3a8a] px-8 py-3 rounded-full">
-            <SubHeading text="The Most Genuine Results in Kerala" color="white" size="medium" />
+          <div className="inline-block  px-8 py-3 rounded-full">
+            <Heading
+              className="font-bold"
+              text="The Most Genuine Results in Kerala"
+              color="tricolor"
+            />
           </div>
         </div>
 
@@ -116,25 +130,38 @@ const ResultSection = () => {
               <button
                 key={year}
                 onClick={() => setSelectedYear(year)}
-                className={`px-6 py-2 rounded-full transition-all whitespace-nowrap ${selectedYear === year
+                className={`px-6 py-2 rounded-full transition-all whitespace-nowrap ${
+                  selectedYear === year
                     ? "bg-yellow-400 text-black"
                     : "text-gray-500 hover:bg-gray-100"
-                  }`}
+                }`}
               >
-                <TextLabel text={year} variant="button" color={selectedYear === year ? 'black' : 'gray'} />
+                <TextLabel
+                  text={year}
+                  variant="button"
+                  color={selectedYear === year ? "black" : "gray"}
+                />
               </button>
             ))}
           </div>
         </div>
 
         {/* Desktop/Tablet Grid */}
-        <div className={`hidden sm:grid grid-cols-2 md:grid-cols-3 gap-4 results-fade${fadeActive ? ' results-fade-active' : ''}`}> 
+        <div
+          className={`hidden sm:grid grid-cols-2 md:grid-cols-3 gap-4 results-fade${
+            fadeActive ? " results-fade-active" : ""
+          }`}
+        >
           {resultCards[selectedYear].map((card, index) => (
             <div
               key={card.id}
-              ref={el => { cardRefs.current[index] = el; }}
+              ref={(el) => {
+                cardRefs.current[index] = el;
+              }}
               data-index={index}
-              className={`w-full video-card-scroll-in${visibleCards[index] ? ' video-card-scroll-in-active' : ''}`}
+              className={`w-full video-card-scroll-in${
+                visibleCards[index] ? " video-card-scroll-in-active" : ""
+              }`}
               style={{ animationDelay: `${index * 0.15}s` }}
             >
               <div className="relative rounded-lg overflow-hidden shadow-lg h-full">
@@ -154,7 +181,11 @@ const ResultSection = () => {
                   <SubHeading text={card.title} size="small" color="black" />
                   <div className="flex items-center gap-2 mt-1">
                     <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
-                    <TextLabel text={card.category} color="blue" variant="tag" />
+                    <TextLabel
+                      text={card.category}
+                      color="blue"
+                      variant="tag"
+                    />
                   </div>
                 </div>
               </div>
@@ -165,17 +196,27 @@ const ResultSection = () => {
         {/* Mobile Dropdown List */}
         <div className="sm:hidden">
           {resultCards[selectedYear].length === 0 ? (
-            <div className="text-center text-gray-500 py-8">No results for this year.</div>
+            <div className="text-center text-gray-500 py-8">
+              No results for this year.
+            </div>
           ) : (
             <div className="space-y-4">
               {resultCards[selectedYear].map((card) => (
                 <div key={card.id}>
                   <button
                     className="w-full flex justify-between items-center px-4 py-3 bg-gray-100 rounded-lg focus:outline-none"
-                    onClick={() => setOpenCard(openCard === card.id ? null : card.id)}
+                    onClick={() =>
+                      setOpenCard(openCard === card.id ? null : card.id)
+                    }
                   >
                     <span className="text-left font-medium">{card.title}</span>
-                    <span className={`transform transition-transform ${openCard === card.id ? 'rotate-180' : ''}`}>▼</span>
+                    <span
+                      className={`transform transition-transform ${
+                        openCard === card.id ? "rotate-180" : ""
+                      }`}
+                    >
+                      ▼
+                    </span>
                   </button>
                   {openCard === card.id && (
                     <div className="mt-2 bg-white rounded-lg shadow p-3">
@@ -192,10 +233,18 @@ const ResultSection = () => {
                         ></iframe>
                       </div>
                       <div>
-                        <SubHeading text={card.title} size="small" color="black" />
+                        <SubHeading
+                          text={card.title}
+                          size="small"
+                          color="black"
+                        />
                         <div className="flex items-center gap-2 mt-1">
                           <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
-                          <TextLabel text={card.category} color="green" variant="tag" />
+                          <TextLabel
+                            text={card.category}
+                            color="green"
+                            variant="tag"
+                          />
                         </div>
                       </div>
                     </div>

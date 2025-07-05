@@ -8,19 +8,22 @@ const JourneySection = () => {
   const { t } = useTranslation();
 
   return (
-    <section className="journey-section py-5" aria-labelledby="journey-section-title">
+    <section
+      className="journey-section py-5"
+      aria-labelledby="journey-section-title"
+    >
       <Container>
         <div className="text-center ">
           <div id="journey-section-title">
-            <Heading 
-              text={<>
-                <span >Our </span>
-                <span className=" position-relative">
-                  Journey
-                  <span className="position-absolute bottom-0 start-0 w-100 journey-underline"></span>
-                </span>
-              </>}
-              className="!text-center !mb-4"
+            <Heading
+              color="tricolor"
+              text={
+                <>
+                  <span>Our Journey</span>
+                  <span className=" position-relative"></span>
+                </>
+              }
+              className="!text-center !mb-4 font-bold"
               animate={true}
             />
           </div>
@@ -35,4 +38,4 @@ const JourneySection = () => {
   );
 };
 
-export default JourneySection; 
+export default JourneySection;

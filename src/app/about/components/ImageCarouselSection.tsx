@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from "react";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
-import Image from 'next/image';
-import useEmblaCarousel, { UseEmblaCarouselType } from 'embla-carousel-react';
-import type { EmblaCarouselType as CarouselType } from 'embla-carousel';
+import Image from "next/image";
+import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
+import type { EmblaCarouselType as CarouselType } from "embla-carousel";
 import {
   NextButton,
   PrevButton,
-  usePrevNextButtons
-} from './carousel/EmblaCarouselArrowButtons';
-import { DotButton, useDotButton } from './carousel/EmblaCarouselDotButton';
-import './styles/embla.scss';
+  usePrevNextButtons,
+} from "./carousel/EmblaCarouselArrowButtons";
+import { DotButton, useDotButton } from "./carousel/EmblaCarouselDotButton";
+import "./styles/embla.scss";
 
 const TWEEN_FACTOR = 0.7;
 
@@ -27,7 +27,7 @@ const academyImages = [
   {
     src: "/About/Carousel/img1.jpg",
     alt: "iLearn IAS Academy Image 3",
-  }
+  },
 ];
 
 type EmblaApi = NonNullable<UseEmblaCarouselType[1]>;
@@ -35,22 +35,23 @@ type EmblaApi = NonNullable<UseEmblaCarouselType[1]>;
 const ImageCarouselSection = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    dragFree: true
+    dragFree: true,
   });
   const tweenFactor = useRef(TWEEN_FACTOR);
   const tweenNodes = useRef<HTMLElement[]>([]);
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
+  const { selectedIndex, scrollSnaps, onDotButtonClick } =
+    useDotButton(emblaApi);
   const {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
-    onNextButtonClick
+    onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
 
   const setTweenNodes = useCallback((emblaApi: EmblaApi): void => {
     tweenNodes.current = emblaApi.slideNodes().map((slideNode: HTMLElement) => {
-      return slideNode.querySelector('.embla__parallax__layer') as HTMLElement;
+      return slideNode.querySelector(".embla__parallax__layer") as HTMLElement;
     });
   }, []);
 
@@ -58,13 +59,14 @@ const ImageCarouselSection = () => {
     tweenFactor.current = TWEEN_FACTOR * emblaApi.scrollSnapList().length;
   }, []);
 
-  const tweenParallax = useCallback(
-    (emblaApi: EmblaApi) => {
-      const engine = emblaApi.internalEngine();
-      const scrollProgress = emblaApi.scrollProgress();
-      const slidesInView = emblaApi.slidesInView();
+  const tweenParallax = useCallback((emblaApi: EmblaApi) => {
+    const engine = emblaApi.internalEngine();
+    const scrollProgress = emblaApi.scrollProgress();
+    const slidesInView = emblaApi.slidesInView();
 
-      emblaApi.scrollSnapList().forEach((scrollSnap: number, snapIndex: number) => {
+    emblaApi
+      .scrollSnapList()
+      .forEach((scrollSnap: number, snapIndex: number) => {
         let diffToTarget = scrollSnap - scrollProgress;
         const slidesInSnap = engine.slideRegistry[snapIndex];
 
@@ -72,20 +74,22 @@ const ImageCarouselSection = () => {
           if (!slidesInView.includes(slideIndex)) return;
 
           if (engine.options.loop) {
-            engine.slideLooper.loopPoints.forEach((loopItem: { target: () => number; index: number }) => {
-              const target = loopItem.target();
+            engine.slideLooper.loopPoints.forEach(
+              (loopItem: { target: () => number; index: number }) => {
+                const target = loopItem.target();
 
-              if (slideIndex === loopItem.index && target !== 0) {
-                const sign = Math.sign(target);
+                if (slideIndex === loopItem.index && target !== 0) {
+                  const sign = Math.sign(target);
 
-                if (sign === -1) {
-                  diffToTarget = scrollSnap - (1 + scrollProgress);
-                }
-                if (sign === 1) {
-                  diffToTarget = scrollSnap + (1 - scrollProgress);
+                  if (sign === -1) {
+                    diffToTarget = scrollSnap - (1 + scrollProgress);
+                  }
+                  if (sign === 1) {
+                    diffToTarget = scrollSnap + (1 - scrollProgress);
+                  }
                 }
               }
-            });
+            );
           }
 
           const translate = diffToTarget * (-1 * tweenFactor.current) * 100;
@@ -95,9 +99,7 @@ const ImageCarouselSection = () => {
           }
         });
       });
-    },
-    []
-  );
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -107,24 +109,24 @@ const ImageCarouselSection = () => {
     tweenParallax(emblaApi);
 
     emblaApi
-      .on('reInit', () => {
+      .on("reInit", () => {
         setTweenNodes(emblaApi);
         setTweenFactor(emblaApi);
         tweenParallax(emblaApi);
       })
-      .on('scroll', () => {
+      .on("scroll", () => {
         tweenParallax(emblaApi);
       });
 
     return () => {
       if (!emblaApi) return;
       emblaApi
-        .off('reInit', () => {
+        .off("reInit", () => {
           setTweenNodes(emblaApi);
           setTweenFactor(emblaApi);
           tweenParallax(emblaApi);
         })
-        .off('scroll', () => {
+        .off("scroll", () => {
           tweenParallax(emblaApi);
         });
     };
@@ -134,9 +136,10 @@ const ImageCarouselSection = () => {
     <div className="image-carousel-section">
       <Container>
         <Fade cascade triggerOnce>
-          <Heading 
+          <Heading
+            color="tricolor"
             text="Our Academy"
-            className="!text-center !mb-4"
+            className="!text-center !mb-4 font-bold"
             animate={true}
           />
           <p className="section-subtitle text-center mb-2">
@@ -168,8 +171,14 @@ const ImageCarouselSection = () => {
 
             <div className="embla__controls">
               <div className="embla__buttons">
-                <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-                <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+                <PrevButton
+                  onClick={onPrevButtonClick}
+                  disabled={prevBtnDisabled}
+                />
+                <NextButton
+                  onClick={onNextButtonClick}
+                  disabled={nextBtnDisabled}
+                />
               </div>
 
               <div className="embla__dots">
@@ -177,8 +186,8 @@ const ImageCarouselSection = () => {
                   <DotButton
                     key={index}
                     onClick={() => onDotButtonClick(index)}
-                    className={'embla__dot'.concat(
-                      index === selectedIndex ? ' embla__dot--selected' : ''
+                    className={"embla__dot".concat(
+                      index === selectedIndex ? " embla__dot--selected" : ""
                     )}
                   />
                 ))}
@@ -191,4 +200,4 @@ const ImageCarouselSection = () => {
   );
 };
 
-export default ImageCarouselSection; 
+export default ImageCarouselSection;

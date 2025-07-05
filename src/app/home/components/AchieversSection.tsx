@@ -49,7 +49,10 @@ const AchieverCard: React.FC<AchieverCardProps> = ({
       </div>
       <div className="achiever-info">
         <div className="air-rank">{airRank}</div>
-        <Heading text={name} className="!text-lg !font-semibold !leading-normal" />
+        <Heading
+          text={name}
+          className="!text-lg !font-semibold !leading-normal"
+        />
       </div>
     </motion.div>
   );
@@ -62,14 +65,20 @@ const AchieversSection = () => {
   const scrollToNextCard = () => {
     if (scrollContainerRef.current) {
       const containerWidth = scrollContainerRef.current.offsetWidth;
-      scrollContainerRef.current.scrollBy({ left: containerWidth, behavior: 'smooth' });
+      scrollContainerRef.current.scrollBy({
+        left: containerWidth,
+        behavior: "smooth",
+      });
     }
   };
 
   const scrollToPreviousCard = () => {
     if (scrollContainerRef.current) {
       const containerWidth = scrollContainerRef.current.offsetWidth;
-      scrollContainerRef.current.scrollBy({ left: -containerWidth, behavior: 'smooth' });
+      scrollContainerRef.current.scrollBy({
+        left: -containerWidth,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -110,14 +119,19 @@ const AchieversSection = () => {
   return (
     <section className="achievers-section">
       <Container className="w-full">
-        <motion.div 
+        <motion.div
           className="section-header"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false }}
           transition={{ duration: 0.5 }}
         >
-          <Heading text="Our Proud Achievers" className="!text-center !mb-4" animate={true} />
+          <Heading
+            color="tricolor"
+            text="Our Proud Achievers"
+            className="!text-center !mb-4"
+            animate={true}
+          />
           <p className="section-subtitle">
             Success stories of India&apos;s future leaders
           </p>
@@ -135,30 +149,52 @@ const AchieversSection = () => {
               />
             ))}
           </div>
-          
+
           {/* Navigation Buttons - Only visible on mobile */}
-          <button 
+          <button
             onClick={scrollToPreviousCard}
             className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg z-10"
             aria-label="Previous card"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
-          
-          <button 
+
+          <button
             onClick={scrollToNextCard}
             className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg z-10"
             aria-label="Next card"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </button>
         </div>
 
-        <motion.div 
+        <motion.div
           className="view-all-container"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

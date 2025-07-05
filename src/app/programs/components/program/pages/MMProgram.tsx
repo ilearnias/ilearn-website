@@ -7,13 +7,19 @@ import HeroSection from "@/components/common/HeroSection";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import { motion } from "framer-motion";
-import { 
-  FiUser, FiUsers, FiCheckCircle, FiClock,
-  FiFileText, FiMessageSquare, FiAward, FiStar,
-  FiChevronDown
+import {
+  FiUser,
+  FiUsers,
+  FiCheckCircle,
+  FiClock,
+  FiFileText,
+  FiMessageSquare,
+  FiAward,
+  FiStar,
+  FiChevronDown,
 } from "react-icons/fi";
 import { RiDoubleQuotesL } from "react-icons/ri";
-import Image from 'next/image';
+import Image from "next/image";
 import { useMediaQuery } from "react-responsive";
 
 // Expert Faculty Section
@@ -21,18 +27,31 @@ interface FacultyMemberProps {
   name: string;
   qualification: string;
   description: string;
-  gender: 'male' | 'female';
+  gender: "male" | "female";
 }
 
-const FacultyMember: React.FC<FacultyMemberProps> = ({ name, qualification, description, gender }) => (
-  <motion.div 
+const FacultyMember: React.FC<FacultyMemberProps> = ({
+  name,
+  qualification,
+  description,
+  gender,
+}) => (
+  <motion.div
     className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
     whileHover={{ y: -5 }}
     transition={{ duration: 0.3 }}
   >
     <div className="flex items-start gap-4">
-      <div className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center ${gender === 'male' ? 'bg-blue-100' : 'bg-red-100'}`}>
-        <FiUser className={`w-8 h-8 ${gender === 'male' ? 'text-blue-500' : 'text-red-500'}`} />
+      <div
+        className={`flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center ${
+          gender === "male" ? "bg-blue-100" : "bg-red-100"
+        }`}
+      >
+        <FiUser
+          className={`w-8 h-8 ${
+            gender === "male" ? "text-blue-500" : "text-red-500"
+          }`}
+        />
       </div>
       <div>
         <h3 className="text-lg font-semibold mb-2">{name}</h3>
@@ -48,47 +67,49 @@ const ExpertFaculty = () => {
     {
       name: "Nikhil Lohitakshan",
       qualification: "UPSC AIR 622 - History Optional",
-      description: "Expert in Indian history and comprehensive geography coverage",
-      gender: "male"
+      description:
+        "Expert in Indian history and comprehensive geography coverage",
+      gender: "male",
     },
     {
       name: "Rahul Raghavan",
       qualification: "UPSC AIR 825 - Public Administration",
       description: "Expert in public administration and selective test prep",
-      gender: "male"
+      gender: "male",
     },
     {
       name: "Vineeth Lohitakshan",
       qualification: "UPSC AIR 891 - Geography & Environment",
       description: "Expert in geography and environmental studies",
-      gender: "male"
+      gender: "male",
     },
     {
       name: "Ashil Shukoor",
       qualification: "UPSC AIR 522 - International Relations",
       description: "Expert in international relations and global affairs",
-      gender: "male"
+      gender: "male",
     },
     {
       name: "Aditya Narayan H",
       qualification: "UPSC AIR 350 - Society",
       description: "Specialist in social issues and contemporary studies",
-      gender: "male"
+      gender: "male",
     },
     {
       name: "Dr. Jayesh Khaddar",
       qualification: "Essay Writing Specialist",
       description: "Expert in essay writing, editing and text improvement",
-      gender: "male"
-    }
+      gender: "male",
+    },
   ] as const;
 
   return (
     <section className="py-16 bg-white">
       <Container>
-        <Heading 
-          text="Expert Faculty & UPSC Toppers" 
-          className="text-center mb-6"
+        <Heading
+          color="tricolor"
+          text="Expert Faculty & UPSC Toppers"
+          className="text-center font-bold mb-6"
           animate={true}
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
@@ -154,7 +175,7 @@ const Highlight: React.FC<HighlightProps> = ({ icon, title, text }) => {
   }
 
   return (
-    <div 
+    <div
       className="feature-card bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
@@ -177,23 +198,23 @@ const ProgramHighlights = () => {
     {
       icon: <FiFileText className="w-6 h-6" />,
       title: "Regular Tests",
-      text: "Comprehensive tests covering both GS and optional papers for thorough preparation"
+      text: "Comprehensive tests covering both GS and optional papers for thorough preparation",
     },
     {
       icon: <FiCheckCircle className="w-6 h-6" />,
       title: "Detailed Evaluation",
-      text: "In-depth assessment of your answers with constructive feedback for improvement"
+      text: "In-depth assessment of your answers with constructive feedback for improvement",
     },
     {
       icon: <FiMessageSquare className="w-6 h-6" />,
       title: "Personal Feedback",
-      text: "One-on-one sessions to discuss your progress and areas of improvement"
+      text: "One-on-one sessions to discuss your progress and areas of improvement",
     },
     {
       icon: <FiAward className="w-6 h-6" />,
       title: "Writing Excellence",
-      text: "Master the art of answer writing with proven techniques and strategies"
-    }
+      text: "Master the art of answer writing with proven techniques and strategies",
+    },
   ];
 
   return (
@@ -203,7 +224,7 @@ const ProgramHighlights = () => {
           --mouse-x: 0;
           --mouse-y: 0;
         }
-        
+
         .hover-effect {
           position: absolute;
           inset: 0;
@@ -229,13 +250,15 @@ const ProgramHighlights = () => {
       `}</style>
       <Container>
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <Heading 
-            text="Program Highlights" 
-            className="mb-4"
+          <Heading
+            color="tricolor"
+            text="Program Highlights"
+            className="mb-4 font-bold"
             animate={true}
           />
           <p className="text-gray-600 leading-relaxed">
-            Our comprehensive program is designed to give you the edge you need in UPSC Mains examination
+            Our comprehensive program is designed to give you the edge you need
+            in UPSC Mains examination
           </p>
         </div>
 
@@ -267,7 +290,17 @@ const ProgramHighlights = () => {
 };
 
 // Testimonials Section
-const TestimonialCard = ({ name, rank, text, image }: { name: string; rank: string; text: string; image: string }) => {
+const TestimonialCard = ({
+  name,
+  rank,
+  text,
+  image,
+}: {
+  name: string;
+  rank: string;
+  text: string;
+  image: string;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
@@ -280,12 +313,7 @@ const TestimonialCard = ({ name, rank, text, image }: { name: string; rank: stri
         >
           <div className="flex items-center gap-3">
             <div className="relative w-12 h-12 rounded-full overflow-hidden">
-              <Image
-                src={image}
-                alt={name}
-                fill
-                className="object-cover"
-              />
+              <Image src={image} alt={name} fill className="object-cover" />
             </div>
             <div>
               <h4 className="font-semibold">{name}</h4>
@@ -318,12 +346,7 @@ const TestimonialCard = ({ name, rank, text, image }: { name: string; rank: stri
     <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
       <div className="flex items-center gap-4 mb-4">
         <div className="relative w-16 h-16 rounded-full overflow-hidden">
-          <Image
-            src={image}
-            alt={name}
-            fill
-            className="object-cover"
-          />
+          <Image src={image} alt={name} fill className="object-cover" />
         </div>
         <div>
           <h4 className="font-semibold text-lg">{name}</h4>
@@ -344,33 +367,35 @@ const StudentTestimonials = () => {
       name: "Rahul Kumar",
       rank: "AIR 45, CSE 2023",
       image: "/result/dummy.jpg",
-      text: "The Mains Mastery Program helped me develop a structured approach to answer writing. The regular feedback and evaluation were invaluable."
+      text: "The Mains Mastery Program helped me develop a structured approach to answer writing. The regular feedback and evaluation were invaluable.",
     },
     {
       name: "Priya Singh",
       rank: "AIR 89, CSE 2023",
       image: "/result/dummy.jpg",
-      text: "What sets MMP apart is their personalized attention. The mentors helped me identify and work on my weak areas effectively."
+      text: "What sets MMP apart is their personalized attention. The mentors helped me identify and work on my weak areas effectively.",
     },
     {
       name: "Amit Patel",
       rank: "AIR 156, CSE 2023",
       image: "/result/dummy.jpg",
-      text: "The program's focus on current affairs integration and answer presentation techniques significantly improved my mains score."
-    }
+      text: "The program's focus on current affairs integration and answer presentation techniques significantly improved my mains score.",
+    },
   ];
 
   return (
     <section className="py-16 bg-gray-50">
       <Container>
         <div className="text-center mb-12">
-          <Heading 
-            text="What Our Students Say about Mains Mastery Program (MMP)" 
-            className="mb-4"
+          <Heading
+            color="tricolor"
+            text="What Our Students Say about Mains Mastery Program (MMP)"
+            className="mb-4 font-bold"
             animate={true}
           />
           <p className="text-gray-600 max-w-3xl mx-auto">
-            Hear from our successful candidates about their experience with our program
+            Hear from our successful candidates about their experience with our
+            program
           </p>
         </div>
 
@@ -395,16 +420,24 @@ const FAQ: React.FC<FAQProps> = ({ question, answer }) => {
 
   return (
     <div className="border-b border-gray-200 py-4">
-      <button 
+      <button
         className="flex justify-between items-center w-full text-left"
         onClick={() => setIsOpen(!isOpen)}
       >
         <span className="font-semibold text-gray-800">{question}</span>
-        <div className={`text-blue-600 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
+        <div
+          className={`text-blue-600 transition-transform duration-300 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        >
           <FiChevronDown size={20} />
         </div>
       </button>
-      <div className={`mt-2 text-gray-600 transition-all duration-300 ${isOpen ? 'block' : 'hidden'}`}>
+      <div
+        className={`mt-2 text-gray-600 transition-all duration-300 ${
+          isOpen ? "block" : "hidden"
+        }`}
+      >
         {answer}
       </div>
     </div>
@@ -415,17 +448,19 @@ const FAQSection = () => {
   const faqs = [
     {
       question: "How many tests are included?",
-      answer: "The program includes regular tests covering both GS and optional papers, with detailed evaluation and personalized feedback."
-    }
+      answer:
+        "The program includes regular tests covering both GS and optional papers, with detailed evaluation and personalized feedback.",
+    },
     // Add more FAQs as needed
   ];
 
   return (
     <section className="py-16 bg-gray-50">
       <Container>
-        <Heading 
-          text="Frequently Asked Questions" 
-          className="text-center mb-8"
+        <Heading
+          color="tricolor"
+          text="Frequently Asked Questions"
+          className="text-center mb-8 font-bold"
           animate={true}
         />
         <div className="max-w-3xl mx-auto">
@@ -454,6 +489,8 @@ export default function MMProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
+        className="font-bold"
+        titleClassName="font-bold"
         title="Mains Mastery Program"
         description="Master UPSC Mains with our comprehensive program"
         buttons={buttons}
@@ -462,7 +499,6 @@ export default function MMProgram() {
       <ProgramHighlights />
       <StudentTestimonials />
       <FAQSection />
-        
     </div>
   );
-} 
+}

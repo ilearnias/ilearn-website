@@ -12,9 +12,10 @@ const teamMembers = [
     name: "John Smith",
     role: "Founder & Director",
     image: "/About/team/dummy.jpg",
-    description: "Former IAS officer with 15+ years of experience in civil services",
+    description:
+      "Former IAS officer with 15+ years of experience in civil services",
     linkedin: "https://linkedin.com",
-    email: "director@ilearnias.com"
+    email: "director@ilearnias.com",
   },
   {
     name: "Emily Parker",
@@ -22,7 +23,7 @@ const teamMembers = [
     image: "/About/team/dummy.jpg",
     description: "Expert in UPSC curriculum development and strategy",
     linkedin: "https://linkedin.com",
-    email: "academic@ilearnias.com"
+    email: "academic@ilearnias.com",
   },
   {
     name: "Michael Chen",
@@ -30,7 +31,7 @@ const teamMembers = [
     image: "/About/team/dummy.jpg",
     description: "Specialized in General Studies and Current Affairs",
     linkedin: "https://linkedin.com",
-    email: "mentor@ilearnias.com"
+    email: "mentor@ilearnias.com",
   },
   {
     name: "Lisa Anderson",
@@ -38,16 +39,16 @@ const teamMembers = [
     image: "/About/team/dummy.jpg",
     description: "PhD in Public Policy and Administration",
     linkedin: "https://linkedin.com",
-    email: "research@ilearnias.com"
-  }
+    email: "research@ilearnias.com",
+  },
 ];
 
 const TeamSection = () => {
   const { t } = useTranslation();
-  const [imgError, setImgError] = useState<{[key: string]: boolean}>({});
+  const [imgError, setImgError] = useState<{ [key: string]: boolean }>({});
 
   const handleImageError = (memberName: string) => {
-    setImgError(prev => ({...prev, [memberName]: true}));
+    setImgError((prev) => ({ ...prev, [memberName]: true }));
   };
 
   return (
@@ -55,9 +56,10 @@ const TeamSection = () => {
       <Container>
         <Fade>
           <div id="team-section-title">
-            <Heading 
+            <Heading
+              color="tricolor"
               text="Our Leadership Team"
-              className="!text-center !mb-4"
+              className="!text-center !font-bold !mb-4"
               animate={true}
             />
           </div>
@@ -69,7 +71,11 @@ const TeamSection = () => {
           {teamMembers.map((member, index) => (
             <Col md={6} lg={3} key={index}>
               <Fade direction="up" delay={index * 100}>
-                <div className="team-member-card" role="article" aria-labelledby={`member-name-${index}`}>
+                <div
+                  className="team-member-card"
+                  role="article"
+                  aria-labelledby={`member-name-${index}`}
+                >
                   <div className="member-image-container">
                     {!imgError[member.name] ? (
                       <Image
@@ -82,20 +88,27 @@ const TeamSection = () => {
                         onError={() => handleImageError(member.name)}
                       />
                     ) : (
-                      <div className="fallback-image" aria-label={`${member.name}'s profile`}>
+                      <div
+                        className="fallback-image"
+                        aria-label={`${member.name}'s profile`}
+                      >
                         {member.name.charAt(0)}
                       </div>
                     )}
-                    <div className="social-links" role="group" aria-label={`${member.name}'s social links`}>
-                      <a 
-                        href={member.linkedin} 
-                        target="_blank" 
+                    <div
+                      className="social-links"
+                      role="group"
+                      aria-label={`${member.name}'s social links`}
+                    >
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`Visit ${member.name}'s LinkedIn profile`}
                       >
                         <FaLinkedin size={20} aria-hidden="true" />
                       </a>
-                      <a 
+                      <a
                         href={`mailto:${member.email}`}
                         aria-label={`Email ${member.name}`}
                       >
@@ -105,7 +118,7 @@ const TeamSection = () => {
                   </div>
                   <div className="member-info">
                     <div id={`member-name-${index}`}>
-                      <Heading 
+                      <Heading
                         text={member.name}
                         className="!text-lg !font-semibold !leading-normal"
                         animate={false}
@@ -124,4 +137,4 @@ const TeamSection = () => {
   );
 };
 
-export default TeamSection; 
+export default TeamSection;

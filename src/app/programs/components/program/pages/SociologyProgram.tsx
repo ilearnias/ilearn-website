@@ -7,9 +7,15 @@ import HeroSection from "@/components/common/HeroSection";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import SubText from "@/components/common/SubText";
-import { 
-  FiBook, FiTarget, FiGlobe, FiClipboard,
-  FiClock, FiHelpCircle, FiVideo, FiChevronDown
+import {
+  FiBook,
+  FiTarget,
+  FiGlobe,
+  FiClipboard,
+  FiClock,
+  FiHelpCircle,
+  FiVideo,
+  FiChevronDown,
 } from "react-icons/fi";
 import { TestimonialItem } from "@/app/home/components/TestimonialsSection";
 import TestimonialsSection from "@/app/home/components/TestimonialsSection";
@@ -23,22 +29,22 @@ const sociologyTestimonials: TestimonialItem[] = [
     title: "Success in Sociology Optional",
     subtitle: "How iLearn's comprehensive notes helped me score high marks.",
     videoId: "Y8Tko2YC5hA",
-    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg"
+    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg",
   },
   {
     id: "soc2",
     title: "From Basics to Advanced",
     subtitle: "My journey through the sociology optional preparation.",
     videoId: "jNQXAC9IVRw",
-    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg"
+    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg",
   },
   {
     id: "soc3",
     title: "Sociology - The Right Choice",
     subtitle: "How conceptual clarity and test series made the difference.",
     videoId: "M7lc1UVf-VE",
-    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg"
-  }
+    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg",
+  },
 ];
 
 // Program Highlights Section
@@ -94,7 +100,7 @@ const Highlight: React.FC<HighlightProps> = ({ icon, title, text }) => {
   }
 
   return (
-    <div 
+    <div
       className="feature-card bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
@@ -117,23 +123,23 @@ const ProgramHighlights = () => {
     {
       icon: <FiBook className="w-6 h-6" />,
       title: "Comprehensive Notes",
-      text: "Detailed study material covering all topics of Paper I and Paper II"
+      text: "Detailed study material covering all topics of Paper I and Paper II",
     },
     {
       icon: <FiTarget className="w-6 h-6" />,
       title: "Conceptual Clarity",
-      text: "Focus on building strong theoretical understanding with practical applications"
+      text: "Focus on building strong theoretical understanding with practical applications",
     },
     {
       icon: <FiGlobe className="w-6 h-6" />,
       title: "Contemporary Application",
-      text: "Regular updates on current events and their sociological analysis"
+      text: "Regular updates on current events and their sociological analysis",
     },
     {
       icon: <FiClipboard className="w-6 h-6" />,
       title: "Regular Test Series",
-      text: "Periodic assessments with detailed feedback and performance analysis"
-    }
+      text: "Periodic assessments with detailed feedback and performance analysis",
+    },
   ];
 
   return (
@@ -143,7 +149,7 @@ const ProgramHighlights = () => {
           --mouse-x: 0;
           --mouse-y: 0;
         }
-        
+
         .hover-effect {
           position: absolute;
           inset: 0;
@@ -169,13 +175,15 @@ const ProgramHighlights = () => {
       `}</style>
       <Container>
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <Heading 
-            text="Program Highlights" 
-            className="mb-4"
+          <Heading
+            color="tricolor"
+            text="Program Highlights"
+            className="mb-4 font-bold"
             animate={true}
           />
           <p className="text-gray-600 leading-relaxed">
-            Our comprehensive sociology optional program is designed to help you excel in UPSC optional papers
+            Our comprehensive sociology optional program is designed to help you
+            excel in UPSC optional papers
           </p>
         </div>
 
@@ -254,31 +262,35 @@ const FAQSection = () => {
   const faqs = [
     {
       question: "How do I enroll in the program?",
-      answer: "You can enroll by clicking the 'Enroll Now' button or contacting us directly through our contact page."
+      answer:
+        "You can enroll by clicking the 'Enroll Now' button or contacting us directly through our contact page.",
     },
     {
       question: "Are there any scholarships available?",
-      answer: "Yes, we offer merit-based scholarships. Contact our admissions team for more details."
+      answer:
+        "Yes, we offer merit-based scholarships. Contact our admissions team for more details.",
     },
     {
       question: "Do you offer online classes?",
-      answer: "Yes, we provide both online and offline learning options to suit your convenience."
+      answer:
+        "Yes, we provide both online and offline learning options to suit your convenience.",
     },
     {
       question: "What is your batch size?",
-      answer: "We maintain small batch sizes of 30-40 students to ensure personalized attention to each student."
-    }
+      answer:
+        "We maintain small batch sizes of 30-40 students to ensure personalized attention to each student.",
+    },
   ];
 
   return (
     <section className="py-16 bg-white">
       <Container>
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <Heading 
+          <Heading
             text="Frequently Asked Questions"
-            color="black"
+            color="tricolor"
             animate={true}
-            className="text-[#1F2937] font-bold mb-4"
+            className="font-bold mb-4"
           />
           <p className="text-gray-600 leading-relaxed">
             Get answers to common questions about our Sociology Optional Program
@@ -300,7 +312,7 @@ const CallToAction = () => {
     <section className="py-16 bg-blue-900 text-white">
       <Container>
         <div className="text-center">
-          <SubText 
+          <SubText
             text="Join Sociology Optional at iLearn IAS Academy and take the first step towards achieving your goal of becoming a civil servant."
             className="!text-white !text-lg !mb-8"
           />
@@ -334,6 +346,8 @@ export default function SociologyProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
+        className="font-bold"
+        titleClassName="font-bold"
         title="Sociology Optional"
         description="Master sociology with our comprehensive optional course"
         buttons={buttons}
@@ -344,4 +358,4 @@ export default function SociologyProgram() {
       <CallToAction />
     </div>
   );
-} 
+}

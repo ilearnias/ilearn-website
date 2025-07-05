@@ -21,13 +21,17 @@ const CoreValuesSection = () => {
   };
 
   return (
-    <section className="core-values-section" aria-labelledby="core-values-title">
-      <Container >
+    <section
+      className="core-values-section"
+      aria-labelledby="core-values-title"
+    >
+      <Container>
         <Fade>
           <div id="core-values-title">
-            <Heading 
+            <Heading
+              color="tricolor"
               text="Our Core Values"
-              className="!text-center !mb-8"
+              className="!text-center font-bold !mb-8"
               animate={true}
             />
           </div>
@@ -36,7 +40,7 @@ const CoreValuesSection = () => {
           {coreValues.map((value: CoreValue, index: number) => (
             <Col md={6} lg={3} key={index}>
               <Fade direction="up" delay={index * 100}>
-                <div 
+                <div
                   className="value-card"
                   role="article"
                   aria-labelledby={`value-title-${index}`}
@@ -47,7 +51,7 @@ const CoreValuesSection = () => {
                       {value.icon}
                     </div>
                     <div id={`value-title-${index}`}>
-                      <Heading 
+                      <Heading
                         text={value.title}
                         className="!text-lg !font-semibold !leading-normal"
                         animate={false}
@@ -66,4 +70,4 @@ const CoreValuesSection = () => {
   );
 };
 
-export default CoreValuesSection; 
+export default CoreValuesSection;

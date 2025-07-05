@@ -9,15 +9,15 @@ const BeginJourneySection = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const buttons = document.querySelectorAll('.animated-btn');
+    const buttons = document.querySelectorAll(".animated-btn");
 
     const handleMouseMove = (e: MouseEvent, element: Element) => {
       const rect = (element as HTMLElement).getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
-      (element as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
-      (element as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
+
+      (element as HTMLElement).style.setProperty("--mouse-x", `${x}px`);
+      (element as HTMLElement).style.setProperty("--mouse-y", `${y}px`);
     };
 
     const mouseHandlers = new Map<Element, (e: Event) => void>();
@@ -25,14 +25,14 @@ const BeginJourneySection = () => {
     const addMouseHandler = (element: Element) => {
       const handler = (e: Event) => handleMouseMove(e as MouseEvent, element);
       mouseHandlers.set(element, handler);
-      element.addEventListener('mousemove', handler);
+      element.addEventListener("mousemove", handler);
     };
 
     buttons.forEach(addMouseHandler);
 
     return () => {
       mouseHandlers.forEach((handler, element) => {
-        element.removeEventListener('mousemove', handler);
+        element.removeEventListener("mousemove", handler);
       });
     };
   }, []);
@@ -43,18 +43,29 @@ const BeginJourneySection = () => {
         <div className="text-center">
           <Fade cascade damping={0.2}>
             <div id="journey-title">
-              <Heading 
-                text={<>Ready to Begin Your <span className="text-red">UPSC Journey</span> With Us?</>}
-                className="!text-3xl md:!text-4xl lg:!text-5xl !mb-4"
+              <Heading
+                color="tricolor"
+                text={
+                  <>
+                    Ready to Begin Your{" "}
+                    <span className="text-red">UPSC Journey</span> With Us?
+                  </>
+                }
+                className="!text-3xl !font-bold md:!text-4xl lg:!text-5xl !mb-4"
                 animate={true}
               />
             </div>
             <p className="description">
               Join the thousands of students who have transformed their dream of
-              becoming a civil servant into reality with iLearn IAS Academy&apos;s guidance.
+              becoming a civil servant into reality with iLearn IAS
+              Academy&apos;s guidance.
             </p>
-            <div className="button-group" role="group" aria-label="Journey actions">
-              <button 
+            <div
+              className="button-group"
+              role="group"
+              aria-label="Journey actions"
+            >
+              <button
                 className="animated-btn primary-btn"
                 onClick={() => router.push("/programs")}
                 aria-label="Explore our programs"
@@ -62,7 +73,7 @@ const BeginJourneySection = () => {
                 <span>Explore Programs</span>
                 <i className="fas fa-arrow-right"></i>
               </button>
-              <button 
+              <button
                 className="animated-btn secondary-btn"
                 onClick={() => router.push("/contact")}
                 aria-label="Contact our team"
@@ -78,4 +89,4 @@ const BeginJourneySection = () => {
   );
 };
 
-export default BeginJourneySection; 
+export default BeginJourneySection;

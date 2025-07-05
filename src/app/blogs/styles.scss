@@ -59,11 +59,12 @@
 
     .blog-sidebar {
       width: 280px;
+      padding-top: 45px;
       
       h2 {
         font-size: 18px;
         font-weight: 600;
-        color: #1a1a1a;
+       
         margin-bottom: 16px;
       }
 
@@ -235,7 +236,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 32px;
-  padding: 16px 0;
+  padding: 45px 0;
 }
 
 .blog-cards-list:has(.blog-card:nth-child(2)) {

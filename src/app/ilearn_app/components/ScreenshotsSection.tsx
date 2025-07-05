@@ -5,9 +5,12 @@ import type { EmblaCarouselType as CarouselType } from "embla-carousel";
 import {
   NextButton,
   PrevButton,
-  usePrevNextButtons
+  usePrevNextButtons,
 } from "../../about/components/carousel/EmblaCarouselArrowButtons";
-import { DotButton, useDotButton } from "../../about/components/carousel/EmblaCarouselDotButton";
+import {
+  DotButton,
+  useDotButton,
+} from "../../about/components/carousel/EmblaCarouselDotButton";
 import "./styles/embla.scss";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
@@ -17,23 +20,23 @@ const TWEEN_FACTOR = 0.7;
 const learnImages = [
   { src: "/ilearn/test.jpg", alt: "Learn Screenshot 1" },
   { src: "/ilearn/test.jpg", alt: "Learn Screenshot 2" },
-  { src: "/ilearn/test.jpg", alt: "Learn Screenshot 3" }
+  { src: "/ilearn/test.jpg", alt: "Learn Screenshot 3" },
 ];
 const practiceImages = [
   { src: "/ilearn/test2.jpg", alt: "Practice Screenshot 1" },
   { src: "/ilearn/test2.jpg", alt: "Practice Screenshot 2" },
-  { src: "/ilearn/test2.jpg", alt: "Practice Screenshot 3" }
+  { src: "/ilearn/test2.jpg", alt: "Practice Screenshot 3" },
 ];
 const trackImages = [
   { src: "/ilearn/test3.jpg", alt: "Track Progress Screenshot 1" },
   { src: "/ilearn/test3.jpg", alt: "Track Progress Screenshot 2" },
-  { src: "/ilearn/test3.jpg", alt: "Track Progress Screenshot 3" }
+  { src: "/ilearn/test3.jpg", alt: "Track Progress Screenshot 3" },
 ];
 
 const categories = [
   { key: "learn", label: "Learn" },
   { key: "practice", label: "Practice" },
-  { key: "track", label: "Track Progress" }
+  { key: "track", label: "Track Progress" },
 ];
 
 type EmblaApi = NonNullable<UseEmblaCarouselType[1]>;
@@ -42,22 +45,23 @@ const ScreenshotsSection = () => {
   const [selectedCategory, setSelectedCategory] = useState("learn");
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    dragFree: true
+    dragFree: true,
   });
   const tweenFactor = useRef(TWEEN_FACTOR);
   const tweenNodes = useRef<HTMLElement[]>([]);
 
-  const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(emblaApi);
+  const { selectedIndex, scrollSnaps, onDotButtonClick } =
+    useDotButton(emblaApi);
   const {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
-    onNextButtonClick
+    onNextButtonClick,
   } = usePrevNextButtons(emblaApi);
 
   const setTweenNodes = useCallback((emblaApi: EmblaApi): void => {
     tweenNodes.current = emblaApi.slideNodes().map((slideNode: HTMLElement) => {
-      return slideNode.querySelector('.embla__parallax__layer') as HTMLElement;
+      return slideNode.querySelector(".embla__parallax__layer") as HTMLElement;
     });
   }, []);
 
@@ -65,13 +69,14 @@ const ScreenshotsSection = () => {
     tweenFactor.current = TWEEN_FACTOR * emblaApi.scrollSnapList().length;
   }, []);
 
-  const tweenParallax = useCallback(
-    (emblaApi: EmblaApi) => {
-      const engine = emblaApi.internalEngine();
-      const scrollProgress = emblaApi.scrollProgress();
-      const slidesInView = emblaApi.slidesInView();
+  const tweenParallax = useCallback((emblaApi: EmblaApi) => {
+    const engine = emblaApi.internalEngine();
+    const scrollProgress = emblaApi.scrollProgress();
+    const slidesInView = emblaApi.slidesInView();
 
-      emblaApi.scrollSnapList().forEach((scrollSnap: number, snapIndex: number) => {
+    emblaApi
+      .scrollSnapList()
+      .forEach((scrollSnap: number, snapIndex: number) => {
         let diffToTarget = scrollSnap - scrollProgress;
         const slidesInSnap = engine.slideRegistry[snapIndex];
 
@@ -79,20 +84,22 @@ const ScreenshotsSection = () => {
           if (!slidesInView.includes(slideIndex)) return;
 
           if (engine.options.loop) {
-            engine.slideLooper.loopPoints.forEach((loopItem: { target: () => number; index: number }) => {
-              const target = loopItem.target();
+            engine.slideLooper.loopPoints.forEach(
+              (loopItem: { target: () => number; index: number }) => {
+                const target = loopItem.target();
 
-              if (slideIndex === loopItem.index && target !== 0) {
-                const sign = Math.sign(target);
+                if (slideIndex === loopItem.index && target !== 0) {
+                  const sign = Math.sign(target);
 
-                if (sign === -1) {
-                  diffToTarget = scrollSnap - (1 + scrollProgress);
-                }
-                if (sign === 1) {
-                  diffToTarget = scrollSnap + (1 - scrollProgress);
+                  if (sign === -1) {
+                    diffToTarget = scrollSnap - (1 + scrollProgress);
+                  }
+                  if (sign === 1) {
+                    diffToTarget = scrollSnap + (1 - scrollProgress);
+                  }
                 }
               }
-            });
+            );
           }
 
           const translate = diffToTarget * (-1 * tweenFactor.current) * 100;
@@ -102,9 +109,7 @@ const ScreenshotsSection = () => {
           }
         });
       });
-    },
-    []
-  );
+  }, []);
 
   useEffect(() => {
     if (!emblaApi) return;
@@ -114,28 +119,34 @@ const ScreenshotsSection = () => {
     tweenParallax(emblaApi);
 
     emblaApi
-      .on('reInit', () => {
+      .on("reInit", () => {
         setTweenNodes(emblaApi);
         setTweenFactor(emblaApi);
         tweenParallax(emblaApi);
       })
-      .on('scroll', () => {
+      .on("scroll", () => {
         tweenParallax(emblaApi);
       });
 
     return () => {
       if (!emblaApi) return;
       emblaApi
-        .off('reInit', () => {
+        .off("reInit", () => {
           setTweenNodes(emblaApi);
           setTweenFactor(emblaApi);
           tweenParallax(emblaApi);
         })
-        .off('scroll', () => {
+        .off("scroll", () => {
           tweenParallax(emblaApi);
         });
     };
-  }, [emblaApi, setTweenNodes, setTweenFactor, tweenParallax, selectedCategory]);
+  }, [
+    emblaApi,
+    setTweenNodes,
+    setTweenFactor,
+    tweenParallax,
+    selectedCategory,
+  ]);
 
   let images = learnImages;
   if (selectedCategory === "practice") images = practiceImages;
@@ -144,27 +155,38 @@ const ScreenshotsSection = () => {
   return (
     <div className="image-carousel-section">
       <Container>
-        <Heading 
+        <Heading
+          color="tricolor"
           text="App Screenshots"
-          className="!text-center !text-4xl !font-bold !mb-4"
+          className="!text-center  !font-bold !mb-4"
           animate={true}
         />
-        <p className="section-subtitle text-center">Take a look at the intuitive interface and features of the iLearn IAS App.</p>
-        <div className="screenshot-tabs" style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+        <p className="section-subtitle text-center">
+          Take a look at the intuitive interface and features of the iLearn IAS
+          App.
+        </p>
+        <div
+          className="screenshot-tabs"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: 24,
+          }}
+        >
           {categories.map((cat) => (
             <button
               key={cat.key}
-              className={`tab${selectedCategory === cat.key ? ' active' : ''}`}
+              className={`tab${selectedCategory === cat.key ? " active" : ""}`}
               style={{
-                margin: '0 8px',
-                padding: '8px 20px',
+                margin: "0 8px",
+                padding: "8px 20px",
                 borderRadius: 20,
-                border: 'none',
-                background: selectedCategory === cat.key ? '#222' : '#eee',
-                color: selectedCategory === cat.key ? '#fff' : '#222',
+                border: "none",
+                background: selectedCategory === cat.key ? "#222" : "#eee",
+                color: selectedCategory === cat.key ? "#fff" : "#222",
                 fontWeight: 600,
-                cursor: 'pointer',
-                fontSize: 16
+                cursor: "pointer",
+                fontSize: 16,
               }}
               onClick={() => setSelectedCategory(cat.key)}
             >
@@ -195,8 +217,14 @@ const ScreenshotsSection = () => {
           </div>
           <div className="embla__controls">
             <div className="embla__buttons">
-              <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-              <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
+              <PrevButton
+                onClick={onPrevButtonClick}
+                disabled={prevBtnDisabled}
+              />
+              <NextButton
+                onClick={onNextButtonClick}
+                disabled={nextBtnDisabled}
+              />
             </div>
             <div className="embla__dots">
               {scrollSnaps.map((_, index) => (
@@ -216,4 +244,4 @@ const ScreenshotsSection = () => {
   );
 };
 
-export default ScreenshotsSection; 
+export default ScreenshotsSection;

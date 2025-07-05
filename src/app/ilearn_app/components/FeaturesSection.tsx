@@ -1,4 +1,4 @@
-import { Col,  Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { FaStar, FaMobileAlt, FaLock, FaRocket } from "react-icons/fa";
 import { IconType } from "react-icons";
 import Container from "@/components/common/Container";
@@ -17,14 +17,16 @@ const defaultIcons: IconType[] = [FaStar, FaMobileAlt, FaLock, FaRocket];
 const FeaturesSection = ({ features }: { features: Feature[] }) => (
   <section className="features-section">
     <Container>
-      <Heading 
+      <Heading
+        color="tricolor"
         text="App Features"
-        className="!text-center !text-4xl !font-bold !mb-8"
+        className="!text-center !font-bold !mb-8"
         animate={true}
       />
       <Row className="feature-row">
         {features.map((feature, index) => {
-          const Icon = feature.icon || defaultIcons[index % defaultIcons.length];
+          const Icon =
+            feature.icon || defaultIcons[index % defaultIcons.length];
           return (
             <Col md={3} sm={6} key={index} className="feature-col">
               <motion.div
@@ -37,9 +39,10 @@ const FeaturesSection = ({ features }: { features: Feature[] }) => (
                 <div className="feature-icon">
                   <Icon />
                 </div>
-                <Heading 
+                <Heading
+                  color="white"
                   text={feature.title}
-                  className="!text-xl !font-semibold !mb-2"
+                  className="!text-xl !font-bold !mb-2"
                 />
                 <p>{feature.description}</p>
               </motion.div>
@@ -51,4 +54,4 @@ const FeaturesSection = ({ features }: { features: Feature[] }) => (
   </section>
 );
 
-export default FeaturesSection; 
+export default FeaturesSection;

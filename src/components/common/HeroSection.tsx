@@ -1,6 +1,7 @@
 import { Container } from "react-bootstrap";
 import { twMerge } from "tailwind-merge";
 import "./styles.scss";
+import Heading from "./Heading";
 
 interface HeroSectionProps {
   title: string;
@@ -25,7 +26,7 @@ const HeroSection = ({
   titleClassName = "",
   breadcrumbClassName = "",
   buttons,
-  children
+  children,
 }: HeroSectionProps) => {
   // Base styles that should always be applied
   const baseStyles = {
@@ -40,15 +41,14 @@ const HeroSection = ({
       <div className={twMerge(baseStyles.overlay, overlayClassName)}>
         <Container>
           <div className={twMerge(baseStyles.content, contentClassName)}>
-            <h1 className={titleClassName}>{title}</h1>
-            {description && (
-              <p className="hero-description">{description}</p>
-            )}
-            {buttons && (
-              <div className="hero-buttons">
-                {buttons}
-              </div>
-            )}
+            <Heading
+              text={title}
+              color="tricolor"
+              className={titleClassName}
+              animate={true}
+            />
+            {description && <p className="hero-description">{description}</p>}
+            {buttons && <div className="hero-buttons">{buttons}</div>}
             {children}
           </div>
         </Container>

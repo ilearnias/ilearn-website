@@ -13,105 +13,91 @@ import { useTranslation } from "react-i18next";
 const GalleryPage = () => {
   const { t } = useTranslation();
 
-  // Example images array - replace with your actual images
-  const galleryImages = [
+  // Separate arrays for each gallery section
+  const onamGalleryImages = [
     {
-      src: "/path/to/image1.jpg",
-      alt: "Gallery Image 1",
-      title: "Art 01",
+      src: "/gallery/onam.jpg",
+      alt: "Onam Celebration",
+      title: "Onam Celebration",
     },
     {
-      src: "/path/to/image2.jpg",
-      alt: "Gallery Image 2",
-      title: "Art 02",
+      src: "/gallery/onam.jpg",
+      alt: "Onam Celebration",
+      title: "Onam Celebration",
     },
     {
-      src: "/path/to/image3.jpg",
-      alt: "Gallery Image 3",
-      title: "Art 03",
+      src: "/gallery/onam.jpg",
+      alt: "Onam Celebration",
+      title: "Onam Celebration",
     },
     {
-      src: "/path/to/image4.jpg",
-      alt: "Gallery Image 4",
-      title: "Art 04",
+      src: "/gallery/onam.jpg",
+      alt: "Onam Celebration",
+      title: "Onam Celebration",
     },
     {
-      src: "/path/to/image5.jpg",
-      alt: "Gallery Image 5",
-      title: "Art 05",
+      src: "/gallery/onam.jpg",
+      alt: "Onam Celebration",
+      title: "Onam Celebration",
+    },
+  ];
+
+  const lifeGalleryImages = [
+    {
+      src: "/gallery/life.jpg",
+      alt: "Life at iLearn",
+      title: "Life at iLearn",
     },
     {
-      src: "/path/to/image6.jpg",
-      alt: "Gallery Image 6",
-      title: "Art 06",
+      src: "/gallery/life.jpg",
+      alt: "Life at iLearn",
+      title: "Life at iLearn",
     },
     {
-      src: "/path/to/image7.jpg",
-      alt: "Gallery Image 7",
-      title: "Art 07",
+      src: "/gallery/life.jpg",
+      alt: "Life at iLearn",
+      title: "Life at iLearn",
     },
     {
-      src: "/path/to/image8.jpg",
-      alt: "Gallery Image 8",
-      title: "Art 08",
-    },
-    {
-      src: "/path/to/image9.jpg",
-      alt: "Gallery Image 9",
-      title: "Art 09",
+      src: "/gallery/life.jpg",
+      alt: "Life at iLearn",
+      title: "Life at iLearn",
     },
   ];
 
   return (
     <div className="gallery-page">
       <Header />
-      
+
       <HeroSection
-        title={t('gallery-HeaderTxt')}
+        titleClassName="font-bold"
+        title="Gallery"
         pageName="Gallery"
         description="Experience the vibrant life at iLearn through our collection of memorable moments, celebrations, and academic milestones."
-        className="gallery-hero"
+        className="!font-bold"
       />
 
       <div className="gallery-content">
-        <Container>
-          <section className="gallery-section">
-            <Fade direction="up">
-              <div className="section-header">
-                <Heading 
-                  text={t("Onam_Celebration")} 
-                  color="white"
-                  className="section-title"
-                />
-                <p className="section-subtitle">
-                  {t("Onam_Celebration_Subtitle")}
-                </p>
-              </div>
-            </Fade>
-            <GalleryComponent images={galleryImages} />
-          </section>
+        <section>
+          <GalleryComponent
+            images={onamGalleryImages}
+            title={t("Onam_Celebration")}
+            color="tricolor"
+            headingClassName="font-bold text-center  pt-10"
+          />
+        </section>
 
-          <section className="gallery-section">
-            <Fade direction="up">
-              <div className="section-header">
-                <Heading 
-                  text={t("Life_At_iLearn")} 
-                  color="white"
-                  className="section-title"
-                />
-                <p className="section-subtitle">
-                  {t("Life_At_iLearn_Subtitle")}
-                </p>
-              </div>
-            </Fade>
-            <GalleryComponent images={galleryImages} />
-          </section>
-        </Container>
+        <section>
+          <GalleryComponent
+            images={lifeGalleryImages}
+            title={t("Life_At_iLearn")}
+            color="tricolor"
+            headingClassName="font-bold text-center pt-10"
+          />
+        </section>
       </div>
-
-   
     </div>
   );
-}
+};
 
 export default GalleryPage;

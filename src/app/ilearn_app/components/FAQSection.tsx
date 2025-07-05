@@ -18,9 +18,10 @@ const FAQSection = ({ faqs }: { faqs: FAQ[] }) => {
   return (
     <section className="faq-section">
       <Container>
-        <Heading 
+        <Heading
+          color="tricolor"
           text="Frequently Asked Questions"
-          className="!text-center !text-4xl !font-bold !mb-8"
+          className="!text-center !font-bold !mb-8"
           animate={true}
         />
         <div className="faq-container">
@@ -45,7 +46,7 @@ const FAQSection = ({ faqs }: { faqs: FAQ[] }) => {
                   cursor: "pointer",
                   outline: "none",
                   borderBottom: "1px solid #eee",
-                  transition: "background 0.2s"
+                  transition: "background 0.2s",
                 }}
               >
                 <span>{faq.question}</span>
@@ -54,7 +55,8 @@ const FAQSection = ({ faqs }: { faqs: FAQ[] }) => {
                     float: "right",
                     display: "inline-block",
                     transition: "transform 0.3s",
-                    transform: openIndex === index ? "rotate(180deg)" : "rotate(0deg)"
+                    transform:
+                      openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
                   }}
                 >
                   <FiChevronDown size={22} />
@@ -70,7 +72,7 @@ const FAQSection = ({ faqs }: { faqs: FAQ[] }) => {
                   background: "#fafbfc",
                   padding: openIndex === index ? "1rem" : "0 1rem",
                   opacity: openIndex === index ? 1 : 0,
-                  pointerEvents: openIndex === index ? "auto" : "none"
+                  pointerEvents: openIndex === index ? "auto" : "none",
                 }}
               >
                 <p style={{ margin: 0 }}>{faq.answer}</p>
@@ -83,4 +85,4 @@ const FAQSection = ({ faqs }: { faqs: FAQ[] }) => {
   );
 };
 
-export default FAQSection; 
+export default FAQSection;

@@ -1,8 +1,8 @@
 import { Col, Row } from "react-bootstrap";
-import { FaGooglePlay, FaApple } from 'react-icons/fa';
-import Image from 'next/image';
-import { useEffect, useRef } from 'react';
-import { useLoading } from '@/components/common/LoadingProvider';
+import { FaGooglePlay, FaApple } from "react-icons/fa";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { useLoading } from "@/components/common/LoadingProvider";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 
@@ -19,14 +19,14 @@ const HeroSection = () => {
       if (!card || triggeredRef.current) return;
       const rect = card.getBoundingClientRect();
       if (rect.bottom <= window.innerHeight && rect.top > 0) {
-        card.classList.add('visible');
+        card.classList.add("visible");
         triggeredRef.current = true;
-        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener("scroll", onScroll);
       }
     };
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener("scroll", onScroll);
     onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, [isLoading]);
 
   return (
@@ -35,22 +35,30 @@ const HeroSection = () => {
         <Row className="align-items-center">
           <Col md={6}>
             <div className="app-content">
-              <Heading 
+              <Heading
+                color="tricolor"
                 text="Learn Anytime, Anywhere"
                 className="!text-4xl md:!text-5xl lg:!text-6xl !font-bold !mb-4"
                 animate={true}
               />
-              <p>Download the iLearn IAS app and start your UPSC preparation journey today.</p>
+              <p>
+                Download the iLearn IAS app and start your UPSC preparation
+                journey today.
+              </p>
               <div className="app-store-buttons">
                 <a href="#" className="store-button google-play">
-                  <span className="store-icon"><FaGooglePlay /></span>
+                  <span className="store-icon">
+                    <FaGooglePlay />
+                  </span>
                   <span className="button-text">
                     <span>GET IT ON</span>
                     <strong>Google Play</strong>
                   </span>
                 </a>
                 <a href="#" className="store-button app-store">
-                  <span className="store-icon"><FaApple /></span>
+                  <span className="store-icon">
+                    <FaApple />
+                  </span>
                   <span className="button-text">
                     <span>Download on the</span>
                     <strong>App Store</strong>
@@ -62,7 +70,13 @@ const HeroSection = () => {
           <Col md={6}>
             <div className="hero-image">
               <div className="app-image-card animate-on-scroll" ref={cardRef}>
-                <Image src="/ilearn/appcard.png" alt="iLearn App Screenshot" width={400} height={400} className="app-image-hover" />
+                <Image
+                  src="/ilearn/appcard.png"
+                  alt="iLearn App Screenshot"
+                  width={400}
+                  height={400}
+                  className="app-image-hover"
+                />
               </div>
             </div>
           </Col>
@@ -72,4 +86,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection; 
+export default HeroSection;

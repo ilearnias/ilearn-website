@@ -68,9 +68,15 @@ const achievers: Achiever[] = [
   },
 ];
 
-const AchieverCard = ({ achiever, idx }: { achiever: Achiever; idx: number }) => {
+const AchieverCard = ({
+  achiever,
+  idx,
+}: {
+  achiever: Achiever;
+  idx: number;
+}) => {
   const ref = React.useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: false, margin: '-50px' });
+  const isInView = useInView(ref, { once: false, margin: "-50px" });
 
   return (
     <motion.div
@@ -93,7 +99,11 @@ const AchieverCard = ({ achiever, idx }: { achiever: Achiever; idx: number }) =>
         <SubHeading text={achiever.name} size="small" color="black" />
         <div className="flex justify-between items-center mt-2">
           <div className="bg-red-100 px-3 py-1 rounded-full">
-            <TextLabel text={`AIR ${achiever.rank}`} color="blue" variant="tag" />
+            <TextLabel
+              text={`AIR ${achiever.rank}`}
+              color="blue"
+              variant="tag"
+            />
           </div>
           <TextLabel text={achiever.year} color="gray" variant="tag" />
         </div>
@@ -137,11 +147,12 @@ const TopAchievers = () => {
     <section className="py-16 bg-white">
       <Container>
         <div className="achievers-content">
-          <div className="flex items-center gap-2 mb-8">
-            <div className="w-8 h-8">
-              <Image src="/logo.svg" alt="Logo" width={32} height={32} />
-            </div>
-            <Heading text="Our Top Achievers" color="black" />
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <Heading
+              text="Our Top Achievers"
+              color="tricolor"
+              className="font-bold "
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

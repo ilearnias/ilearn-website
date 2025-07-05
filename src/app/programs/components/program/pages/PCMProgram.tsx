@@ -6,10 +6,18 @@ import Footer from "@/components/footer";
 import HeroSection from "@/components/common/HeroSection";
 import Heading from "@/components/common/Heading";
 import Container from "@/components/common/Container";
-import { 
-  FiClock, FiUsers, FiAward, FiCheckCircle,
-  FiBook, FiTarget, FiClipboard, FiMessageSquare,
-  FiBarChart, FiBookOpen, FiStar
+import {
+  FiClock,
+  FiUsers,
+  FiAward,
+  FiCheckCircle,
+  FiBook,
+  FiTarget,
+  FiClipboard,
+  FiMessageSquare,
+  FiBarChart,
+  FiBookOpen,
+  FiStar,
 } from "react-icons/fi";
 
 // Program Overview Component
@@ -19,15 +27,19 @@ interface OverviewItemProps {
   description: string;
 }
 
-const OverviewItem: React.FC<OverviewItemProps> = ({ icon, title, description }) => (
+const OverviewItem: React.FC<OverviewItemProps> = ({
+  icon,
+  title,
+  description,
+}) => (
   <div className="flex flex-col items-center text-center p-4 sm:p-6 rounded-lg hover:shadow-md transition-all duration-300">
     <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 sm:mb-4 text-blue-600 bg-blue-50 rounded-full flex items-center justify-center">
-      <div className="w-6 h-6 sm:w-8 sm:h-8">
-        {icon}
-      </div>
+      <div className="w-6 h-6 sm:w-8 sm:h-8">{icon}</div>
     </div>
     <h3 className="text-base sm:text-xl font-bold mb-1 sm:mb-2">{title}</h3>
-    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{description}</p>
+    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+      {description}
+    </p>
   </div>
 );
 
@@ -36,36 +48,37 @@ const ProgramOverview = () => {
     {
       icon: <FiClock className="w-full h-full" />,
       title: "12 Months",
-      description: "Comprehensive duration"
+      description: "Comprehensive duration",
     },
     {
       icon: <FiUsers className="w-full h-full" />,
       title: "Expert Faculty",
-      description: "Experienced instructors"
+      description: "Experienced instructors",
     },
     {
       icon: <FiAward className="w-full h-full" />,
       title: "Best Results",
-      description: "Kerala&apos;s highest success rate"
+      description: "Kerala&apos;s highest success rate",
     },
     {
       icon: <FiCheckCircle className="w-full h-full" />,
       title: "Complete Coverage",
-      description: "Full syllabus included"
-    }
+      description: "Full syllabus included",
+    },
   ];
 
   return (
     <section className="py-12 sm:py-16 bg-white">
       <Container>
-        <Heading 
+        <Heading
           text="Program Overview"
-          className="!text-center !mb-3 sm:!mb-4"
+          color="tricolor"
+          className=" font-bold !text-center !mb-3 sm:!mb-4"
           animate={true}
         />
         <p className="text-center text-sm sm:text-base text-gray-600 mb-8 sm:mb-12">
-          Our flagship program designed to take you from basics to success in both
-          UPSC Prelims and Mains examinations
+          Our flagship program designed to take you from basics to success in
+          both UPSC Prelims and Mains examinations
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-8">
           {features.map((feature, index) => (
@@ -96,15 +109,13 @@ const Feature: React.FC<FeatureProps> = ({ icon, title, description }) => {
   };
 
   return (
-    <div 
+    <div
       className="feature-card bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
       <div className="feature-card-content relative z-10">
         <div className="flex items-start gap-4">
-          <div className="text-blue-600 bg-blue-50 p-3 rounded-lg">
-            {icon}
-          </div>
+          <div className="text-blue-600 bg-blue-50 p-3 rounded-lg">{icon}</div>
           <div>
             <h3 className="text-lg font-semibold mb-2">{title}</h3>
             <p className="text-gray-600 leading-relaxed">{description}</p>
@@ -121,33 +132,35 @@ const ProgramFeatures = () => {
     {
       icon: <FiBook className="w-6 h-6" />,
       title: "Complete Syllabus Coverage",
-      description: "Comprehensive coverage of both Prelims and Mains syllabus with integrated approach"
+      description:
+        "Comprehensive coverage of both Prelims and Mains syllabus with integrated approach",
     },
     {
       icon: <FiTarget className="w-6 h-6" />,
       title: "Proven Methodology",
-      description: "Time-tested teaching methods that have consistently produced top results"
+      description:
+        "Time-tested teaching methods that have consistently produced top results",
     },
     {
       icon: <FiClipboard className="w-6 h-6" />,
       title: "Regular Assessment",
-      description: "Continuous evaluation through tests and mock examinations"
+      description: "Continuous evaluation through tests and mock examinations",
     },
     {
       icon: <FiMessageSquare className="w-6 h-6" />,
       title: "Personal Attention",
-      description: "Individual guidance and doubt clearing sessions"
+      description: "Individual guidance and doubt clearing sessions",
     },
     {
       icon: <FiBookOpen className="w-6 h-6" />,
       title: "Study Materials",
-      description: "Comprehensive study materials and reference books"
+      description: "Comprehensive study materials and reference books",
     },
     {
       icon: <FiBarChart className="w-6 h-6" />,
       title: "Interview Preparation",
-      description: "Complete personality test and interview guidance"
-    }
+      description: "Complete personality test and interview guidance",
+    },
   ];
 
   return (
@@ -157,7 +170,7 @@ const ProgramFeatures = () => {
           --mouse-x: 0;
           --mouse-y: 0;
         }
-        
+
         .hover-effect {
           position: absolute;
           inset: 0;
@@ -176,9 +189,10 @@ const ProgramFeatures = () => {
         }
       `}</style>
       <Container>
-        <Heading 
+        <Heading
+          color="tricolor"
           text="Program Features"
-          className="!text-center !mb-4"
+          className="!text-center font-bold !mb-4"
           animate={true}
         />
         <p className="text-center text-gray-600 mb-12">
@@ -211,24 +225,25 @@ const SuccessStories = () => {
   const stats = [
     {
       value: "45+",
-      label: "UPSC Selections"
+      label: "UPSC Selections",
     },
     {
       value: "5",
-      label: "Women in Top 100"
+      label: "Women in Top 100",
     },
     {
       value: "#1",
-      label: "Success Rate in Kerala"
-    }
+      label: "Success Rate in Kerala",
+    },
   ];
 
   return (
     <section className="py-16 bg-white">
       <Container>
-        <Heading 
+        <Heading
+          color="tricolor"
           text="Success Stories"
-          className="!text-center !mb-4"
+          className="!text-center font-bold !mb-4"
           animate={true}
         />
         <div className="max-w-3xl mx-auto mb-16">
@@ -237,15 +252,16 @@ const SuccessStories = () => {
               <div className="w-20 h-20 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                 <FiStar className="w-10 h-10 text-blue-600" />
               </div>
-              <Heading 
+              <Heading
                 text="Athul Janardanan IFS - State Topper"
                 className="!text-xl !font-bold !mb-4"
                 animate={false}
               />
             </div>
             <p className="text-gray-600 italic text-lg leading-relaxed">
-              &quot;iLearn&apos;s PCM program provided me with the perfect foundation and guidance to achieve
-              success in UPSC. The comprehensive approach and excellent faculty made all the
+              &quot;iLearn&apos;s PCM program provided me with the perfect
+              foundation and guidance to achieve success in UPSC. The
+              comprehensive approach and excellent faculty made all the
               difference.&quot;
             </p>
           </div>
@@ -253,7 +269,10 @@ const SuccessStories = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {stats.map((stat, index) => (
-            <div key={index} className="bg-blue-50 p-6 rounded-lg hover:shadow-md transition-all duration-300">
+            <div
+              key={index}
+              className="bg-blue-50 p-6 rounded-lg hover:shadow-md transition-all duration-300"
+            >
               <Stat {...stat} />
             </div>
           ))}
@@ -261,8 +280,8 @@ const SuccessStories = () => {
 
         <div className="text-center mt-12">
           <p className="text-gray-700 mb-8 text-lg">
-            Join our PCM program and be part of Kerala&apos;s most successful civil
-            service coaching institute
+            Join our PCM program and be part of Kerala&apos;s most successful
+            civil service coaching institute
           </p>
           <div className="flex justify-center gap-4">
             <button className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
@@ -281,7 +300,7 @@ const SuccessStories = () => {
 export default function PCMProgram() {
   const buttons = (
     <div className="flex justify-center gap-4">
-      <button className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
+      <button className="bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg">
         Join PCM Program
       </button>
       <button className="bg-white text-gray-800 px-8 py-3 rounded-md hover:bg-gray-100 transition-all duration-300 border border-gray-200">
@@ -294,14 +313,15 @@ export default function PCMProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
+        className="font-bold"
         title="Prelims Cum Mains Program"
+        titleClassName="font-bold"
         description="Comprehensive preparation for both UPSC Prelims and Mains"
         buttons={buttons}
       />
       <ProgramOverview />
       <ProgramFeatures />
       <SuccessStories />
-
     </div>
   );
-} 
+}

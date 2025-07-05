@@ -7,9 +7,15 @@ import HeroSection from "@/components/common/HeroSection";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import SubText from "@/components/common/SubText";
-import { 
-  FiUsers, FiUserPlus, FiMessageCircle, FiCheckCircle,
-  FiClock, FiHelpCircle, FiVideo, FiChevronDown
+import {
+  FiUsers,
+  FiUserPlus,
+  FiMessageCircle,
+  FiCheckCircle,
+  FiClock,
+  FiHelpCircle,
+  FiVideo,
+  FiChevronDown,
 } from "react-icons/fi";
 import { TestimonialItem } from "@/app/home/components/TestimonialsSection";
 import TestimonialsSection from "@/app/home/components/TestimonialsSection";
@@ -21,24 +27,27 @@ const igpTestimonials: TestimonialItem[] = [
   {
     id: "igp1",
     title: "Success in UPSC Interview",
-    subtitle: "How iLearn's IGP helped me ace my UPSC interview with confidence.",
+    subtitle:
+      "How iLearn's IGP helped me ace my UPSC interview with confidence.",
     videoId: "Y8Tko2YC5hA",
-    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg"
+    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg",
   },
   {
     id: "igp2",
     title: "From Nervous to Confident",
-    subtitle: "My journey through IGP and how it transformed my interview preparation.",
+    subtitle:
+      "My journey through IGP and how it transformed my interview preparation.",
     videoId: "jNQXAC9IVRw",
-    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg"
+    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg",
   },
   {
     id: "igp3",
     title: "IGP - The Game Changer",
-    subtitle: "How mock interviews and personality development sessions made the difference.",
+    subtitle:
+      "How mock interviews and personality development sessions made the difference.",
     videoId: "M7lc1UVf-VE",
-    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg"
-  }
+    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg",
+  },
 ];
 
 // Program Highlights Section
@@ -94,7 +103,7 @@ const Highlight: React.FC<HighlightProps> = ({ icon, title, text }) => {
   }
 
   return (
-    <div 
+    <div
       className="feature-card bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
@@ -117,23 +126,23 @@ const ProgramHighlights = () => {
     {
       icon: <FiUsers className="w-6 h-6" />,
       title: "Mock Interviews",
-      text: "One-on-one mock interviews with experienced panel members to simulate the actual UPSC interview experience"
+      text: "One-on-one mock interviews with experienced panel members to simulate the actual UPSC interview experience",
     },
     {
       icon: <FiUserPlus className="w-6 h-6" />,
       title: "Personality Development",
-      text: "Comprehensive sessions focusing on communication skills, body language, and overall personality enhancement"
+      text: "Comprehensive sessions focusing on communication skills, body language, and overall personality enhancement",
     },
     {
       icon: <FiMessageCircle className="w-6 h-6" />,
       title: "Current Affairs Discussion",
-      text: "In-depth analysis of current events and their implications from interview perspective"
+      text: "In-depth analysis of current events and their implications from interview perspective",
     },
     {
       icon: <FiCheckCircle className="w-6 h-6" />,
       title: "Expert Feedback",
-      text: "Detailed feedback and personalized guidance from experienced interview panel members"
-    }
+      text: "Detailed feedback and personalized guidance from experienced interview panel members",
+    },
   ];
 
   return (
@@ -143,7 +152,7 @@ const ProgramHighlights = () => {
           --mouse-x: 0;
           --mouse-y: 0;
         }
-        
+
         .hover-effect {
           position: absolute;
           inset: 0;
@@ -169,13 +178,15 @@ const ProgramHighlights = () => {
       `}</style>
       <Container>
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <Heading 
-            text="Program Highlights" 
-            className="mb-4"
+          <Heading
+            color="tricolor"
+            text="Program Highlights"
+            className="mb-4 font-bold"
             animate={true}
           />
           <p className="text-gray-600 leading-relaxed">
-            Our comprehensive interview guidance program is designed to help you excel in the UPSC personality test
+            Our comprehensive interview guidance program is designed to help you
+            excel in the UPSC personality test
           </p>
         </div>
 
@@ -254,27 +265,30 @@ const FAQSection = () => {
   const faqs = [
     {
       question: "When should I join the IGP?",
-      answer: "The best time to join the IGP is after clearing your Mains examination, as it specifically focuses on interview preparation and personality development."
+      answer:
+        "The best time to join the IGP is after clearing your Mains examination, as it specifically focuses on interview preparation and personality development.",
     },
     {
       question: "What is the duration of mock interviews?",
-      answer: "Each mock interview session typically lasts for 30-45 minutes, followed by a detailed feedback session."
+      answer:
+        "Each mock interview session typically lasts for 30-45 minutes, followed by a detailed feedback session.",
     },
     {
       question: "How many mock interviews are conducted?",
-      answer: "The program includes multiple mock interviews to ensure thorough preparation and improvement."
-    }
+      answer:
+        "The program includes multiple mock interviews to ensure thorough preparation and improvement.",
+    },
   ];
 
   return (
     <section className="py-16 bg-white">
       <Container>
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <Heading 
+          <Heading
+            color="tricolor"
             text="Frequently Asked Questions"
-            color="black"
             animate={true}
-            className="text-[#1F2937] font-bold mb-4"
+            className=" font-bold mb-4"
           />
           <p className="text-gray-600 leading-relaxed">
             Get answers to common questions about our Interview Guidance Program
@@ -296,7 +310,7 @@ const CallToAction = () => {
     <section className="py-16 bg-blue-900 text-white">
       <Container>
         <div className="text-center">
-          <SubText 
+          <SubText
             text="Join Interview Guidance Program (IGP) at iLearn IAS Academy and take the first step towards achieving your goal of becoming a civil servant."
             className="!text-white !text-lg !mb-8"
           />
@@ -330,6 +344,8 @@ export default function IGProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
+        className="font-bold"
+        titleClassName="font-bold"
         title="Interview Guidance"
         description="Expert guidance for UPSC personality test"
         buttons={buttons}
@@ -338,7 +354,6 @@ export default function IGProgram() {
       <TestimonialsSection testimonials={igpTestimonials} />
       <FAQSection />
       <CallToAction />
-  
     </div>
   );
-} 
+}

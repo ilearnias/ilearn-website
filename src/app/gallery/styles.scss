@@ -36,6 +36,7 @@
 }
 
 .gallery-page {
+  overflow-x: hidden;
   background: #111827;
   min-height: 100vh;
   color: #ffffff;
@@ -85,54 +86,17 @@
   }
 
   .gallery-content {
+    overflow-x: hidden;
     position: relative;
     z-index: 1;
-  }
-
-  .gallery-section {
-    padding: 80px 0;
-    position: relative;
-
-    .section-header {
-      margin-bottom: 3rem;
-      text-align: center;
-    }
-
-    .section-title {
-      margin-bottom: 1rem;
-
-      &::after {
-        content: '';
-        display: block;
-        margin: 1rem auto 0;
-        width: 60px;
-        height: 4px;
-        background: #EF4444;
-        border-radius: 2px;
-      }
-    }
-
-    .section-subtitle {
-      font-size: 1.125rem;
-      color: #D1D5DB;
-      max-width: 600px;
-      margin: 1.5rem auto 0;
-    }
   }
 }
 
 // Responsive styles
 @media (max-width: 768px) {
   .gallery-page {
-    .gallery-section {
-      padding: 40px 0;
-
-      .section-header {
-        .section-subtitle {
-          font-size: 1rem;
-          padding: 0 20px;
-        }
-      }
+    .gallery-content {
+      // No extra mobile-specific styles needed
     }
   }
 } 

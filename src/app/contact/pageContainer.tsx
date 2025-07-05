@@ -2,10 +2,18 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { useTranslation } from "react-i18next";
-import { FaPhone, FaWhatsapp, FaEnvelope, FaMapMarkerAlt, FaClock, FaArrowRight } from "react-icons/fa";
+import {
+  FaPhone,
+  FaWhatsapp,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaClock,
+  FaArrowRight,
+} from "react-icons/fa";
 import Container from "@/components/common/Container";
 import HeroSection from "@/components/common/HeroSection";
 import "./styles.scss";
+import Heading from "@/components/common/Heading";
 
 const PageContainer = () => {
   const { t } = useTranslation();
@@ -13,21 +21,26 @@ const PageContainer = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <HeroSection 
-        title="Get in Touch" 
+      <HeroSection
+        className="font-bold"
+        titleClassName="font-bold"
+        title="Get in Touch"
         pageName="Contact Us"
         description="Have questions? We're here to help! Connect with our team for program inquiries, counseling sessions, or any assistance you need in your UPSC journey."
       />
-      
+
       <section className="contact-section py-16">
         <Container className="space-y-12">
           <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Contact <span className="text-primary">Us</span>
-            </h2>
+            <Heading
+              color="tricolor"
+              text="Contact Us"
+              className="font-bold mb-4"
+            ></Heading>
+
             <p className="text-gray-600 text-lg">
-              Get in touch with us for inquiries about our programs, admission process,
-              or to schedule a counselling session.
+              Get in touch with us for inquiries about our programs, admission
+              process, or to schedule a counselling session.
             </p>
           </div>
 
@@ -41,7 +54,8 @@ const PageContainer = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-2">Our Location</h3>
                     <p className="text-gray-600">
-                      iLearn IAS Academy, Minchin Road, Chakka,<br />
+                      iLearn IAS Academy, Minchin Road, Chakka,
+                      <br />
                       Thiruvananthapuram, Kerala 695011
                     </p>
                   </div>
@@ -54,9 +68,15 @@ const PageContainer = () => {
                     <FaClock className="text-2xl text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Working Hours</h3>
-                    <p className="text-gray-600">Monday to Saturday: 9:00 AM - 8:00 PM</p>
-                    <p className="text-gray-600">Sunday: Closed (Online support available)</p>
+                    <h3 className="text-xl font-semibold mb-2">
+                      Working Hours
+                    </h3>
+                    <p className="text-gray-600">
+                      Monday to Saturday: 9:00 AM - 8:00 PM
+                    </p>
+                    <p className="text-gray-600">
+                      Sunday: Closed (Online support available)
+                    </p>
                   </div>
                 </div>
               </div>
@@ -74,11 +94,12 @@ const PageContainer = () => {
                       <p className="text-gray-600 mb-3">8089166792</p>
                     </div>
                     <div className="mt-auto">
-                      <a 
-                        href="tel:8089166792" 
+                      <a
+                        href="tel:8089166792"
                         className="inline-flex items-center text-primary hover:text-primary-dark font-medium group"
                       >
-                        Call Now <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
+                        Call Now{" "}
+                        <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
                       </a>
                     </div>
                   </div>
@@ -93,16 +114,19 @@ const PageContainer = () => {
                   <div className="flex-1 flex flex-col">
                     <div>
                       <h3 className="text-xl font-semibold mb-2">WhatsApp</h3>
-                      <p className="text-gray-600 mb-3">Chat with us for quick responses</p>
+                      <p className="text-gray-600 mb-3">
+                        Chat with us for quick responses
+                      </p>
                     </div>
                     <div className="mt-auto">
-                      <a 
-                        href="https://wa.me/918089166792" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                      <a
+                        href="https://wa.me/918089166792"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="inline-flex items-center text-primary hover:text-primary-dark font-medium group"
                       >
-                        Chat Now <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
+                        Chat Now{" "}
+                        <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
                       </a>
                     </div>
                   </div>
@@ -117,14 +141,17 @@ const PageContainer = () => {
                   <div className="flex-1 flex flex-col">
                     <div>
                       <h3 className="text-xl font-semibold mb-2">Email</h3>
-                      <p className="text-gray-600 mb-3">ilearnoffic@gmail.com</p>
+                      <p className="text-gray-600 mb-3">
+                        ilearnoffic@gmail.com
+                      </p>
                     </div>
                     <div className="mt-auto">
-                      <a 
-                        href="mailto:ilearnoffic@gmail.com" 
+                      <a
+                        href="mailto:ilearnoffic@gmail.com"
                         className="inline-flex items-center text-primary hover:text-primary-dark font-medium group"
                       >
-                        Send Email <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
+                        Send Email{" "}
+                        <FaArrowRight className="ml-2 text-sm transition-transform duration-300 group-hover:translate-x-1" />
                       </a>
                     </div>
                   </div>

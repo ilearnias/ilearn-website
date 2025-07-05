@@ -87,9 +87,10 @@ function BlogCard({
         />
       </div>
       <div className="blog-card-content">
-        <Heading 
+        <Heading
+          color="tricolor"
           text={title}
-          className="!text-xl !font-semibold !leading-normal"
+          className="!text-xl !font-bold !leading-normal"
           animate={false}
         />
         <p className="blog-card-desc">{description}</p>
@@ -155,8 +156,10 @@ export default function BlogPage() {
 
   return (
     <div>
-      <HeroSection 
-        title="Our Blog" 
+      <HeroSection
+        className="font-bold"
+        titleClassName="font-bold"
+        title="Our Blog"
         pageName="Blog"
         description="Stay informed and inspired with our latest articles, success stories, and expert insights on civil service examination preparation."
       />
@@ -189,12 +192,13 @@ export default function BlogPage() {
                 >
                   <div className="sidebar-mobile-wrap">
                     <div className="categories-section">
-                      <Heading 
+                      <Heading
+                        color="tricolor"
                         text="Categories"
-                        className="!text-xl !font-semibold !mb-4"
+                        className="!text-xl !font-bold !mb-4"
                         animate={false}
                       />
-                      <div className="category-list ">
+                      <div className="category-list  ">
                         {categories.map((cat) => (
                           <button
                             key={cat}
@@ -212,14 +216,13 @@ export default function BlogPage() {
                       </div>
                     </div>
                     <div className="tags-section">
-                      <Heading 
+                      <Heading
+                        color="tricolor"
                         text="Popular Tags"
-                        className="!text-xl !font-semibold !mb-4"
+                        className="!text-xl !font-bold !mb-4"
                         animate={false}
                       />
-                      <div className="tags-list">
-                        {/* Add tags here */}
-                      </div>
+                      <div className="tags-list">{/* Add tags here */}</div>
                     </div>
                   </div>
                 </Drawer>
@@ -228,9 +231,10 @@ export default function BlogPage() {
               <div className="blog-sidebar">
                 <div className="sidebar-mobile-wrap  mt-[1rem]">
                   <div className="categories-section ">
-                    <Heading 
+                    <Heading
+                      color="tricolor"
                       text="Categories"
-                      className="!text-xl !font-semibold !mb-4"
+                      className="!text-xl !font-bold !mb-4"
                       animate={false}
                     />
                     <div className="category-list ">
@@ -248,14 +252,13 @@ export default function BlogPage() {
                     </div>
                   </div>
                   <div className="tags-section">
-                    <Heading 
+                    <Heading
+                      color="tricolor"
                       text="Popular Tags"
-                      className="!text-xl !font-semibold !mb-4"
+                      className="!text-xl !font-bold !mb-4"
                       animate={false}
                     />
-                    <div className="tags-list">
-                      {/* Add tags here */}
-                    </div>
+                    <div className="tags-list">{/* Add tags here */}</div>
                   </div>
                 </div>
               </div>

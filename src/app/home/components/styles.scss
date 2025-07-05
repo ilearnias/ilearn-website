@@ -35,23 +35,11 @@ $charcoal: #1f2937; // Text - Primary text
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 16px;
-    color: #1e4592;
     position: relative;
     display: inline-block;
 
     @media (max-width: 768px) {
       font-size: 2rem;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
-      height: 3px;
-      background-color: #1e4592;
     }
   }
 
@@ -434,17 +422,6 @@ $charcoal: #1f2937; // Text - Primary text
       margin-bottom: 16px;
       position: relative;
       display: inline-block;
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -8px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%;
-        height: 3px;
-        background-color: #1e4592;
-      }
     }
 
     .section-subtitle {
@@ -998,19 +975,39 @@ $charcoal: #1f2937; // Text - Primary text
 
       .success-badge {
         position: absolute;
-        top: 16px;
-        left: 16px;
-        background-color: #dc2626;
+        top: 20px;
+        right: 20px;
+        background: red;
         color: white;
-        padding: 4px 12px;
-        border-radius: 4px;
+        padding: 8px 16px;
+        border-radius: 20px;
         font-size: 0.875rem;
-        font-weight: 500;
+        font-weight: 600;
         z-index: 2;
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: badgePulse 2s infinite;
 
         @media (max-width: 480px) {
           font-size: 0.75rem;
-          padding: 3px 10px;
+          padding: 6px 12px;
+          top: 15px;
+          right: 15px;
+        }
+
+        @keyframes badgePulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+          100% {
+            transform: scale(1);
+          }
         }
       }
 
@@ -1196,7 +1193,7 @@ $charcoal: #1f2937; // Text - Primary text
     }
 
     p {
-      color: #666;
+    
       margin-bottom: 1.5rem;
       line-height: 1.6;
     }
@@ -1598,15 +1595,40 @@ h2 {
   
   .success-badge {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    background: #E31E24;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #dc2626 60%, #ff8080);
     color: white;
-    padding: 4px 12px;
+    padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     z-index: 2;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: badgePulse 2s infinite;
+
+    @media (max-width: 480px) {
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      top: 15px;
+      right: 15px;
+    }
+
+    @keyframes badgePulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
   }
 
   .image-container {
