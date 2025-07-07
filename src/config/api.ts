@@ -55,23 +55,16 @@ export const API_ENDPOINTS = {
 
     // Gallery management
     GALLERY: {
-      // Gallery titles
-      TITLES: {
-        LIST: '/v1/admin/gallery/titles',
-        DETAIL: (id: string) => `/v1/admin/gallery/titles/${id}`,
-        CREATE: '/v1/admin/gallery/titles',
-        UPDATE: (id: string) => `/v1/admin/gallery/titles/${id}`,
-        DELETE: (id: string) => `/v1/admin/gallery/titles/${id}`,
+      // Gallery items (unified endpoint)
+      ITEMS: {
+        LIST: '/v1/admin/gallery',
+        DETAIL: (id: string) => `/v1/admin/gallery/${id}`,
+        CREATE: '/v1/admin/gallery',
+        UPDATE: (id: string) => `/v1/admin/gallery/${id}`,
+        DELETE: (id: string) => `/v1/admin/gallery/${id}`,
       },
-      // Gallery images
-      IMAGES: {
-        LIST: '/v1/admin/gallery/images',
-        DETAIL: (id: string) => `/v1/admin/gallery/images/${id}`,
-        CREATE: '/v1/admin/gallery/images',
-        UPDATE: (id: string) => `/v1/admin/gallery/images/${id}`,
-        DELETE: (id: string) => `/v1/admin/gallery/images/${id}`,
-        UPLOAD: '/v1/admin/gallery/images/upload',
-      },
+      // Image upload endpoint
+      UPLOAD: '/v1/admin/gallery/upload',
     },
 
     // Blog management

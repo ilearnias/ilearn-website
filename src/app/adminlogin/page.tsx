@@ -12,7 +12,6 @@ import {
   ArrowLeftOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
-
 interface LoginForm {
   email: string;
   password: string;
@@ -35,7 +34,7 @@ const AdminLogin = () => {
   const handleSubmit = async (values: LoginForm) => {
     setLoading(true);
 
-    try {
+    try { 
       // Make API call to login
       const response = await fetch('/api/auth/login', {
         method: 'POST',
