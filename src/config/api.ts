@@ -42,6 +42,7 @@ export const API_ENDPOINTS = {
       CREATE: '/v1/admin/success-stories',
       UPDATE: (id: string) => `/v1/admin/success-stories/${id}`,
       DELETE: (id: string) => `/v1/admin/success-stories/${id}`,
+      UPLOAD: '/v1/upload/image',
     },
 
     // Team management
@@ -51,6 +52,7 @@ export const API_ENDPOINTS = {
       CREATE: '/v1/admin/team',
       UPDATE: (id: string) => `/v1/admin/team/${id}`,
       DELETE: (id: string) => `/v1/admin/team/${id}`,
+      UPLOAD: '/v1/upload/image',
     },
 
     // Gallery management
@@ -64,7 +66,7 @@ export const API_ENDPOINTS = {
         DELETE: (id: string) => `/v1/admin/gallery/${id}`,
       },
       // Image upload endpoint
-      UPLOAD: '/v1/admin/gallery/upload',
+      UPLOAD: '/v1/upload/image',
     },
 
     // Blog management
@@ -101,6 +103,7 @@ export const API_ENDPOINTS = {
       CREATE: '/v1/admin/achievers',
       UPDATE: (id: string) => `/v1/admin/achievers/${id}`,
       DELETE: (id: string) => `/v1/admin/achievers/${id}`,
+      UPLOAD: '/v1/upload/image',
     },
 
     // Dashboard statistics

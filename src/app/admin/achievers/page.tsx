@@ -13,12 +13,15 @@ import {
   message,
   InputNumber,
   Switch,
+  Upload,
 } from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
+import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import { achieverService, IAchiever } from "@/services/achievers.service";
 import "./styles.scss";
 
@@ -31,6 +34,7 @@ const Achievers = () => {
   const [achievers, setAchievers] = useState<IAchiever[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingAchiever, setEditingAchiever] = useState<IAchiever | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
 
   const fetchAchievers = useCallback(async () => {
@@ -83,6 +87,7 @@ const Achievers = () => {
 
   const handleAdd = () => {
     setEditingAchiever(null);
+    setUploadedFile(null);
     form.resetFields();
     form.setFieldsValue({ isActive: true }); // Set default value for isActive
     setIsModalVisible(true);
@@ -90,6 +95,17 @@ const Achievers = () => {
 
   const handleEdit = (record: IAchiever) => {
     setEditingAchiever(record);
+    // If there is an image, show it in the Upload preview
+    if (record.image) {
+      setUploadedFile({
+        uid: '-1',
+        name: 'image.jpg',
+        status: 'done',
+        url: record.image,
+      });
+    } else {
+      setUploadedFile(null);
+    }
     form.setFieldsValue(record);
     setIsModalVisible(true);
   };
@@ -118,11 +134,29 @@ const Achievers = () => {
     });
   };
 
+  // Helper to upload a single image and return its URL
+  const uploadImageToApi = async (file: File): Promise<string> => {
+    const response = await achieverService.uploadSingleImage(file);
+    return response;
+  };
+
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
       values.order = Number(values.order);
       values.isActive = Boolean(values.isActive);
+
+      // Handle image upload if a new file is selected
+      if (uploadedFile && uploadedFile.originFileObj) {
+        try {
+          const imageUrl = await uploadImageToApi(uploadedFile.originFileObj);
+          console.log("hello====>>>>",imageUrl);
+          values.image = imageUrl;
+        } catch (error: any) {
+          message.error(error.message || 'Failed to upload image');
+          return;
+        }
+      }
 
       if (editingAchiever) {
         const response = await achieverService.updateAchiever(editingAchiever.id, values);
@@ -152,6 +186,24 @@ const Achievers = () => {
   const handleModalCancel = () => {
     setIsModalVisible(false);
     form.resetFields();
+    setUploadedFile(null);
+  };
+
+  const handleUploadChange: UploadProps['onChange'] = ({ fileList }) => {
+    if (fileList.length > 0) {
+      const file = fileList[0];
+      try {
+        if (file.originFileObj) {
+          achieverService.validateImageFile(file.originFileObj as File);
+        }
+        setUploadedFile(file);
+      } catch (error: any) {
+        message.error(error.message);
+        return;
+      }
+    } else {
+      setUploadedFile(null);
+    }
   };
 
   // Memoize filtered achievers to prevent unnecessary recalculations
@@ -159,8 +211,8 @@ const Achievers = () => {
     return achievers.filter(
       (achiever) =>
         achiever.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        achiever.details.toLowerCase().includes(searchText.toLowerCase()) ||
-        achiever.description.toLowerCase().includes(searchText.toLowerCase())
+        (achiever.details?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
+        (achiever.description?.toLowerCase() || "").includes(searchText.toLowerCase())
     );
   }, [achievers, searchText]);
 
@@ -289,11 +341,27 @@ const Achievers = () => {
             </Form.Item>
 
             <Form.Item
+              label="Image"
               name="image"
-              label="Image URL"
-              rules={[{ required: true, message: "Please enter image URL" }]}
             >
-              <Input placeholder="https://example.com/image.jpg" />
+              <Upload
+                listType="picture-card"
+                fileList={uploadedFile ? [uploadedFile] : []}
+                onChange={handleUploadChange}
+                beforeUpload={() => false} // Prevent auto upload
+                accept="image/*"
+                maxCount={1}
+              >
+                {!uploadedFile && (
+                  <div>
+                    <UploadOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
+              </Upload>
+              <div style={{ marginTop: 8, fontSize: '12px', color: '#666' }}>
+                Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
+              </div>
             </Form.Item>
 
             <Form.Item

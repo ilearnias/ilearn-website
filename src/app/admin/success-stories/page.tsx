@@ -21,6 +21,7 @@ import {
   DatePicker,
   Switch,
   InputNumber,
+  Upload,
 } from "antd";
 import {
   SearchOutlined,
@@ -32,8 +33,10 @@ import {
   UserOutlined,
   LikeOutlined,
   EyeOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
+import type { UploadFile, UploadProps } from "antd/es/upload/interface";
 import { successStoryService, ISuccessStory } from "@/services/success-stories.service";
 import dayjs from 'dayjs';
 import "./styles.scss";
@@ -48,6 +51,7 @@ const SuccessStories = () => {
   const [stories, setStories] = useState<ISuccessStory[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingStory, setEditingStory] = useState<ISuccessStory | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -73,12 +77,24 @@ const SuccessStories = () => {
 
   const handleAdd = () => {
     setEditingStory(null);
+    setUploadedFile(null);
     form.resetFields();
     setIsModalVisible(true);
   };
 
   const handleEdit = (record: ISuccessStory) => {
     setEditingStory(record);
+    // If there is an image, show it in the Upload preview
+    if (record.image) {
+      setUploadedFile({
+        uid: '-1',
+        name: 'image.jpg',
+        status: 'done',
+        url: record.image,
+      });
+    } else {
+      setUploadedFile(null);
+    }
     form.setFieldsValue({
       ...record,
     });
@@ -109,11 +125,29 @@ const SuccessStories = () => {
     });
   };
 
+  // Helper to upload a single image and return its URL
+  const uploadImageToApi = async (file: File): Promise<string> => {
+    const response = await successStoryService.uploadSingleImage(file);
+    return response;
+  };
+
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
       values.isActive = Boolean(values.isActive);
       values.order = Number(values.order);
+
+      // Handle image upload if a new file is selected
+      if (uploadedFile && uploadedFile.originFileObj) {
+        try {
+          const imageUrl = await uploadImageToApi(uploadedFile.originFileObj);
+          values.image = imageUrl;
+        } catch (error: any) {
+          message.error(error.message || 'Failed to upload image');
+          return;
+        }
+      }
+
       if (editingStory) {
         const response = await successStoryService.updateSuccessStory(editingStory.id, values);
         if (response.status) {
@@ -142,6 +176,26 @@ const SuccessStories = () => {
   const handleModalCancel = () => {
     setIsModalVisible(false);
     form.resetFields();
+    setUploadedFile(null);
+  };
+
+  const handleUploadChange: UploadProps['onChange'] = ({ fileList }) => {
+    if (fileList.length > 0) {
+      const file = fileList[0];
+      
+      // Validate file
+      try {
+        if (file.originFileObj) {
+          successStoryService.validateImageFile(file.originFileObj as File);
+        }
+        setUploadedFile(file);
+      } catch (error: any) {
+        message.error(error.message);
+        return;
+      }
+    } else {
+      setUploadedFile(null);
+    }
   };
 
   const filteredStories = stories.filter(
@@ -292,10 +346,11 @@ const SuccessStories = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="image"
-                label="Image URL"
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
               >
-                <Input placeholder="https://example.com/image.jpg" />
+                <InputNumber min={0} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
           </Row>
@@ -315,27 +370,38 @@ const SuccessStories = () => {
             <TextArea rows={4} placeholder="Additional details (optional)" />
           </Form.Item>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="order"
-                label="Order"
-                rules={[{ required: true, message: "Please enter order" }]}
-              >
-                <InputNumber min={0} style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="isActive"
-                label="Status"
-                valuePropName="checked"
-                rules={[{ required: true, message: "Please select status" }]}
-              >
-                <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
-              </Form.Item>
-            </Col>
-          </Row>
+          <Form.Item
+            label="Image"
+            name="image"
+          >
+            <Upload
+              listType="picture-card"
+              fileList={uploadedFile ? [uploadedFile] : []}
+              onChange={handleUploadChange}
+              beforeUpload={() => false} // Prevent auto upload
+              accept="image/*"
+              maxCount={1}
+            >
+              {!uploadedFile && (
+                <div>
+                  <UploadOutlined />
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              )}
+            </Upload>
+            <div style={{ marginTop: 8, fontSize: '12px', color: '#666' }}>
+              Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
+            </div>
+          </Form.Item>
+
+          <Form.Item
+            name="isActive"
+            label="Status"
+            valuePropName="checked"
+            rules={[{ required: true, message: "Please select status" }]}
+          >
+            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+          </Form.Item>
         </Form>
       </Modal>
     </div>
