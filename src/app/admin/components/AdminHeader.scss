@@ -9,17 +9,30 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 
   .header-left {
+    flex: 1;
+    min-width: 0; // Allows text to truncate
+
     .page-title {
       font-size: 24px;
       font-weight: 600;
       color: #1f2937;
       margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
   }
 
   .header-right {
+    flex-shrink: 0;
+    margin-left: 16px;
+
     .profile-button {
       display: flex;
       align-items: center;
@@ -29,6 +42,8 @@
       border-radius: 8px;
       background: #ffffff;
       transition: all 0.2s ease;
+      white-space: nowrap;
+      max-width: 300px;
 
       &:hover {
         background: #f9fafb;
@@ -36,6 +51,8 @@
       }
 
       .profile-avatar {
+        flex-shrink: 0;
+
         .ant-avatar {
           background: #f3f4f6;
           color: #6b7280;
@@ -47,18 +64,28 @@
         flex-direction: column;
         align-items: flex-start;
         text-align: left;
+        min-width: 0;
+        flex: 1;
 
         .profile-name {
           font-size: 14px;
           font-weight: 500;
           color: #1f2937;
           line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
         }
 
         .profile-role {
           font-size: 12px;
           color: #6b7280;
           line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
         }
       }
 
@@ -66,6 +93,7 @@
         font-size: 12px;
         color: #6b7280;
         transition: transform 0.2s ease;
+        flex-shrink: 0;
       }
     }
   }
@@ -158,7 +186,7 @@
 }
 
 // Responsive design
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .admin-header {
     padding: 0 16px;
 
@@ -167,9 +195,63 @@
     }
 
     .header-right .profile-button {
+      padding: 6px 10px;
+      gap: 8px;
+
       .profile-info {
+        .profile-name {
+          font-size: 13px;
+        }
+
+        .profile-role {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 0 12px;
+    height: 60px;
+
+    .header-left .page-title {
+      font-size: 18px;
+    }
+
+    .header-right .profile-button {
+      padding: 4px 8px;
+      gap: 6px;
+
+      .profile-info {
+        display: none;
+      }
+
+      .profile-arrow {
         display: none;
       }
     }
   }
-} 
+}
+
+@media (max-width: 480px) {
+  .admin-header {
+    padding: 0 8px;
+
+    .header-left .page-title {
+      font-size: 16px;
+    }
+
+    .header-right .profile-button {
+      padding: 4px 6px;
+
+      .profile-avatar {
+        .ant-avatar {
+          width: 28px;
+          height: 28px;
+        }
+      }
+    }
+  }
+}

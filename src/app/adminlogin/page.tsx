@@ -12,7 +12,6 @@ import {
   ArrowLeftOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
-
 interface LoginForm {
   email: string;
   password: string;
@@ -35,7 +34,7 @@ const AdminLogin = () => {
   const handleSubmit = async (values: LoginForm) => {
     setLoading(true);
 
-    try {
+    try { 
       // Make API call to login
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -48,8 +47,9 @@ const AdminLogin = () => {
       const data = await response.json();
 
       if (response.ok && data.status) {
+        console.log("data1111", data);
         // Store token in localStorage
-        localStorage.setItem('adminToken', data.data.token);
+        localStorage.setItem('adminToken', data.data.accessToken);
         
         // Dispatch Redux action to update state
         dispatch(login({

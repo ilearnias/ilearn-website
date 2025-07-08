@@ -4,24 +4,25 @@ import { apiRequest, ApiResponse } from '../config/apiRequest';
 export interface IAchiever {
   id: string;
   name: string;
-  achievement: string;
+  details: string;
   description: string;
-  year?: number;
-  category?: string;
-  image?: string;
-  institution?: string;
-  score?: number;
-  rank?: number;
-  testimonial?: string;
+  image: string;
+  order: number;
+  isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
-  isActive?: boolean;
-  details?: string | null;
-  order?: number | null;
   deletedAt?: string | null;
 }
 
-export interface IAchieverCreate extends Omit<IAchiever, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IAchieverCreate {
+  name: string;
+  details: string;
+  description: string;
+  image: string;
+  order: number;
+  isActive: boolean;
+}
+
 export interface IAchieverUpdate extends Partial<IAchieverCreate> {}
 
 class AchieverService {

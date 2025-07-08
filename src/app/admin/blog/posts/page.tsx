@@ -6,18 +6,17 @@ import {
   Input,
   Button,
   Card,
-  Statistic,
   Row,
   Col,
   Space,
-  Tag,
   Dropdown,
   Menu,
   Modal,
   Form,
   message,
-  Select,
-  DatePicker,
+  Switch,
+  InputNumber,
+  Select
 } from "antd";
 import {
   SearchOutlined,
@@ -25,17 +24,12 @@ import {
   EditOutlined,
   DeleteOutlined,
   MoreOutlined,
-  FileTextOutlined,
-  EyeOutlined,
-  ReadOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { blogService, IBlogPost, IBlogCategory } from "@/services/blog.service";
-import dayjs from 'dayjs';
 import "./styles.scss";
 
 const { confirm } = Modal;
-const { Option } = Select;
 const { TextArea } = Input;
 
 const BlogPosts = () => {
@@ -91,10 +85,7 @@ const BlogPosts = () => {
 
   const handleEdit = (record: IBlogPost) => {
     setEditingPost(record);
-    form.setFieldsValue({
-      ...record,
-      publishDate: record.publishDate ? dayjs(record.publishDate) : undefined,
-    });
+    form.setFieldsValue(record);
     setIsModalVisible(true);
   };
 
@@ -126,11 +117,6 @@ const BlogPosts = () => {
     try {
       const values = await form.validateFields();
       
-      // Format dates
-      if (values.publishDate) {
-        values.publishDate = values.publishDate.format('YYYY-MM-DD');
-      }
-
       if (editingPost) {
         const response = await blogService.updatePost(editingPost.id, values);
         if (response.status) {
@@ -164,33 +150,15 @@ const BlogPosts = () => {
   const filteredPosts = posts.filter(
     (post) =>
       post.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      post.content.toLowerCase().includes(searchText.toLowerCase()) ||
-      post.author.toLowerCase().includes(searchText.toLowerCase())
+      post.description.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'published':
-        return 'green';
-      case 'draft':
-        return 'gold';
-      default:
-        return 'default';
-    }
-  };
 
   const columns: ColumnsType<IBlogPost> = [
     {
       title: "Title",
+      dataIndex: "title",
       key: "title",
-      render: (_, record) => (
-        <Space direction="vertical" size={0}>
-          <div style={{ fontWeight: 500 }}>{record.title}</div>
-          <div style={{ fontSize: "12px", color: "#666" }}>
-            By {record.author}
-          </div>
-        </Space>
-      ),
+      sorter: (a, b) => a.title.localeCompare(b.title),
     },
     {
       title: "Category",
@@ -198,41 +166,22 @@ const BlogPosts = () => {
       key: "category",
       render: (categoryId) => {
         const category = categories.find(c => c.id === categoryId);
-        return category ? <Tag color="blue">{category.name}</Tag> : null;
+        return category ? category.title : '-';
       },
+    },
+    {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+      sorter: (a, b) => a.order - b.order,
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={getStatusColor(status)}>
-          {status.charAt(0).toUpperCase() + status.slice(1)}
-        </Tag>
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive) => (
+        <Switch checked={isActive} disabled />
       ),
-    },
-    {
-      title: "Views",
-      dataIndex: "views",
-      key: "views",
-      sorter: (a, b) => (a.views || 0) - (b.views || 0),
-      render: (views) => (
-        <Space>
-          <EyeOutlined />
-          {views || 0}
-        </Space>
-      ),
-    },
-    {
-      title: "Publish Date",
-      dataIndex: "publishDate",
-      key: "publishDate",
-      render: (date) => date ? dayjs(date).format('YYYY-MM-DD') : '-',
-      sorter: (a, b) => {
-        if (!a.publishDate) return -1;
-        if (!b.publishDate) return 1;
-        return dayjs(a.publishDate).unix() - dayjs(b.publishDate).unix();
-      },
     },
     {
       title: "Actions",
@@ -270,51 +219,27 @@ const BlogPosts = () => {
     <div className="blog-posts-page">
       <div className="blog-posts-header">
         <h1>Blog Posts</h1>
-        <p>Manage your blog posts and articles</p>
+        <p>Manage your blog posts</p>
       </div>
 
       <Row gutter={[16, 16]} className="blog-posts-stats">
-        <Col xs={24} sm={12} md={8}>
+        <Col xs={24}>
           <Card>
-            <Statistic
-              title="Total Posts"
-              value={posts.length}
-              prefix={<FileTextOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Published Posts"
-              value={posts.filter(p => p.status === 'published').length}
-              prefix={<ReadOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Total Views"
-              value={posts.reduce((sum, p) => sum + (p.views || 0), 0)}
-              prefix={<EyeOutlined />}
-            />
+            <div className="blog-posts-controls">
+              <Input
+                placeholder="Search posts..."
+                prefix={<SearchOutlined />}
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                style={{ maxWidth: 300 }}
+              />
+              <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+                Add Post
+              </Button>
+            </div>
           </Card>
         </Col>
       </Row>
-
-      <div className="blog-posts-controls">
-        <Input
-          placeholder="Search posts..."
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 300 }}
-        />
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          Add Post
-        </Button>
-      </div>
 
       <Table
         className="blog-posts-table"
@@ -334,7 +259,7 @@ const BlogPosts = () => {
         <Form
           form={form}
           layout="vertical"
-          initialValues={{ status: "draft" }}
+          initialValues={{ isActive: true, order: 1 }}
         >
           <Row gutter={16}>
             <Col span={16}>
@@ -354,9 +279,9 @@ const BlogPosts = () => {
               >
                 <Select>
                   {categories.map(category => (
-                    <Option key={category.id} value={category.id}>
-                      {category.name}
-                    </Option>
+                    <Select.Option key={category.id} value={category.id}>
+                      {category.title}
+                    </Select.Option>
                   ))}
                 </Select>
               </Form.Item>
@@ -364,68 +289,71 @@ const BlogPosts = () => {
           </Row>
 
           <Form.Item
-            name="content"
-            label="Content"
-            rules={[{ required: true, message: "Please enter content" }]}
+            name="subTitle"
+            label="Subtitle"
+            rules={[{ required: true, message: "Please enter subtitle" }]}
           >
-            <TextArea rows={10} />
+            <Input />
           </Form.Item>
 
           <Form.Item
-            name="excerpt"
-            label="Excerpt"
-            rules={[{ required: true, message: "Please enter excerpt" }]}
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: "Please enter description" }]}
           >
-            <TextArea rows={3} />
+            <TextArea rows={5} />
           </Form.Item>
 
           <Row gutter={16}>
-            <Col span={8}>
+            <Col span={12}>
               <Form.Item
-                name="author"
-                label="Author"
-                rules={[{ required: true, message: "Please enter author" }]}
+                name="image"
+                label="Image URL"
+                rules={[{ required: true, message: "Please enter image URL" }]}
               >
                 <Input />
               </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={12}>
               <Form.Item
-                name="status"
-                label="Status"
-                rules={[{ required: true, message: "Please select status" }]}
+                name="link"
+                label="Link URL"
+                rules={[{ required: true, message: "Please enter link URL" }]}
               >
-                <Select>
-                  <Option value="draft">Draft</Option>
-                  <Option value="published">Published</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                name="publishDate"
-                label="Publish Date"
-              >
-                <DatePicker style={{ width: '100%' }} />
+                <Input />
               </Form.Item>
             </Col>
           </Row>
 
-          <Form.Item
-            name="featuredImage"
-            label="Featured Image URL"
-          >
-            <Input placeholder="https://example.com/image.jpg" />
-          </Form.Item>
-
-          <Form.Item
-            name="tags"
-            label="Tags"
-          >
-            <Select mode="tags" style={{ width: '100%' }} placeholder="Add tags">
-              {/* Tags will be dynamically added by the user */}
-            </Select>
-          </Form.Item>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="tags"
+                label="Tags"
+                rules={[{ required: true, message: "Please enter tags" }]}
+              >
+                <Input placeholder="Comma separated tags" />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                name="order"
+                label="Display Order"
+                rules={[{ required: true, message: "Please enter display order" }]}
+              >
+                <InputNumber min={1} style={{ width: '100%' }} />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item
+                name="isActive"
+                label="Status"
+                valuePropName="checked"
+              >
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Modal>
     </div>

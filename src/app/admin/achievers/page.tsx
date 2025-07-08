@@ -1,40 +1,39 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Table,
   Input,
   Button,
   Card,
-  Statistic,
-  Row,
-  Col,
   Space,
   Tag,
-  Dropdown,
-  Menu,
   Modal,
   Form,
   message,
-  Select,
   InputNumber,
   Switch,
+  Image,
+  Upload,
+  UploadFile,
+  UploadProps,
 } from "antd";
 import {
   SearchOutlined,
   PlusOutlined,
-  EditOutlined,
+  InboxOutlined,
   DeleteOutlined,
-  MoreOutlined,
-  TrophyOutlined,
-  StarOutlined,
-  UserOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { achieverService, IAchiever } from "@/services/achievers.service";
+import { API_CONFIG, API_ENDPOINTS } from "@/config/api";
+import { apiRequest } from "@/config/apiRequest";
 import "./styles.scss";
 
 const { confirm } = Modal;
+const { TextArea } = Input;
+const { Dragger } = Upload;
 
 const Achievers = () => {
   const [searchText, setSearchText] = useState("");
@@ -44,13 +43,11 @@ const Achievers = () => {
   const [editingAchiever, setEditingAchiever] = useState<IAchiever | null>(
     null
   );
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    fetchAchievers();
-  }, []);
-
-  const fetchAchievers = async () => {
+  const fetchAchievers = useCallback(async () => {
     try {
       setLoading(true);
       const response = await achieverService.getAllAchievers();
@@ -65,17 +62,27 @@ const Achievers = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchAchievers();
+  }, [fetchAchievers]);
 
   const handleAdd = () => {
     setEditingAchiever(null);
+    setUploadedImageUrl("");
     form.resetFields();
+    form.setFieldsValue({ isActive: true });
     setIsModalVisible(true);
   };
 
   const handleEdit = (record: IAchiever) => {
     setEditingAchiever(record);
-    form.setFieldsValue(record);
+    setUploadedImageUrl(record.image);
+    form.setFieldsValue({
+      ...record,
+      image: undefined, // Don't set image field, we'll handle it separately
+    });
     setIsModalVisible(true);
   };
 
@@ -93,7 +100,7 @@ const Achievers = () => {
             message.success(
               response.message || "Achiever deleted successfully"
             );
-            fetchAchievers();
+            await fetchAchievers();
           } else {
             message.error(response.message || "Failed to delete achiever");
           }
@@ -105,11 +112,70 @@ const Achievers = () => {
     });
   };
 
+  const uploadProps: UploadProps = {
+    name: "file",
+    multiple: false,
+    accept: "image/*",
+    showUploadList: false,
+    customRequest: async ({ file, onSuccess, onError, onProgress }) => {
+      try {
+        setUploadLoading(true);
+        const formData = new FormData();
+        formData.append("file", file as File);
+
+        const result = await apiRequest.upload(
+          API_ENDPOINTS.ADMIN.UPLOAD.IMAGE,
+          formData,
+          (progress) => {
+            onProgress?.({ percent: progress });
+          }
+        );
+
+        if (result.status) {
+          setUploadedImageUrl(result.data.url || result.data);
+          onSuccess?.(result);
+          message.success("Image uploaded successfully!");
+        } else {
+          throw new Error(result.message || "Upload failed");
+        }
+      } catch (error: any) {
+        onError?.(error);
+        message.error(error.message || "Upload failed");
+      } finally {
+        setUploadLoading(false);
+      }
+    },
+    beforeUpload: (file) => {
+      const isImage = file.type.startsWith("image/");
+      if (!isImage) {
+        message.error("You can only upload image files!");
+        return false;
+      }
+
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        message.error("Image must be smaller than 5MB!");
+        return false;
+      }
+
+      return true;
+    },
+  };
+
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
       values.order = Number(values.order);
       values.isActive = Boolean(values.isActive);
+
+      // Use uploaded image URL if available, otherwise use the existing image URL
+      values.image = uploadedImageUrl || editingAchiever?.image || "";
+
+      if (!values.image) {
+        message.error("Please upload an image");
+        return;
+      }
+
       if (editingAchiever) {
         const response = await achieverService.updateAchiever(
           editingAchiever.id,
@@ -118,7 +184,7 @@ const Achievers = () => {
         if (response.status) {
           message.success(response.message || "Achiever updated successfully");
           setIsModalVisible(false);
-          fetchAchievers();
+          await fetchAchievers();
         } else {
           message.error(response.message || "Failed to update achiever");
         }
@@ -127,7 +193,7 @@ const Achievers = () => {
         if (response.status) {
           message.success(response.message || "Achiever created successfully");
           setIsModalVisible(false);
-          fetchAchievers();
+          await fetchAchievers();
         } else {
           message.error(response.message || "Failed to create achiever");
         }
@@ -140,84 +206,74 @@ const Achievers = () => {
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setUploadedImageUrl("");
     form.resetFields();
   };
 
-  const filteredAchievers = achievers.filter(
-    (achiever) =>
-      (achiever.name || "").toLowerCase().includes(searchText.toLowerCase()) ||
-      (achiever.details || "")
-        .toLowerCase()
-        .includes(searchText.toLowerCase()) ||
-      (achiever.description || "")
-        .toLowerCase()
-        .includes(searchText.toLowerCase())
-  );
+  const removeUploadedImage = () => {
+    setUploadedImageUrl("");
+    message.info("Image removed");
+  };
+
+  const filteredAchievers = useMemo(() => {
+    return achievers.filter(
+      (achiever) =>
+        achiever.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        achiever.details.toLowerCase().includes(searchText.toLowerCase()) ||
+        achiever.description.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [achievers, searchText]);
 
   const columns: ColumnsType<IAchiever> = [
-    // {
-    //   title: "Name",
-    //   dataIndex: "name",
-    //   key: "name",
-    //   render: (_, record) => (
-    //     <Space>
-    //       <img
-    //         src={record.image}
-    //         alt={record.name}
-    //         style={{
-    //           width: 40,
-    //           height: 40,
-    //           borderRadius: "50%",
-    //           objectFit: "cover",
-    //         }}
-    //         onError={(e) => {
-    //           const target = e.target as HTMLImageElement;
-    //           target.src = "/placeholder.png";
-    //         }}
-    //       />
-    //       <div>
-    //         <div style={{ fontWeight: 500 }}>{record.name}</div>
-    //         <div style={{ fontSize: "12px", color: "#666" }}>
-    //           {record.details}
-    //         </div>
-    //       </div>
-    //     </Space>
-    //   ),
-    // },
     {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
+      title: "Image",
+      dataIndex: "image",
+      key: "name",
+      render: (_, record) => (
+        <Space>
+          <Image
+            src={record.image}
+            alt={record.name}
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              objectFit: "cover",
+            }}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.src = "/placeholder.png";
+            }}
+          />
+        </Space>
+      ),
     },
-    // {
-    //   title: "Image",
-    //   dataIndex: "image",
-    //   key: "image",
-    //   render: (image) => (
-    //     <img
-    //       src={image || "/placeholder.png"}
-    //       alt="Image"
-    //       style={{
-    //         width: 40,
-    //         height: 40,
-    //         borderRadius: "50%",
-    //         objectFit: "cover",
-    //       }}
-    //       onError={(e) => {
-    //         (e.target as HTMLImageElement).src = "/placeholder.png";
-    //       }}
-    //     />
-    //   ),
-    // },
+
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      // width: 100,
+    },
+
     {
       title: "Order",
       dataIndex: "order",
       key: "order",
+      // width: 100,
     },
     {
-      title: "Active",
+      title: "Details",
+      dataIndex: "details",
+      key: "details",
+      // width: 100,
+    },
+
+    {
+      title: "Status",
       dataIndex: "isActive",
       key: "isActive",
+      // width: 100,
       render: (isActive) => (
         <Tag color={isActive ? "green" : "red"}>
           {isActive ? "Active" : "Inactive"}
@@ -227,162 +283,185 @@ const Achievers = () => {
     {
       title: "Actions",
       key: "actions",
+      width: 120,
       render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item
-                key="edit"
-                icon={<EditOutlined />}
-                onClick={() => handleEdit(record)}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined />}
-                danger
-                onClick={() => handleDelete(record)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
+        <Space>
+          <Button type="link" onClick={() => handleEdit(record)}>
+            Edit
+          </Button>
+          <Button type="link" danger onClick={() => handleDelete(record)}>
+            Delete
+          </Button>
+        </Space>
       ),
     },
   ];
 
   return (
     <div className="achievers-page">
-      <div className="achievers-header">
-        <h1>Achievers Management</h1>
-        <p>Manage student achievements and success stories</p>
-      </div>
+      <Card>
+        <div
+          className="table-header"
+          style={{
+            marginBottom: 16,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Input
+            placeholder="Search achievers..."
+            prefix={<SearchOutlined />}
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            style={{ width: 300 }}
+          />
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            Add Achiever
+          </Button>
+        </div>
 
-      <Row gutter={[16, 16]} className="achievers-stats">
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Total Achievers"
-              value={achievers.length}
-              prefix={<TrophyOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Active Achievers"
-              value={achievers.filter((a) => a.isActive).length}
-              prefix={<StarOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={8}>
-          <Card>
-            <Statistic
-              title="Highest Order"
-              value={achievers.reduce(
-                (max, a) => (a.order && a.order > max ? a.order : max),
-                0
-              )}
-              prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      <div className="achievers-controls">
-        <Input
-          placeholder="Search achievers..."
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          style={{ maxWidth: 300 }}
+        <Table
+          columns={columns}
+          dataSource={filteredAchievers}
+          rowKey="id"
+          loading={loading}
         />
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          Add Achiever
-        </Button>
-      </div>
 
-      <Table
-        className="achievers-table"
-        columns={columns}
-        dataSource={filteredAchievers}
-        rowKey="id"
-        loading={loading}
-      />
+        <Modal
+          title={editingAchiever ? "Edit Achiever" : "Add New Achiever"}
+          open={isModalVisible}
+          onOk={handleModalOk}
+          onCancel={handleModalCancel}
+          width={700}
+          okText={editingAchiever ? "Update" : "Create"}
+          cancelText="Cancel"
+        >
+          <Form form={form} layout="vertical">
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: "Please enter name" }]}
+            >
+              <Input placeholder="Enter achiever name" />
+            </Form.Item>
 
-      <Modal
-        title={editingAchiever ? "Edit Achiever" : "Add New Achiever"}
-        open={isModalVisible}
-        onOk={handleModalOk}
-        onCancel={handleModalCancel}
-        width={800}
-      >
-        <Form form={form} layout="vertical">
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="name"
-                label="Name"
-                rules={[{ required: true, message: "Please enter name" }]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="image"
-                label="Image URL"
-                rules={[{ required: true, message: "Please enter image URL" }]}
-              >
-                <Input placeholder="https://example.com/image.jpg" />
-              </Form.Item>
-            </Col>
-          </Row>
+            <Form.Item
+              name="details"
+              label="Details"
+              rules={[{ required: true, message: "Please enter details" }]}
+            >
+              <Input placeholder="Enter achiever details" />
+            </Form.Item>
 
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[{ required: true, message: "Please enter description" }]}
+            >
+              <TextArea
+                rows={4}
+                placeholder="Enter detailed description"
+                maxLength={500}
+                showCount
+              />
+            </Form.Item>
 
-          <Form.Item name="details" label="Details">
-            <Input />
-          </Form.Item>
+            <Form.Item
+              label="Profile Image"
+              required
+              help="Upload a profile image (JPG, PNG, GIF up to 5MB)"
+            >
+              {uploadedImageUrl ? (
+                <div style={{ marginBottom: 16 }}>
+                  <div
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <Image
+                      src={uploadedImageUrl}
+                      alt="Uploaded"
+                      style={{
+                        width: 120,
+                        height: 120,
+                        borderRadius: "8px",
+                        objectFit: "cover",
+                      }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = "/placeholder.png";
+                      }}
+                    />
+                    <Button
+                      type="text"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={removeUploadedImage}
+                      style={{
+                        position: "absolute",
+                        top: -8,
+                        right: -8,
+                        background: "#fff",
+                        border: "1px solid #ff4d4f",
+                        borderRadius: "50%",
+                        width: 24,
+                        height: 24,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    />
+                  </div>
+                  <div style={{ marginTop: 8 }}>
+                    <Button
+                      type="link"
+                      icon={<EyeOutlined />}
+                      onClick={() => window.open(uploadedImageUrl, "_blank")}
+                    >
+                      View Full Image
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <Dragger {...uploadProps} disabled={uploadLoading}>
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined />
+                  </p>
+                  <p className="ant-upload-text">
+                    {uploadLoading
+                      ? "Uploading..."
+                      : "Click or drag image to this area to upload"}
+                  </p>
+                  <p className="ant-upload-hint">
+                    Support for JPG, PNG, GIF up to 5MB
+                  </p>
+                </Dragger>
+              )}
+            </Form.Item>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="order"
-                label="Order"
-                rules={[{ required: true, message: "Please enter order" }]}
-              >
-                <InputNumber min={1} style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="isActive"
-                label="Active Status"
-                valuePropName="checked"
-                rules={[
-                  { required: true, message: "Please select active status" },
-                ]}
-              >
-                <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
+            <Form.Item
+              name="order"
+              label="Display Order"
+              rules={[
+                { required: true, message: "Please enter display order" },
+              ]}
+            >
+              <InputNumber
+                min={1}
+                style={{ width: "100%" }}
+                placeholder="Enter display order (1, 2, 3...)"
+              />
+            </Form.Item>
+
+            <Form.Item
+              name="isActive"
+              label="Active Status"
+              valuePropName="checked"
+              initialValue={true}
+            >
+              <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </Card>
     </div>
   );
 };

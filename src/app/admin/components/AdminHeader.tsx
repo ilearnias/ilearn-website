@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '@/redux/slices/authSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/redux/slices/authSlice";
 import { Modal, Button, Dropdown, Avatar, Space } from "antd";
 import {
   UserOutlined,
@@ -58,12 +58,12 @@ const AdminHeader: React.FC = () => {
 
   const confirmLogout = () => {
     // Clear localStorage
-    localStorage.removeItem('adminToken');
-    localStorage.removeItem('adminUser');
-    
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+
     // Dispatch Redux logout action
     dispatch(logout());
-    
+
     setShowLogoutConfirm(false);
   };
 
@@ -119,7 +119,6 @@ const AdminHeader: React.FC = () => {
                   />
                   <div className="profile-info">
                     <span className="profile-name">{user?.name}</span>
-                    <span className="profile-role">Administrator</span>
                   </div>
                   <DownOutlined className="profile-arrow" />
                 </Space>

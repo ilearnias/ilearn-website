@@ -86,7 +86,7 @@ const AdminSidebar: React.FC = () => {
     },
     {
       id: "team",
-      label: "Team Management",
+      label: "Team",
       icon: <TeamOutlined />,
       href: "/admin/team",
       subItems: [],
@@ -102,19 +102,8 @@ const AdminSidebar: React.FC = () => {
       id: "gallery",
       label: "Gallery",
       icon: <PictureOutlined />,
-      href: "#",
-      subItems: [
-        {
-          id: "gallery-titles",
-          label: "Gallery Titles",
-          href: "/admin/gallery/titles",
-        },
-        {
-          id: "gallery-images",
-          label: "Gallery Images",
-          href: "/admin/gallery/images",
-        },
-      ],
+      href: "/admin/gallery",
+      subItems: [],
     },
     {
       id: "blog",

@@ -1,92 +1,86 @@
 // Base API URL configuration
 export const API_CONFIG = {
-  BASE_URL: "https://ilearn-server.bairuhatech.com"
+  // BASE_URL: "https://ilearn-server.bairuhatech.com",
+  BASE_URL: "http://localhost:8011",
 };
 
 // API Endpoints
 export const API_ENDPOINTS = {
   // Auth endpoints
   AUTH: {
-    LOGIN: '/v1/auth/login',
-    LOGOUT: '/v1/auth/logout',
-    REFRESH_TOKEN: '/v1/auth/refresh-token',
-    VERIFY_TOKEN: '/v1/auth/verify-token',
+    LOGIN: "/v1/auth/login",
+    LOGOUT: "/v1/auth/logout",
+    REFRESH_TOKEN: "/v1/auth/refresh-token",
+    VERIFY_TOKEN: "/v1/auth/verify-token",
   },
 
   // Admin Dashboard endpoints
   ADMIN: {
     // Results management
     RESULTS: {
-      LIST: '/v1/admin/results',
+      LIST: "/v1/admin/results",
       DETAIL: (id: string) => `/v1/admin/results/${id}`,
-      CREATE: '/v1/admin/results',
+      CREATE: "/v1/admin/results",
       UPDATE: (id: string) => `/v1/admin/results/${id}`,
       DELETE: (id: string) => `/v1/admin/results/${id}`,
-      SUMMARY: '/v1/admin/results/summary',
-      EXPORT: '/v1/admin/results/export',
+      SUMMARY: "/v1/admin/results/summary",
+      EXPORT: "/v1/admin/results/export",
     },
 
     // Programs management
     PROGRAMS: {
-      LIST: '/v1/admin/programs',
+      LIST: "/v1/admin/programs",
       DETAIL: (id: string) => `/v1/admin/programs/${id}`,
-      CREATE: '/v1/admin/programs',
+      CREATE: "/v1/admin/programs",
       UPDATE: (id: string) => `/v1/admin/programs/${id}`,
       DELETE: (id: string) => `/v1/admin/programs/${id}`,
     },
-    
+
     // Success Stories management
     SUCCESS_STORIES: {
-      LIST: '/v1/admin/success-stories',
+      LIST: "/v1/admin/success-stories",
       DETAIL: (id: string) => `/v1/admin/success-stories/${id}`,
-      CREATE: '/v1/admin/success-stories',
+      CREATE: "/v1/admin/success-stories",
       UPDATE: (id: string) => `/v1/admin/success-stories/${id}`,
       DELETE: (id: string) => `/v1/admin/success-stories/${id}`,
     },
 
     // Team management
     TEAM: {
-      LIST: '/v1/admin/team',
+      LIST: "/v1/admin/team",
       DETAIL: (id: string) => `/v1/admin/team/${id}`,
-      CREATE: '/v1/admin/team',
+      CREATE: "/v1/admin/team",
       UPDATE: (id: string) => `/v1/admin/team/${id}`,
       DELETE: (id: string) => `/v1/admin/team/${id}`,
     },
 
     // Gallery management
     GALLERY: {
-      // Gallery titles
-      TITLES: {
-        LIST: '/v1/admin/gallery/titles',
-        DETAIL: (id: string) => `/v1/admin/gallery/titles/${id}`,
-        CREATE: '/v1/admin/gallery/titles',
-        UPDATE: (id: string) => `/v1/admin/gallery/titles/${id}`,
-        DELETE: (id: string) => `/v1/admin/gallery/titles/${id}`,
+      // Gallery items (unified endpoint)
+      ITEMS: {
+        LIST: "/v1/admin/gallery",
+        DETAIL: (id: string) => `/v1/admin/gallery/${id}`,
+        CREATE: "/v1/admin/gallery",
+        UPDATE: (id: string) => `/v1/admin/gallery/${id}`,
+        DELETE: (id: string) => `/v1/admin/gallery/${id}`,
       },
-      // Gallery images
-      IMAGES: {
-        LIST: '/v1/admin/gallery/images',
-        DETAIL: (id: string) => `/v1/admin/gallery/images/${id}`,
-        CREATE: '/v1/admin/gallery/images',
-        UPDATE: (id: string) => `/v1/admin/gallery/images/${id}`,
-        DELETE: (id: string) => `/v1/admin/gallery/images/${id}`,
-        UPLOAD: '/v1/admin/gallery/images/upload',
-      },
+      // Image upload endpoint
+      UPLOAD: "/v1/admin/gallery/upload",
     },
 
     // Blog management
     BLOG: {
       POSTS: {
-        LIST: '/v1/admin/blog/posts',
+        LIST: "/v1/admin/blog/posts",
         DETAIL: (id: string) => `/v1/admin/blog/posts/${id}`,
-        CREATE: '/v1/admin/blog/posts',
+        CREATE: "/v1/admin/blog/posts",
         UPDATE: (id: string) => `/v1/admin/blog/posts/${id}`,
         DELETE: (id: string) => `/v1/admin/blog/posts/${id}`,
       },
       CATEGORIES: {
-        LIST: '/v1/admin/blog/categories',
+        LIST: "/v1/admin/blog/categories",
         DETAIL: (id: string) => `/v1/admin/blog/categories/${id}`,
-        CREATE: '/v1/admin/blog/categories',
+        CREATE: "/v1/admin/blog/categories",
         UPDATE: (id: string) => `/v1/admin/blog/categories/${id}`,
         DELETE: (id: string) => `/v1/admin/blog/categories/${id}`,
       },
@@ -94,40 +88,45 @@ export const API_ENDPOINTS = {
 
     // Contact management
     CONTACTS: {
-      LIST: '/v1/admin/contacts',
+      LIST: "/v1/admin/contacts",
       DETAIL: (id: string) => `/v1/admin/contacts/${id}`,
-      CREATE: '/v1/admin/contacts',
+      CREATE: "/v1/admin/contacts",
       UPDATE: (id: string) => `/v1/admin/contacts/${id}`,
       DELETE: (id: string) => `/v1/admin/contacts/${id}`,
     },
 
     // Achievers management
     ACHIEVERS: {
-      LIST: '/v1/admin/achievers',
+      LIST: "/v1/admin/achievers",
       DETAIL: (id: string) => `/v1/admin/achievers/${id}`,
-      CREATE: '/v1/admin/achievers',
+      CREATE: "/v1/admin/achievers",
       UPDATE: (id: string) => `/v1/admin/achievers/${id}`,
       DELETE: (id: string) => `/v1/admin/achievers/${id}`,
     },
 
+    // File upload endpoint
+    UPLOAD: {
+      IMAGE: "/v1/upload/image",
+    },
+
     // Dashboard statistics
     DASHBOARD: {
-      STATS: '/v1/admin/dashboard/stats',
-      RECENT_ACTIVITIES: '/v1/admin/dashboard/activities',
-      PERFORMANCE_METRICS: '/v1/admin/dashboard/performance',
+      STATS: "/v1/admin/dashboard/stats",
+      RECENT_ACTIVITIES: "/v1/admin/dashboard/activities",
+      PERFORMANCE_METRICS: "/v1/admin/dashboard/performance",
     },
   },
 
   // Public endpoints
   PUBLIC: {
-    PROGRAMMES: '/v1/programmes',
-    SUCCESS_STORIES: '/v1/success-stories',
-    TEAM: '/v1/team',
-    GALLERY: '/v1/gallery',
+    PROGRAMMES: "/v1/programmes",
+    SUCCESS_STORIES: "/v1/success-stories",
+    TEAM: "/v1/team",
+    GALLERY: "/v1/gallery",
     BLOG: {
-      POSTS: '/v1/blog/posts',
-      CATEGORIES: '/v1/blog/categories',
+      POSTS: "/v1/blog/posts",
+      CATEGORIES: "/v1/blog/categories",
     },
-    CONTACT: '/v1/contact',
+    CONTACT: "/v1/contact",
   },
-}; 
+};

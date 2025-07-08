@@ -161,20 +161,25 @@ export const apiRequest = {
     data: FormData,
     onProgress?: (progress: number) => void
   ) => {
-    const response = await axiosInstance.post<ApiResponse<T>>(url, data, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      onUploadProgress: (progressEvent: AxiosProgressEvent) => {
-        if (onProgress && progressEvent.total && progressEvent.loaded) {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          onProgress(progress);
-        }
-      },
-    });
-    return response.data;
+    try {
+      const response = await axiosInstance.post<ApiResponse<T>>(url, data, {
+        headers: {
+          'Content-Type': undefined, // Let browser set the correct boundary
+          Accept: 'application/json',
+        },
+        onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+          if (onProgress && progressEvent.total && progressEvent.loaded) {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            onProgress(progress);
+          }
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 };
 

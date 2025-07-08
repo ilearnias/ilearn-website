@@ -11,6 +11,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { isAuthenticated } = useSelector((state: any) => state.auth);
+  console.log("isAuthenticated check", isAuthenticated);
   const router = useRouter();
 
   useEffect(() => {

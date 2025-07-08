@@ -1,5 +1,8 @@
+// ("use client");
+
 import type { Metadata } from "next";
 import { Merriweather } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
@@ -9,6 +12,7 @@ import Footer from "@/components/footer";
 import Providers from "@/components/Providers";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import LayoutWithConditionalHeaderFooter from "@/components/LayoutWithConditionalHeaderFooter";
+// import { usePathname } from "next/navigation";
 
 const merriweather = Merriweather({
   weight: ["300", "400", "700", "900"],
@@ -16,46 +20,15 @@ const merriweather = Merriweather({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "iLearn - Your Path to UPSC Success",
-  description:
-    "iLearn offers comprehensive UPSC preparation programs including Foundation Course, Optional Subjects, and Interview Guidance. Join us to achieve your IAS dream.",
-  alternates: {
-    canonical: "https://ilearn.edu",
-  },
-  openGraph: {
-    type: "website",
-    title: "iLearn - Your Path to UPSC Success",
-    description:
-      "iLearn offers comprehensive UPSC preparation programs including Foundation Course, Optional Subjects, and Interview Guidance. Join us to achieve your IAS dream.",
-    url: "https://ilearn.edu",
-    images: {
-      url: "https://ilearn.edu/logo.png",
-      alt: "iLearn - Leading UPSC Coaching Institute",
-      width: 575,
-      height: 275,
-    },
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "iLearn - Your Path to UPSC Success",
-    description:
-      "iLearn offers comprehensive UPSC preparation programs including Foundation Course, Optional Subjects, and Interview Guidance. Join us to achieve your IAS dream.",
-    creator: "@iLearn",
-    images: {
-      url: "https://ilearn.edu/logo.png",
-      alt: "iLearn - Leading UPSC Coaching Institute",
-      width: 575,
-      height: 275,
-    },
-  },
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const pathname = usePathname();
+  // const hideHeaderFooter =
+  //   pathname?.includes("/adminlogin") || pathname?.includes("/admin");
+
   return (
     <html lang="en">
       <head>
@@ -69,10 +42,16 @@ export default function RootLayout({
           <ErrorBoundary>
             <LoadingProvider>
               <LayoutWithConditionalHeaderFooter>
-                {children}
+                <Providers>{children}</Providers>
               </LayoutWithConditionalHeaderFooter>
             </LoadingProvider>
           </ErrorBoundary>
+
+          {/* {!hideHeaderFooter && <Header />}
+          <Providers>
+            <main className="min-h-screen">{children}</main>
+          </Providers>
+          {!hideHeaderFooter && <Footer />} */}
         </AntdRegistry>
       </body>
     </html>
