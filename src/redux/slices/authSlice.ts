@@ -39,7 +39,7 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
     },
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<User | any>) => {
       state.user = action.payload;
     },
     initializeAuth: (state, action: PayloadAction<{ user: User; token: string } | null>) => {

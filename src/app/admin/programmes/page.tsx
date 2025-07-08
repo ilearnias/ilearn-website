@@ -19,6 +19,7 @@ import {
   Select,
   InputNumber,
   DatePicker,
+  Switch,
 } from "antd";
 import {
   SearchOutlined,
@@ -34,8 +35,13 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { programmeService, IProgramme, IProgrammeCreate, IProgrammeUpdate } from "@/services/programmes.service";
-import dayjs from 'dayjs';
+import {
+  programmeService,
+  IProgramme,
+  IProgrammeCreate,
+  IProgrammeUpdate,
+} from "@/services/programmes.service";
+import dayjs from "dayjs";
 import "./styles.scss";
 
 const { confirm } = Modal;
@@ -46,7 +52,9 @@ const Programmes = () => {
   const [loading, setLoading] = useState(false);
   const [programmes, setProgrammes] = useState<IProgramme[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingProgramme, setEditingProgramme] = useState<IProgramme | null>(null);
+  const [editingProgramme, setEditingProgramme] = useState<IProgramme | null>(
+    null
+  );
   const [form] = Form.useForm();
 
   // Fetch programmes on component mount
@@ -61,11 +69,11 @@ const Programmes = () => {
       if (response.status) {
         setProgrammes(response.data);
       } else {
-        message.error(response.message || 'Failed to fetch programmes');
+        message.error(response.message || "Failed to fetch programmes");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch programmes');
-      console.error('Error fetching programmes:', error);
+      message.error(error.message || "Failed to fetch programmes");
+      console.error("Error fetching programmes:", error);
     } finally {
       setLoading(false);
     }
@@ -89,80 +97,95 @@ const Programmes = () => {
 
   const handleDelete = (record: IProgramme) => {
     confirm({
-      title: 'Are you sure you want to delete this programme?',
-      content: 'This action cannot be undone.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      title: "Are you sure you want to delete this programme?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: async () => {
         try {
           const response = await programmeService.deleteProgramme(record.id);
           console.log("response", response);
           if (response.status) {
-            message.success(response.message || 'Programme deleted successfully');
-            // Optimistically remove the deleted record:
-            setProgrammes((prev) =>
-              prev.filter((p) => p.id !== record.id)
+            message.success(
+              response.message || "Programme deleted successfully"
             );
+            // Optimistically remove the deleted record:
+            setProgrammes((prev) => prev.filter((p) => p.id !== record.id));
           } else {
-            console.error('Delete error:', response);
-            message.error(response.message || 'Failed to delete programme');
+            console.error("Delete error:", response);
+            message.error(response.message || "Failed to delete programme");
           }
         } catch (error: any) {
-          message.error(error.message || 'Failed to delete programme');
-          console.error('Error deleting programme:', error);
+          message.error(error.message || "Failed to delete programme");
+          console.error("Error deleting programme:", error);
         }
       },
     });
   };
-  
 
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
       // Format dates
       if (values.startDate) {
-        values.startDate = values.startDate.format('YYYY-MM-DD');
+        values.startDate = values.startDate.format("YYYY-MM-DD");
       }
       if (values.endDate) {
-        values.endDate = values.endDate.format('YYYY-MM-DD');
+        values.endDate = values.endDate.format("YYYY-MM-DD");
       }
       // Ensure price is a number
       values.price = Number(values.price);
       // Only send allowed fields
       const allowedFields = [
-        'title', 'description', 'duration', 'status', 'price', 'order', 'isActive',
-        'category', 'startDate', 'endDate', 'instructor', 'enrollments', 'thumbnail'
+        "title",
+        "sub_title",
+        "description",
+        "duration",
+        "status",
+        "price",
+        "order",
+        "isActive",
+        "category",
+        "startDate",
+        "endDate",
+        "instructor",
+        "enrollments",
+        "thumbnail",
       ];
       const filteredValues = Object.fromEntries(
-        Object.entries(values).filter(([key, value]) => allowedFields.includes(key) && value !== undefined)
+        Object.entries(values).filter(
+          ([key, value]) => allowedFields.includes(key) && value !== undefined
+        )
       );
       if (editingProgramme) {
         const response = await programmeService.updateProgramme(
           editingProgramme.id,
-          (filteredValues as unknown) as IProgrammeUpdate
+          filteredValues as unknown as IProgrammeUpdate
         );
         if (response.status) {
-          message.success(response.message || 'Programme updated successfully');
+          message.success(response.message || "Programme updated successfully");
           setIsModalVisible(false);
           fetchProgrammes();
         } else {
-          console.error('Update error:', response);
-          message.error(response.message || 'Failed to update programme');
+          console.error("Update error:", response);
+          message.error(response.message || "Failed to update programme");
         }
       } else {
-        const response = await programmeService.createProgramme((filteredValues as unknown) as IProgrammeCreate);
+        const response = await programmeService.createProgramme(
+          filteredValues as unknown as IProgrammeCreate
+        );
         if (response.status) {
-          message.success(response.message || 'Programme created successfully');
+          message.success(response.message || "Programme created successfully");
           setIsModalVisible(false);
           fetchProgrammes();
         } else {
-          message.error(response.message || 'Failed to create programme');
+          message.error(response.message || "Failed to create programme");
         }
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to save programme');
-      console.error('Error saving programme:', error);
+      message.error(error.message || "Failed to save programme");
+      console.error("Error saving programme:", error);
     }
   };
 
@@ -174,7 +197,8 @@ const Programmes = () => {
   const filteredProgrammes = programmes.filter(
     (programme) =>
       programme.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      (programme.description && programme.description.toLowerCase().includes(searchText.toLowerCase()))
+      (programme.description &&
+        programme.description.toLowerCase().includes(searchText.toLowerCase()))
   );
 
   const getCategoryColor = (category: string) => {
@@ -227,14 +251,7 @@ const Programmes = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
-        <Tag
-          color={getStatusColor(status)}
-          icon={status === "Active" ? <CheckCircleOutlined /> : undefined}
-        >
-          {status}
-        </Tag>
-      ),
+      render: (status) => <Tag color={getStatusColor(status)}>{status}</Tag>,
     },
     {
       title: "Enrollments",
@@ -287,46 +304,6 @@ const Programmes = () => {
         <p>Manage your educational programmes and courses</p>
       </div>
 
-      <Row gutter={[16, 16]} className="programmes-stats">
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Total Programmes"
-              value={programmes.length}
-              prefix={<BookOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Active Programmes"
-              value={programmes.filter((p) => p.status === "Active").length}
-              prefix={<CheckCircleOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Total Enrollments"
-              value={programmes.reduce((sum, p) => sum + (p.enrollments || 0), 0)}
-              prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Average Price"
-              value={programmes.length ? programmes.reduce((sum, p) => sum + Number(p.price), 0) / programmes.length : 0}
-              prefix={<DollarOutlined />}
-              precision={2}
-            />
-          </Card>
-        </Col>
-      </Row>
-
       <div className="programmes-controls">
         <Input
           placeholder="Search programmes..."
@@ -355,11 +332,7 @@ const Programmes = () => {
         onCancel={handleModalCancel}
         width={800}
       >
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{ status: "Active" }}
-        >
+        <Form form={form} layout="vertical">
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -367,7 +340,7 @@ const Programmes = () => {
                 label="Title"
                 rules={[{ required: true, message: "Please enter title" }]}
               >
-                <Input />
+                <Input placeholder="Enter programme title" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -389,12 +362,8 @@ const Programmes = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item
-                name="duration"
-                label="Duration"
-                rules={[{ required: true, message: "Please enter duration" }]}
-              >
-                <Input placeholder="e.g., 12 weeks" />
+              <Form.Item name="sub_title" label="Sub Title">
+                <Input placeholder="Enter programme sub title" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -403,10 +372,7 @@ const Programmes = () => {
                 label="Status"
                 rules={[{ required: true, message: "Please select status" }]}
               >
-                <Select>
-                  <Option value="Active">Active</Option>
-                  <Option value="Inactive">Inactive</Option>
-                </Select>
+                <Input placeholder="Enter status" />
               </Form.Item>
             </Col>
           </Row>
@@ -414,25 +380,15 @@ const Programmes = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="price"
-                label="Price"
-                rules={[{ required: true, message: "Please enter price" }, { type: 'number', min: 0.01, message: 'Price must be a positive number' }]}
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
               >
                 <InputNumber
                   style={{ width: "100%" }}
-                  formatter={(value: string | number | undefined) => `$ ${value ?? ''}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                  parser={(value: string | undefined) => (value ? value.replace(/\$\s?|(\,*)/g, "") : '')}
-                  min={0.01}
+                  min={1}
+                  placeholder="Enter display order (1, 2, 3...)"
                 />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="enrollments"
-                label="Enrollments"
-                rules={[{ required: true, message: "Please enter enrollments" }]}
-              >
-                <InputNumber style={{ width: "100%" }} min={1} />
               </Form.Item>
             </Col>
           </Row>
@@ -445,31 +401,13 @@ const Programmes = () => {
             <Input.TextArea rows={4} />
           </Form.Item>
 
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item
-                name="startDate"
-                label="Start Date"
-              >
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
-                name="endDate"
-                label="End Date"
-              >
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-          </Row>
-
           <Form.Item
-            name="instructor"
-            label="Instructor"
-            rules={[{ required: true, message: "Please enter instructor name" }]}
+            name="isActive"
+            label="Active Status"
+            valuePropName="checked"
+            initialValue={true}
           >
-            <Input />
+            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
           </Form.Item>
         </Form>
       </Modal>

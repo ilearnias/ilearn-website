@@ -62,6 +62,54 @@ class SuccessStoryService {
       throw error;
     }
   }
+
+  // Upload a single image and return its URL
+  async uploadSingleImage(file: File): Promise<string> {
+    try {
+      const formData = new FormData();
+      formData.append('file', file); // field name must be 'file'
+      const response = await apiRequest.upload(API_ENDPOINTS.ADMIN.SUCCESS_STORIES.UPLOAD, formData);
+      if (response.status && response.data) {
+        // If backend returns { data: { url: '...' } }
+        return response.data.url || response.data;
+      }
+      throw new Error(response.message || 'Failed to upload image');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
+  }
+
+  // Upload multiple images and return an array of URLs
+  async uploadMultipleImages(files: File[]): Promise<string[]> {
+    try {
+      const urls: string[] = [];
+      for (const file of files) {
+        const url = await this.uploadSingleImage(file);
+        urls.push(url);
+      }
+      return urls;
+    } catch (error) {
+      console.error('Error uploading multiple images:', error);
+      throw error;
+    }
+  }
+
+  // Validate image file
+  validateImageFile(file: File): boolean {
+    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!acceptedFormats.includes(file.type)) {
+      throw new Error(`${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`);
+    }
+
+    if (file.size > maxSize) {
+      throw new Error(`${file.name} is larger than 5MB`);
+    }
+
+    return true;
+  }
 }
 
 export const successStoryService = new SuccessStoryService(); 
