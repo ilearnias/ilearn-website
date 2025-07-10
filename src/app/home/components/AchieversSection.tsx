@@ -75,7 +75,7 @@ const AchieversSection = () => {
           transition={{ duration: 0.5 }}
         >
           <Heading
-            color="tricolor"
+            color="red"
             text="Our Proud Achievers"
             className="!text-center !mb-4"
             animate={true}

@@ -106,7 +106,7 @@ const MediaSection = () => {
         <div className="text-center mb-12">
           <Heading
             text="iLearn in Media"
-            color="tricolor"
+            color="red"
             animate={true}
             className="font-bold mb-4"
           />

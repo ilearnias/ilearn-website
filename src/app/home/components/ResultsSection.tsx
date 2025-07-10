@@ -63,7 +63,7 @@ const ResultsSection = () => {
     <section className="results-section w-full">
       <Container className="w-full">
         <Heading
-          color="tricolor"
+          color="red"
           text={
             <>
               Civil Service Examination 2024

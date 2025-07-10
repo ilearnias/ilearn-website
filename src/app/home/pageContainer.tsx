@@ -7,7 +7,9 @@ import HomeSection from "./components/HomeSection";
 import ResultsSection from "./components/ResultsSection";
 import AchieversSection from "./components/AchieversSection";
 import MediaSection from "./components/MediaSection";
-import TestimonialsSection, { TestimonialItem } from "./components/TestimonialsSection";
+import TestimonialsSection, {
+  TestimonialItem,
+} from "./components/TestimonialsSection";
 import SuccessStoriesSection from "./components/SuccessStoriesSection";
 import ProgramsSection from "./components/ProgramsSection";
 import ApplySection from "./components/ApplySection";
@@ -18,22 +20,22 @@ const testimonialData: TestimonialItem[] = [
     title: "Preparation Strategy",
     subtitle: "Learn from our top students",
     videoId: "wMTD8maO6U4",
-    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`
+    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`,
   },
   {
     id: "2",
     title: "Malavika G Nair",
     subtitle: "AIR 45 - Success Story",
     videoId: "wMTD8maO6U4",
-    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`
+    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`,
   },
   {
     id: "3",
     title: "Success Journey",
     subtitle: "Path to achievement",
     videoId: "wMTD8maO6U4",
-    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`
-  }
+    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`,
+  },
 ];
 
 export default function PageContainer() {
@@ -45,7 +47,7 @@ export default function PageContainer() {
       </section>
 
       {/* 2. Result Highlights Section */}
-      <section id="results" >
+      <section id="results">
         <ResultsSection />
       </section>
 
@@ -55,27 +57,27 @@ export default function PageContainer() {
       </section>
 
       {/* 4. Media Section */}
-      <section id="media" >
+      <section id="media">
         <MediaSection />
       </section>
 
       {/* 5. Student Testimonials Section */}
-      <section id="testimonials" >
+      <section id="testimonials">
         <TestimonialsSection testimonials={testimonialData} />
       </section>
 
       {/* 6. Success Stories Section */}
-      <section id="success-stories" >
+      <section id="success-stories">
         <SuccessStoriesSection />
       </section>
 
       {/* 7. Our Programs Section */}
-      <section id="programs" >
+      <section id="programs">
         <ProgramsSection />
       </section>
 
       {/* 8. Apply Section */}
-      <section id="apply" >
+      <section id="apply">
         <ApplySection />
       </section>
     </div>

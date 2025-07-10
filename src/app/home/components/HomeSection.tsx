@@ -25,7 +25,7 @@ const HomeSection = () => {
           <div className="text-content ">
             <div className="heading-group">
               <Heading
-                color="tricolor"
+                color="red"
                 text={
                   <>
                     <span>We don&apos;t claim</span>
@@ -52,7 +52,7 @@ const HomeSection = () => {
                     <span>results.</span>
                   </>
                 }
-                color="tricolor"
+                color="red"
                 animate={true}
                 className=" font-bold md:hidden"
               />

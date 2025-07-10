@@ -1,5 +1,5 @@
 "use client";
-import Footer from "@/components/footer";
+
 import Header from "@/components/header";
 import ResultSection from "./components/ResultSection";
 import ResultSummary from "./components/ResultSummary";
