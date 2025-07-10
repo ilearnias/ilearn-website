@@ -15,7 +15,10 @@ import Heading from "@/components/common/Heading";
 import { blogService, IBlogPost, IBlogCategory } from "@/services/blog.service";
 
 // Real data state
-type BlogPostWithCategory = IBlogPost & { category?: IBlogCategory };
+type BlogPostWithCategory = Omit<IBlogPost, "tags"> & {
+  tags: string | string[];
+  category?: IBlogCategory;
+};
 
 const DEFAULT_CATEGORY = "All Posts";
 
@@ -30,7 +33,7 @@ function BlogCard({
   title: string;
   description: string;
   image: string;
-  tags?: string;
+  tags?: string | string[];
   selectedTag?: string | null;
 }) {
   // Fallback if image is not a valid path or URL
@@ -42,7 +45,9 @@ function BlogCard({
   const imageSrc = isValidImage ? image : "/About/Carousel/img1.jpg";
 
   // Tag highlighting logic
-  const tagList = tags
+  const tagList = Array.isArray(tags)
+    ? tags
+    : typeof tags === "string"
     ? tags
         .split(/,|;/)
         .map((t) => t.trim())
@@ -114,14 +119,17 @@ export default function BlogPage() {
   const allTags = Array.from(
     new Set(
       blogPosts
-        .flatMap((post) =>
-          post.tags
-            ? post.tags
-                .split(/,|;/)
-                .map((t) => t.trim())
-                .filter(Boolean)
-            : []
-        )
+        .flatMap((post) => {
+          if (!post.tags) return [];
+          if (Array.isArray(post.tags)) return post.tags;
+          if (typeof post.tags === "string") {
+            return post.tags
+              .split(/,|;/)
+              .map((t: string) => t.trim())
+              .filter(Boolean);
+          }
+          return [];
+        })
         .filter(Boolean)
     )
   );
@@ -130,15 +138,12 @@ export default function BlogPage() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    Promise.all([
-      blogService.getAllPosts(1, 10),
-      blogService.getAllCategories(),
-    ])
+    Promise.all([blogService.getAllPosts(), blogService.getAllCategories()])
       .then(([postsRes, catsRes]) => {
         // postsRes.data is array of posts, each with .category
         setBlogPosts(postsRes.data || []);
         const catTitles =
-          catsRes.data?.map((cat: IBlogCategory) => cat.title) || [];
+          catsRes.data?.map((cat: IBlogCategory) => cat.name) || [];
         setCategories([DEFAULT_CATEGORY, ...catTitles]);
       })
       .catch((err) => {
@@ -196,12 +201,16 @@ export default function BlogPage() {
   const filteredPosts = blogPosts.filter((post) => {
     const inCategory =
       selectedCategory === DEFAULT_CATEGORY ||
-      post.category?.title === selectedCategory;
+      post.category?.name === selectedCategory;
     if (!selectedTag) return inCategory;
-    const tagList = post.tags
+    const tagList = !post.tags
+      ? []
+      : Array.isArray(post.tags)
+      ? post.tags
+      : typeof post.tags === "string"
       ? post.tags
           .split(/,|;/)
-          .map((t) => t.trim())
+          .map((t: string) => t.trim())
           .filter(Boolean)
       : [];
     return inCategory && tagList.includes(selectedTag);
@@ -211,7 +220,7 @@ export default function BlogPage() {
     <div>
       <HeroSection
         className="font-bold"
-        titleClassName="font-bold"
+        titleClassName="font-bold mb-3"
         title="Our Blog"
         pageName="Blog"
         description="Stay informed and inspired with our latest articles, success stories, and expert insights on civil service examination preparation."

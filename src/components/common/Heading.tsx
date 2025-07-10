@@ -28,7 +28,7 @@ const Heading: React.FC<HeadingProps> = ({
 
   // Base styles that should always be applied
   const baseStyles =
-    "text-[2.65rem] sm:text-[2.5rem] md:text-[3.5rem] font-extralight tracking-[-0.02em] leading-[1.1]  font-arvo";
+    "text-[2.65rem] sm:text-[2.5rem] md:text-[3.5rem] font-extralight tracking-[-0.02em] leading-[0.1]  font-arvo";
 
   const content = (
     <h2 className={twMerge(baseStyles, colorStyles[color], className)}>

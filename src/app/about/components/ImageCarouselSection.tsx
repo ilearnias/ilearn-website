@@ -142,7 +142,7 @@ const ImageCarouselSection = () => {
             className="!text-center !mb-4 font-bold"
             animate={true}
           />
-          <p className="section-subtitle text-center mb-2">
+          <p className="section-subtitle text-center md:mb-3 mb-2">
             Take a virtual tour of our state-of-the-art facilities
           </p>
         </Fade>

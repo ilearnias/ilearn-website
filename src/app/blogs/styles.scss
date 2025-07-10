@@ -250,7 +250,7 @@
   transition: box-shadow 0.2s;
   border: 1px solid #e5e7eb;
   width: 100%;
-  height: 480px; // Fixed height for consistent card size
+  height: 450px; // Fixed height for consistent card size
   &:hover {
     box-shadow: 0 4px 24px rgba(30, 64, 175, 0.16);
   }

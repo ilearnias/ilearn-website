@@ -103,7 +103,7 @@ const GalleryPage = () => {
       <Header />
 
       <HeroSection
-        titleClassName="font-bold"
+        titleClassName="font-bold mb-3"
         title="Gallery"
         pageName="Gallery"
         description="Experience the vibrant life at iLearn through our collection of memorable moments, celebrations, and academic milestones."

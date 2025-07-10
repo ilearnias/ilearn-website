@@ -113,7 +113,7 @@ const ProgramsSection = () => {
                 <Heading
                   text={program.title}
                   color="tricolor"
-                  className="font-bold !text-2xl"
+                  className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl"
                 />
                 <p>{program.description}</p>
                 <div className="duration">{program.duration} months</div>

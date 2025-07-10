@@ -23,14 +23,14 @@ a {
 }
 .footer-text {
   color: rgb(255, 255, 255);
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
   font-size: 14px;
   text-align: justify;
 }
 .footer-txt1 {
   color: rgb(255, 255, 255);
   font-size: 20px;
-  font-family: vars.$Bold;
+  font-family: 'Montserrat', Arial, sans-serif;
   margin-bottom: 20px;
 }
 
@@ -38,7 +38,7 @@ a {
   color: rgb(255, 255, 255);
   font-size: 16px;
   margin-bottom: 5px;
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
   cursor: pointer;
   &:hover {
     color: red;
@@ -51,12 +51,12 @@ a {
 .footer-text2 {
   color: rgb(255, 255, 255);
   font-size: 12px;
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
 .footer-txt3 {
   color: rgb(202, 202, 202);
   font-size: 16px;
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
   @media screen and (min-width: 320px) and (max-width: 768px) {
     text-align: center;
   }
@@ -65,7 +65,7 @@ a {
 .footer-txt4 {
   color: rgb(255, 255, 255);
   font-size: 13px;
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
   cursor: pointer;
   &:hover {
     color: #ff4000;
@@ -80,7 +80,7 @@ a {
   color: rgb(255, 255, 255);
   font-size: 16px;
   margin-bottom: 5px;
-  font-family: vars.$SemiBold;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
 
 .footer-item2 {
@@ -136,13 +136,13 @@ a {
 .footer-text3 {
   color: rgb(255, 255, 255);
   font-size: 12px;
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
 
 .footer-text4 {
   color: rgb(255, 255, 255);
   font-size: 15px;
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
   &:hover {
     color: red;
   }
@@ -150,13 +150,13 @@ a {
 
 .txt1 {
   color: rgb(255, 255, 255);
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
   font-size: 12px;
 }
 
 .txt2 {
   color: rgb(255, 255, 255);
-  font-family: vars.$Regular;
+  font-family: 'Montserrat', Arial, sans-serif;
   font-size: 12px;
   display: flex;
   justify-content: center;
@@ -173,7 +173,7 @@ a {
   color: rgb(255, 255, 255);
   font-size: 14px;
   margin-bottom: 5px;
-  font-family: vars.$SemiBold;
+  font-family: 'Montserrat', Arial, sans-serif;
   @media screen and (min-width: 320px) and (max-width: 768px) {
     margin-bottom: 10px;
     font-size: 16px;

@@ -12,7 +12,7 @@ const PageContainer = () => {
       <Header />
       <HeroSection
         title="Our Programs"
-        titleClassName="font-bold"
+        titleClassName="font-bold mb-3"
         className="font-bold"
         pageName="Programs"
         description="Find Your Perfect Learning Path. Choose from our comprehensive range of programs tailored to different aspects of civil service examination preparation."

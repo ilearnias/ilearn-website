@@ -71,7 +71,7 @@ const ResultsSection = () => {
               <span>Result Highlights</span>
             </>
           }
-          className="!text-center !mb-8 font-bold"
+          className="!text-center leading-[1.1] !mb-8 font-bold"
           animate={true}
         />
         <div className="results-grid   !w-full">

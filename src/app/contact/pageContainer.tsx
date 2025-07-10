@@ -23,7 +23,7 @@ const PageContainer = () => {
       <Header />
       <HeroSection
         className="font-bold"
-        titleClassName="font-bold"
+        titleClassName="font-bold mb-3"
         title="Get in Touch"
         pageName="Contact Us"
         description="Have questions? We're here to help! Connect with our team for program inquiries, counseling sessions, or any assistance you need in your UPSC journey."

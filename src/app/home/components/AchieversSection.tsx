@@ -31,8 +31,11 @@ const AchieversSection = () => {
         if (res.status && Array.isArray(res.data)) {
           // Filter for order 1-4 and sort by order
           const filtered = res.data
-            .filter((a) => [1, 2, 3, 4].includes(a.order))
-            .sort((a, b) => a.order - b.order);
+            .filter(
+              (a) =>
+                typeof a.order === "number" && [1, 2, 3, 4].includes(a.order)
+            )
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
           setAchievers(filtered);
         }
       } catch (e) {
@@ -92,16 +95,17 @@ const AchieversSection = () => {
             ) : (
               achievers.map((achiever, index) => {
                 // Extract rank number from details (e.g., "Air 33")
-                const rankMatch = achiever.details.match(/AIR\s*(\d+)/i);
+                const details = achiever.details ?? "";
+                const rankMatch = details.match(/AIR\s*(\d+)/i);
                 const rank = rankMatch
                   ? rankMatch[1]
-                  : achiever.details.match(/(\d+)/)?.[1] || "";
+                  : details.match(/(\d+)/)?.[1] || "";
                 return (
                   <AchieverCard
                     key={achiever.id}
-                    name={achiever.name}
+                    name={achiever.name ?? ""}
                     rank={rank}
-                    imageUrl={achiever.image}
+                    imageUrl={achiever.image ?? ""}
                   />
                 );
               })

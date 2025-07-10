@@ -46,7 +46,7 @@ const TeamSection = () => {
             <Heading
               color="tricolor"
               text="Our Leadership Team"
-              className="!text-center !font-bold !mb-4"
+              className="!text-center md:leading-[0.5] leading-[1.1] !font-bold !mb-4"
               animate={true}
             />
           </div>

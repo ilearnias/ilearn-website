@@ -8,7 +8,7 @@ const DownloadSection = () => (
       <Heading
         color="tricolor"
         text="Download the App Today"
-        className=" text-center font-bold"
+        className=" text-center md:leading-[0.5] leading-[1.1] font-bold"
       ></Heading>
       <p className="section-subtitle text-center">
         Take your IAS learning preparation to the next level with our

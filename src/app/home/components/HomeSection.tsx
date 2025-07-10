@@ -39,7 +39,7 @@ const HomeSection = () => {
                   </>
                 }
                 animate={true}
-                className="md:block hidden font-bold"
+                className="md:block hidden leading-[1.1] font-bold"
               />
               <Heading
                 text={
@@ -54,7 +54,7 @@ const HomeSection = () => {
                 }
                 color="red"
                 animate={true}
-                className=" font-bold md:hidden"
+                className=" leading-[1.1] font-bold md:hidden"
               />
             </div>
             <SubHeading

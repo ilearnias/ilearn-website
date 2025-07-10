@@ -23,11 +23,11 @@ const JourneySection = () => {
                   <span className=" position-relative"></span>
                 </>
               }
-              className="!text-center !mb-4 font-bold"
+              className="!text-center  !mb-4 font-bold"
               animate={true}
             />
           </div>
-          <p className="text-muted ">
+          <p className="text-muted md:mb-3 ">
             Explore the milestones that have shaped our evolution
           </p>
         </div>

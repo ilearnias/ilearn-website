@@ -21,7 +21,9 @@ const TopAchievers = () => {
         const res = await achieverService.getAllAchievers();
         if (res.status && Array.isArray(res.data)) {
           // Sort by order
-          const sorted = res.data.slice().sort((a, b) => a.order - b.order);
+          const sorted = res.data
+            .slice()
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
           setAchievers(sorted);
         }
       } catch (e) {
@@ -41,7 +43,7 @@ const TopAchievers = () => {
             <Heading
               text="Our Top Achievers"
               color="tricolor"
-              className="font-bold "
+              className="font-bold md:leading-[0.5] leading-[1.1]"
             />
           </div>
 
@@ -51,16 +53,17 @@ const TopAchievers = () => {
             ) : (
               achievers.map((achiever) => {
                 // Extract rank number from details (e.g., "Air 33")
-                const rankMatch = achiever.details.match(/AIR\s*(\d+)/i);
+                const details = achiever.details ?? "";
+                const rankMatch = details.match(/AIR\s*(\d+)/i);
                 const rank = rankMatch
                   ? rankMatch[1]
-                  : achiever.details.match(/(\d+)/)?.[1] || "";
+                  : details.match(/(\d+)/)?.[1] || "";
                 return (
                   <AchieverCard
                     key={achiever.id}
                     name={achiever.name}
                     rank={rank}
-                    imageUrl={achiever.image}
+                    imageUrl={achiever.image ?? ""}
                   />
                 );
               })
