@@ -1,3 +1,4 @@
+//600x800
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Image from "next/image";
@@ -5,77 +6,111 @@ import "./styles.scss";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import { usePathname } from "next/navigation";
+import {
+  successStoryService,
+  ISuccessStory,
+} from "@/services/success-stories.service";
 
 interface SuccessStory {
   name: string;
   achievement: string;
-  imageUrl: string;
+  imageUrl: string | null;
   caption: string;
 }
-
-const successStories: SuccessStory[] = [
-  {
-    name: "Dr. Akshay Raj P",
-    achievement: "UPSC Success - First Attempt",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption:
-      "Cracked UPSC in his very first attempt from our PCM Classroom Program",
-  },
-  {
-    name: "Dr. Vineeth Lohidakshan",
-    achievement: "AIR 169 - First Attempt",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption: "Consistent hard work and focused study helped achieve AIR 169",
-  },
-  {
-    name: "Rahul Raghavan",
-    achievement: "AIR 404 - 6th Attempt",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption: "Persistence and determination finally paid off with AIR 404",
-  },
-  {
-    name: "Alex Abraham",
-    achievement: "IPS Officer",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption: "Dream of serving the nation as an IPS officer fulfilled",
-  },
-  {
-    name: "Anjali Sharma",
-    achievement: "AIR 235 - Second Attempt",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption: "Focused preparation and strategic approach led to success",
-  },
-  {
-    name: "Dr. Priya Kumar",
-    achievement: "AIR 89 - First Attempt",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption:
-      "Balanced medical practice with UPSC preparation for remarkable success",
-  },
-  {
-    name: "Mohammed Rafi",
-    achievement: "IAS Officer - AIR 298",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption: "Dedicated preparation with our guidance program paved the way",
-  },
-  {
-    name: "Sneha Patel",
-    achievement: "IFS Officer - AIR 122",
-    imageUrl: "/Achiver images/dummy.jpg",
-    caption:
-      "Achieved dream of joining Indian Foreign Service through focused study",
-  },
-];
 
 const SuccessStoriesSection = () => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isClient, setIsClient] = useState(false);
+  const [successStories, setSuccessStories] = useState<SuccessStory[]>([]);
+  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    const fetchSuccessStories = async () => {
+      try {
+        setLoading(true);
+        const response = await successStoryService.getAllSuccessStories();
+        console.log("Success stories API response:", response);
+
+        if (response.status && response.data) {
+          // Transform API data to match component interface
+          const transformedStories: SuccessStory[] = response.data
+            .filter((story: ISuccessStory) => story.isActive && story.name)
+            .map((story: ISuccessStory) => ({
+              name: story.name || "Anonymous",
+              achievement: story.description || "Achievement",
+              imageUrl: story.image || null,
+              caption: story.details || "Success story",
+            }));
+          console.log("Transformed stories:", transformedStories);
+          setSuccessStories(transformedStories);
+        } else {
+          console.log("No data in response or status is false");
+          // Fallback to hardcoded data if API fails
+          setSuccessStories([
+            {
+              name: "Dr. Akshay Raj P",
+              achievement: "UPSC Success - First Attempt",
+              imageUrl: null,
+              caption:
+                "Cracked UPSC in his very first attempt from our PCM Classroom Program",
+            },
+            {
+              name: "Dr. Vineeth Lohidakshan",
+              achievement: "AIR 169 - First Attempt",
+              imageUrl: null,
+              caption:
+                "Consistent hard work and focused study helped achieve AIR 169",
+            },
+            {
+              name: "Rahul Raghavan",
+              achievement: "AIR 404 - 6th Attempt",
+              imageUrl: null,
+              caption:
+                "Persistence and determination finally paid off with AIR 404",
+            },
+          ]);
+        }
+      } catch (error) {
+        console.error("Error fetching success stories:", error);
+        // Fallback to hardcoded data if API fails
+        setSuccessStories([
+          {
+            name: "Dr. Akshay Raj P",
+            achievement: "UPSC Success - First Attempt",
+            imageUrl: null,
+            caption:
+              "Cracked UPSC in his very first attempt from our PCM Classroom Program",
+          },
+          {
+            name: "Dr. Vineeth Lohidakshan",
+            achievement: "AIR 169 - First Attempt",
+            imageUrl: null,
+            caption:
+              "Consistent hard work and focused study helped achieve AIR 169",
+          },
+          {
+            name: "Rahul Raghavan",
+            achievement: "AIR 404 - 6th Attempt",
+            imageUrl: null,
+            caption:
+              "Persistence and determination finally paid off with AIR 404",
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isClient) {
+      fetchSuccessStories();
+    }
+  }, [isClient]);
 
   const scrollToNext = () => {
     if (!carouselRef.current || !isClient) return;
@@ -105,6 +140,35 @@ const SuccessStoriesSection = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
+  if (loading) {
+    return (
+      <div className="success-stories-section">
+        <Container noPadding className="mx-0 md:mx-4">
+          <div className="section-header">
+            <Heading
+              color="tricolor"
+              text={
+                <>
+                  <span>Success</span>
+                  <span> Stories</span>
+                </>
+              }
+              className="!text-center !mb-4"
+              animate={true}
+            />
+            <p className="subtitle">
+              See how our students achieved remarkable results in the civil
+              services examination
+            </p>
+          </div>
+          <div className="flex justify-center items-center py-8">
+            <div className="text-gray-500">Loading success stories...</div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
   return (
     <div className="success-stories-section ">
       <Container noPadding className="mx-0 md:mx-4 ">
@@ -126,62 +190,74 @@ const SuccessStoriesSection = () => {
           </p>
         </div>
 
-        <div className="stories-carousel p-0 ">
-          {isClient && (
-            <>
-              <button
-                className="nav-button prev md:hidden"
-                onClick={scrollToPrev}
-                aria-label="Previous story"
-                style={{ display: currentIndex === 0 ? "none" : "flex" }}
-              >
-                <span>‹</span>
-              </button>
-              <button
-                className="nav-button next md:hidden"
-                onClick={scrollToNext}
-                aria-label="Next story"
-                style={{
-                  display:
-                    currentIndex === successStories.length - 1
-                      ? "none"
-                      : "flex",
-                }}
-              >
-                <span>›</span>
-              </button>
-            </>
-          )}
-          <div
-            className="flex px-10 md:pl-0  gap-[77px] md overflow-x-auto scroll-smooth scrollbar-none"
-            ref={carouselRef}
-          >
-            {successStories.map((story, index) => (
-              <div key={`${story.name}-${pathname}`} className="story-card ">
-                <div className="success-badge">SUCCESS</div>
-                <div className="image-container">
-                  <Image
-                    src={story.imageUrl}
-                    alt={story.name}
-                    fill
-                    style={{ objectFit: "cover" }}
-                    sizes="(max-width: 768px) 280px, 300px"
-                    priority={index < 3}
-                  />
-                </div>
-                <div className="text-overlay">
-                  <Heading
-                    color="white"
-                    text={story.name}
-                    className="!text-lg !font-semibold !leading-normal !text-white"
-                  />
-                  <p className="achievement">{story.achievement}</p>
-                  <p className="caption">{story.caption}</p>
-                </div>
-              </div>
-            ))}
+        {successStories.length === 0 ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="text-gray-500">No success stories available</div>
           </div>
-        </div>
+        ) : (
+          <div className="stories-carousel p-0 ">
+            {isClient && (
+              <>
+                <button
+                  className="nav-button prev md:hidden"
+                  onClick={scrollToPrev}
+                  aria-label="Previous story"
+                  style={{ display: currentIndex === 0 ? "none" : "flex" }}
+                >
+                  <span>‹</span>
+                </button>
+                <button
+                  className="nav-button next md:hidden"
+                  onClick={scrollToNext}
+                  aria-label="Next story"
+                  style={{
+                    display:
+                      currentIndex === successStories.length - 1
+                        ? "none"
+                        : "flex",
+                  }}
+                >
+                  <span>›</span>
+                </button>
+              </>
+            )}
+            <div
+              className="flex px-10 md:pl-0  gap-[77px] md overflow-x-auto scroll-smooth scrollbar-none"
+              ref={carouselRef}
+            >
+              {successStories.map((story: SuccessStory, index: number) => (
+                <div key={`${story.name}-${pathname}`} className="story-card ">
+                  <div className="success-badge">SUCCESS</div>
+                  <div className="image-container">
+                    {story.imageUrl ? (
+                      <Image
+                        src={story.imageUrl}
+                        alt={story.name}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="(max-width: 768px) 280px, 300px"
+                        priority={index < 3}
+                      />
+                    ) : (
+                      <div className="no-image-placeholder">
+                        <span>No Image</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-overlay">
+                    <Heading
+                      color="white"
+                      text={story.name}
+                      className="!text-lg !font-semibold !leading-normal !text-white"
+                    />
+                    <p className="achievement">{story.achievement}</p>
+                    <p className="caption">{story.caption}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </Container>
     </div>
   );

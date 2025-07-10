@@ -9,14 +9,54 @@ import Container from "@/components/common/Container";
 interface ResultRow {
   year: number;
   totalSelections: number;
+  top100Ranks: number;
+  pcmClassroom: number;
+  firstAttempt: number;
 }
 
 const resultData: ResultRow[] = [
-  { year: 2024, totalSelections: 42 },
-  { year: 2023, totalSelections: 38 },
-  { year: 2022, totalSelections: 35 },
-  { year: 2021, totalSelections: 31 },
-  { year: 2020, totalSelections: 28 },
+  {
+    year: 2025,
+    totalSelections: 46,
+    top100Ranks: 6,
+    pcmClassroom: 11,
+    firstAttempt: 1,
+  },
+  {
+    year: 2024,
+    totalSelections: 28,
+    top100Ranks: 4,
+    pcmClassroom: 12,
+    firstAttempt: 2,
+  },
+  {
+    year: 2023,
+    totalSelections: 65,
+    top100Ranks: 18,
+    pcmClassroom: 52,
+    firstAttempt: 25,
+  },
+  {
+    year: 2022,
+    totalSelections: 48,
+    top100Ranks: 12,
+    pcmClassroom: 36,
+    firstAttempt: 20,
+  },
+  {
+    year: 2021,
+    totalSelections: 35,
+    top100Ranks: 8,
+    pcmClassroom: 28,
+    firstAttempt: 15,
+  },
+  {
+    year: 2020,
+    totalSelections: 18,
+    top100Ranks: 5,
+    pcmClassroom: 14,
+    firstAttempt: 8,
+  },
 ];
 
 function useCountUp(target: number, isActive: boolean, duration = 1) {
@@ -88,34 +128,73 @@ const ResultListRow: React.FC<{ row: ResultRow }> = ({ row }) => (
 
 const ResultSummary = () => {
   return (
-    <Container className="py-12  ">
-      <div className="bg-white rounded-lg  py-6 ">
+    <Container className="py-12">
+      <div className="bg-white rounded-lg py-6">
         <Heading
           text="Results Summary"
           color="tricolor"
           className="!text-3xl md:!text-4xl lg:!text-5xl !font-bold"
           animate={true}
         />
-        {/* Mobile List View */}
-        <div className="block md:hidden mt-8">
-          <div className="bg-blue-50 rounded-lg divide-y">
-            {resultData.map((row) => (
-              <ResultListRow row={row} key={row.year} />
-            ))}
+        {/* Table View */}
+        <div className="mt-8 overflow-x-auto w-full">
+          <table className="min-w-[600px] w-full bg-white rounded-xl shadow-md overflow-hidden text-sm md:text-base">
+            <thead>
+              <tr className="bg-blue-50 text-gray-700 text-left">
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold rounded-tl-xl">
+                  Year
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
+                  Total Selections
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
+                  Top 100 Ranks
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
+                  PCM & Classroom
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold rounded-tr-xl">
+                  First Attempt
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {resultData.map((row, idx) => (
+                <tr
+                  key={row.year}
+                  className={`transition-all duration-200 ${
+                    idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } hover:bg-blue-100 hover:scale-[1.01] hover:shadow-sm`}
+                  style={{ borderRadius: "0.75rem" }}
+                >
+                  <td className="py-2 px-2 md:py-3 md:px-4 font-semibold text-blue-900 rounded-l-lg">
+                    {row.year}
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4">
+                    <span className="inline-block bg-green-50 text-green-600 rounded-full px-2 py-1 md:px-3 text-xs md:text-sm font-semibold">
+                      {row.totalSelections}
+                    </span>
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4 text-center">
+                    {row.top100Ranks}
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4 text-center">
+                    {row.pcmClassroom}
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4 text-center rounded-r-lg">
+                    {row.firstAttempt}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-6">
+          <div className="bg-blue-50 rounded-lg p-4 text-gray-600 italic text-base">
+            Consistently high Prelims-cum-Mains and classroom results—especially
+            from first-attempt candidates—show our academic excellence.
           </div>
         </div>
-        {/* Desktop Card View */}
-        <div className="hidden md:block mt-8  overflow-x-auto scrollbar-hide ">
-          <div className="flex flex-row justify-between  ">
-            {resultData.map((row, idx) => (
-              <ResultCard row={row} index={idx} key={row.year} />
-            ))}
-          </div>
-        </div>
-        <p className="mt-6 italic text-gray-500">
-          * Data includes selections in Civil Services, Indian Forest Service,
-          and other UPSC services.
-        </p>
       </div>
     </Container>
   );

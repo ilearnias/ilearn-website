@@ -31,7 +31,7 @@ const ResultCard = ({
       <div className="card-content">
         <Heading
           text={title}
-          className="!text-xl !font-semibold !uppercase !leading-normal text-gradient-red-white"
+          className="!text-xl !font-semibold !uppercase !leading-normal text-white"
         />
         <p>{description}</p>
       </div>
