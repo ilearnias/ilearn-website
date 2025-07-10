@@ -90,7 +90,7 @@ const ILearnAppPage = () => {
       <Header />
       <HeroSection
         className="font-bold"
-        titleClassName="font-bold"
+        titleClassName="font-bold mb-3"
         title="iLearn App"
         pageName="iLearn App"
         description="Your complete UPSC preparation companion. Access study materials, take tests, track progress, and learn on the go with our feature-rich mobile application."

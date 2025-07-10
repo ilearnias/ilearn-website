@@ -43,6 +43,7 @@ export const API_ENDPOINTS = {
       CREATE: "/v1/admin/success-stories",
       UPDATE: (id: string) => `/v1/admin/success-stories/${id}`,
       DELETE: (id: string) => `/v1/admin/success-stories/${id}`,
+      UPLOAD: "/v1/upload/image",
     },
 
     // Team management
@@ -52,6 +53,7 @@ export const API_ENDPOINTS = {
       CREATE: "/v1/admin/team",
       UPDATE: (id: string) => `/v1/admin/team/${id}`,
       DELETE: (id: string) => `/v1/admin/team/${id}`,
+      UPLOAD: "/v1/upload/image",
     },
 
     // Gallery management
@@ -65,7 +67,8 @@ export const API_ENDPOINTS = {
         DELETE: (id: string) => `/v1/admin/gallery/${id}`,
       },
       // Image upload endpoint
-      UPLOAD: "/v1/admin/gallery/upload",
+      // UPLOAD: "/v1/admin/gallery/upload",
+      UPLOAD: "/v1/upload/image",
     },
 
     // Blog management
@@ -73,7 +76,7 @@ export const API_ENDPOINTS = {
       POSTS: {
         LIST: "/v1/admin/blog/posts",
         DETAIL: (id: string) => `/v1/admin/blog/posts/${id}`,
-        CREATE: "/v1/admin/blog/posts",
+        CREATE: '/v1/admin/blog/posts',
         UPDATE: (id: string) => `/v1/admin/blog/posts/${id}`,
         DELETE: (id: string) => `/v1/admin/blog/posts/${id}`,
       },
@@ -102,6 +105,7 @@ export const API_ENDPOINTS = {
       CREATE: "/v1/admin/achievers",
       UPDATE: (id: string) => `/v1/admin/achievers/${id}`,
       DELETE: (id: string) => `/v1/admin/achievers/${id}`,
+      UPLOAD: "/v1/upload/image",
     },
 
     // File upload endpoint
@@ -120,9 +124,10 @@ export const API_ENDPOINTS = {
   // Public endpoints
   PUBLIC: {
     PROGRAMMES: "/v1/programmes",
+    PROGRAMS: "/v1/admin/programs", // Using admin endpoint for now, can be changed to public endpoint when available
     SUCCESS_STORIES: "/v1/success-stories",
     TEAM: "/v1/team",
-    GALLERY: "/v1/gallery",
+    GALLERY: "/v1/admin/gallery",
     BLOG: {
       POSTS: "/v1/blog/posts",
       CATEGORIES: "/v1/blog/categories",

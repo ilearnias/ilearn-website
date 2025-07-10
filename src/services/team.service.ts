@@ -25,9 +25,9 @@ export interface ITeamMemberCreate extends Omit<ITeamMember, 'id' | 'createdAt' 
 export interface ITeamMemberUpdate extends Partial<ITeamMemberCreate> {}
 
 class TeamService {
-  async getAllTeamMembers(): Promise<ApiResponse<ITeamMember[]>> {
+  async getAllTeamMembers(params?: { order?: string; page?: number; limit?: number }): Promise<ApiResponse<ITeamMember[]>> {
     try {
-      return await apiRequest.get<ITeamMember[]>(API_ENDPOINTS.ADMIN.TEAM.LIST);
+      return await apiRequest.get<ITeamMember[]>(API_ENDPOINTS.ADMIN.TEAM.LIST, { params });
     } catch (error) {
       console.error('Error fetching team members:', error);
       throw error;
@@ -68,6 +68,30 @@ class TeamService {
       console.error('Error deleting team member:', error);
       throw error;
     }
+  }
+
+  // Upload a single image and return its URL
+  async uploadSingleImage(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await apiRequest.upload(API_ENDPOINTS.ADMIN.TEAM.UPLOAD, formData);
+    if (response.status && response.data) {
+      return response.data.url || response.data;
+    }
+    throw new Error(response.message || 'Failed to upload image');
+  }
+
+  // Validate image file
+  validateImageFile(file: File): boolean {
+    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (!acceptedFormats.includes(file.type)) {
+      throw new Error(`${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`);
+    }
+    if (file.size > maxSize) {
+      throw new Error(`${file.name} is larger than 5MB`);
+    }
+    return true;
   }
 }
 

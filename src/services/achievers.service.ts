@@ -4,25 +4,23 @@ import { apiRequest, ApiResponse } from '../config/apiRequest';
 export interface IAchiever {
   id: string;
   name: string;
-  details: string;
+  achievement: string;
   description: string;
-  image: string;
-  order: number;
-  isActive: boolean;
+  year?: number;
+  category?: string;
+  image?: string;
+  institution?: string;
+  score?: number;
+  rank?: number;
+  isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  details?: string | null;
+  order?: number | null;
   deletedAt?: string | null;
 }
 
-export interface IAchieverCreate {
-  name: string;
-  details: string;
-  description: string;
-  image: string;
-  order: number;
-  isActive: boolean;
-}
-
+export interface IAchieverCreate extends Omit<IAchiever, 'id' | 'createdAt' | 'updatedAt'> {}
 export interface IAchieverUpdate extends Partial<IAchieverCreate> {}
 
 class AchieverService {
@@ -69,6 +67,54 @@ class AchieverService {
       console.error('Error deleting achiever:', error);
       throw error;
     }
+  }
+
+  // Upload a single image and return its URL
+  async uploadSingleImage(file: File): Promise<string> {
+    try {
+      const formData = new FormData();
+      formData.append('file', file); // field name must be 'file'
+      const response = await apiRequest.upload(API_ENDPOINTS.ADMIN.ACHIEVERS.UPLOAD, formData);
+      if (response.status && response.data) {
+        // If backend returns { data: { url: '...' } }
+        return response.data.url || response.data;
+      }
+      throw new Error(response.message || 'Failed to upload image');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
+  }
+
+  // Upload multiple images and return an array of URLs
+  async uploadMultipleImages(files: File[]): Promise<string[]> {
+    try {
+      const urls: string[] = [];
+      for (const file of files) {
+        const url = await this.uploadSingleImage(file);
+        urls.push(url);
+      }
+      return urls;
+    } catch (error) {
+      console.error('Error uploading multiple images:', error);
+      throw error;
+    }
+  }
+
+  // Validate image file
+  validateImageFile(file: File): boolean {
+    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!acceptedFormats.includes(file.type)) {
+      throw new Error(`${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`);
+    }
+
+    if (file.size > maxSize) {
+      throw new Error(`${file.name} is larger than 5MB`);
+    }
+
+    return true;
   }
 }
 

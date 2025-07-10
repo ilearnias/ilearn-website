@@ -43,10 +43,11 @@ export default function Footer() {
         <Container>
           <Row>
             <Col lg="3" sm="6" className="footer-col">
-              <div className="footer-logo">
-                <Image src={Logo} width={200} height={200} alt="iLearn IAS Logo" />
+              <div className="footer-text">
+                Kerala&apos;s most successful Civil Services Training Academy
+                —delivering the state&apos;s highest success rate through
+                results-driven Prelims-cum-Mains & classroom programs.
               </div>
-              <div className="footer-text">Kerala&apos;s most successful Civil Services Training Academy —delivering the state&apos;s highest success rate through results-driven Prelims-cum-Mains & classroom programs.</div>
               <div
                 onClick={() => router.push("/about")}
                 className="footer-text footer-txt2 d-flex align-items-center gap-1 text-white mt-2"
@@ -126,35 +127,21 @@ export default function Footer() {
                   <div className="footer-txt2">
                     Current Affairs & News Analysis (CANA)
                   </div>
-                  <div className="footer-txt2">
-                    Restart Program
-                  </div>
-                  <div className="footer-txt2">
-                    Geography Optional
-                  </div>
+                  <div className="footer-txt2">Restart Program</div>
+                  <div className="footer-txt2">Geography Optional</div>
                   <div className="footer-txt2">
                     Political Science & IR Optional
                   </div>
-                  <div className="footer-txt2">
-                    Sociology Optional
-                  </div>
-                  <div className="footer-txt2">
-                    Malayalam Optional
-                  </div>
+                  <div className="footer-txt2">Sociology Optional</div>
+                  <div className="footer-txt2">Malayalam Optional</div>
                 </Col>
                 <Col lg="4" className="footer-col">
                   <div className="footer-txt1">Contact Us</div>
                   <div className="footer-icon-box">
-                    <a
-                      target="_blank"
-                      href="#"
-                    >
+                    <a target="_blank" href="#">
                       <FaFacebookF className="footer-icon" />
                     </a>
-                    <a
-                      target="_blank"
-                      href="#"
-                    >
+                    <a target="_blank" href="#">
                       <RiInstagramFill className="footer-icon" />
                     </a>
                     <a target="_blank" href="#">
@@ -167,11 +154,9 @@ export default function Footer() {
                       <div className="mb-2">
                         <FaPhoneAlt size={20} color="#fff" />
                       </div>
-                      <div >
+                      <div>
                         <a href="tel:8089166792">
-                          <div className="footer-txt2">
-                            8089166792
-                          </div>
+                          <div className="footer-txt2">8089166792</div>
                         </a>
                       </div>
                     </div>
@@ -181,7 +166,9 @@ export default function Footer() {
                       </div>
                       <div className="">
                         <a href="mailto:ilearnoffc@gmail.com">
-                          <div className="footer-txt2">ilearnoffc@gmail.com</div>
+                          <div className="footer-txt2">
+                            ilearnoffc@gmail.com
+                          </div>
                         </a>
                       </div>
                     </div>
@@ -190,7 +177,10 @@ export default function Footer() {
                         <IoLocationSharp size={22} color="#fff" />
                       </div>
                       <div className="">
-                        <div className="footer-txt2">iLearn IAS Academy, Minchin Road, Chakka, Thiruvananthapuram, Kerala 695011</div>
+                        <div className="footer-txt2">
+                          iLearn IAS Academy, Minchin Road, Chakka,
+                          Thiruvananthapuram, Kerala 695011
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -226,7 +216,9 @@ export default function Footer() {
           <Row>
             <Col lg="3"></Col>
             <Col lg="6" sm="12" xs="12">
-              <div className="txt2 mt-4">Kerala&apos;s most successful Civil Services Training Academy</div>
+              <div className="txt2 mt-4">
+                Kerala&apos;s most successful Civil Services Training Academy
+              </div>
             </Col>
             <Col lg="3">
               <div className="scroll-btn mt-3">
@@ -249,4 +241,3 @@ export default function Footer() {
     </>
   );
 }
-

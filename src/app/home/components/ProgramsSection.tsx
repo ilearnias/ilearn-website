@@ -43,7 +43,7 @@ const ProgramsSection = () => {
       <Container>
         <div className="section-header">
           <Heading
-            color="tricolor"
+            color="red"
             text={
               <>
                 <span>Our</span> <span>Programs</span>

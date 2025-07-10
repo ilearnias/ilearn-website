@@ -2,8 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: inherit;
+html, body {
+  font-family: 'Montserrat', Arial, sans-serif !important;
 }
 
 /* Custom Scroll Bar */

@@ -110,7 +110,7 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
             text="Student Testimonials"
             color="tricolor"
             animate={true}
-            className="font-bold mb-4"
+            className={`font-bold mb-4 ${isMobile ? "leading-[1.1]" : ""}`}
           />
           <SubText
             text="Hear success stories from our students"

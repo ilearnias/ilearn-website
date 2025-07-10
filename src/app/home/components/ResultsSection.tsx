@@ -31,7 +31,7 @@ const ResultCard = ({
       <div className="card-content">
         <Heading
           text={title}
-          className="!text-xl !font-semibold !uppercase !leading-normal text-gradient-red-white"
+          className="!text-xl !font-semibold !uppercase !leading-normal text-white"
         />
         <p>{description}</p>
       </div>
@@ -63,7 +63,7 @@ const ResultsSection = () => {
     <section className="results-section w-full">
       <Container className="w-full">
         <Heading
-          color="tricolor"
+          color="red"
           text={
             <>
               Civil Service Examination 2024
@@ -71,7 +71,7 @@ const ResultsSection = () => {
               <span>Result Highlights</span>
             </>
           }
-          className="!text-center !mb-8 font-bold"
+          className="!text-center leading-[1.1] !mb-8 font-bold"
           animate={true}
         />
         <div className="results-grid   !w-full">

@@ -5,14 +5,10 @@ import React, {
   useContext,
   useEffect,
   ReactNode,
-  useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  login as loginAction,
-  logout as logoutAction,
-} from "@/redux/slices/authSlice";
+import { useDispatch, useSelector } from 'react-redux';
+import { login as loginAction, logout as logoutAction } from '@/redux/slices/authSlice';
 
 interface AdminUser {
   id: number;
@@ -49,22 +45,10 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
 }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-
+  
   // Get auth state from Redux
-  const { user, isAuthenticated, token } = useSelector(
-    (state: any) => state.auth
-  );
+  const { user, isAuthenticated, token } = useSelector((state: any) => state.auth);
   const [isLoading, setIsLoading] = React.useState(true);
-
-  const logout = useCallback(() => {
-    localStorage.removeItem("adminToken");
-    localStorage.removeItem("adminUser");
-
-    // Dispatch Redux action
-    dispatch(logoutAction());
-
-    router.push("/adminlogin");
-  }, [dispatch, router]);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -75,12 +59,10 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
         if (storedToken && userData) {
           const parsedUser = JSON.parse(userData);
           // Dispatch Redux action to restore auth state
-          dispatch(
-            loginAction({
-              user: parsedUser,
-              token: storedToken,
-            })
-          );
+          dispatch(loginAction({
+            user: parsedUser,
+            token: storedToken
+          }));
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
@@ -91,54 +73,62 @@ export const AdminAuthProvider: React.FC<AdminAuthProviderProps> = ({
     };
 
     checkAuth();
-  }, [dispatch, logout]);
+  }, [dispatch]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      console.log("Attempting login with email:", email);
+      console.log('Attempting login with email:', email);
 
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email, password }),
-        credentials: "include",
+        credentials: 'include'
       });
 
-      console.log("Login response status:", response.status);
+      console.log('Login response status:', response.status);
 
       const responseData = await response.json();
-      console.log("Login response data:", responseData);
+      console.log('Login response data:', responseData);
 
       if (!response.ok || !responseData.status) {
-        throw new Error(responseData.message || "Login failed");
+        throw new Error(responseData.message || 'Login failed');
       }
 
       // Extract data from the nested structure
       const { user, accessToken: token } = responseData.data;
 
       if (token && user) {
-        localStorage.setItem("adminToken", token);
-        localStorage.setItem("adminUser", JSON.stringify(user));
-
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('adminUser', JSON.stringify(user));
+        
         // Dispatch Redux action
-        dispatch(
-          loginAction({
-            user,
-            token,
-          })
-        );
-
+        dispatch(loginAction({
+          user,
+          token
+        }));
+        
         return true;
       } else {
-        console.error("Invalid response format:", responseData);
-        throw new Error("Invalid response format");
+        console.error('Invalid response format:', responseData);
+        throw new Error('Invalid response format');
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error('Login error:', error);
       throw error;
     }
+  };
+
+  const logout = () => {
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
+    
+    // Dispatch Redux action
+    dispatch(logoutAction());
+    
+    router.push("/adminlogin");
   };
 
   const value: AdminAuthContextType = {

@@ -20,6 +20,7 @@ export interface IProgramme {
   endDate?: string;
   instructor?: string;
   thumbnail?: string;
+  route?: string | null;
 }
 
 export interface IProgrammeCreate {
@@ -42,11 +43,28 @@ export interface IProgrammeCreate {
 export interface IProgrammeUpdate extends Partial<IProgrammeCreate> {}
 
 class ProgrammeService {
-  async getAllProgrammes(): Promise<ApiResponse<IProgramme[]>> {
+  async getAllProgrammes(page: number = 1, limit: number = 10): Promise<ApiResponse<IProgramme[]>> {
     try {
-      return await apiRequest.get<IProgramme[]>(API_ENDPOINTS.ADMIN.PROGRAMS.LIST);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString()
+      });
+      return await apiRequest.get<IProgramme[]>(`${API_ENDPOINTS.PUBLIC.PROGRAMS}?${params}`);
     } catch (error) {
       console.error('Error fetching programmes:', error);
+      throw error;
+    }
+  }
+
+  async getPublicProgrammes(page: number = 1, limit: number = 10): Promise<ApiResponse<IProgramme[]>> {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString()
+      });
+      return await apiRequest.get<IProgramme[]>(`${API_ENDPOINTS.PUBLIC.PROGRAMS}?${params}`);
+    } catch (error) {
+      console.error('Error fetching public programmes:', error);
       throw error;
     }
   }
