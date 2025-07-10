@@ -1,18 +1,20 @@
 // ("use client");
 
-import type { Metadata } from "next";
 import { Merriweather } from "next/font/google";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
+
 import LoadingProvider from "@/components/common/LoadingProvider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import Providers from "@/components/Providers";
 import ErrorBoundary from "@/components/common/ErrorBoundary";
 import LayoutWithConditionalHeaderFooter from "@/components/LayoutWithConditionalHeaderFooter";
 // import { usePathname } from "next/navigation";
+import Providers from "@/components/Providers";
+import { Metadata } from "next";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import ClientLayout from "./ClientLayout";
 
 const merriweather = Merriweather({
   weight: ["300", "400", "700", "900"],
@@ -20,15 +22,43 @@ const merriweather = Merriweather({
   display: "swap",
 });
 
+export const metadata: Metadata = {
+  title: "",
+  description: "",
+  alternates: {
+    canonical: "",
+  },
+  openGraph: {
+    type: "website",
+    title: "",
+    description: "",
+    url: "",
+    images: {
+      url: "",
+      alt: "",
+      width: 575,
+      height: 275,
+    },
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "",
+    description: "",
+    creator: "",
+    images: {
+      url: "",
+      alt: "",
+      width: 575,
+      height: 275,
+    },
+  },
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const pathname = usePathname();
-  // const hideHeaderFooter =
-  //   pathname?.includes("/adminlogin") || pathname?.includes("/admin");
-
   return (
     <html lang="en">
       <head>
@@ -42,16 +72,12 @@ export default function RootLayout({
           <ErrorBoundary>
             <LoadingProvider>
               <LayoutWithConditionalHeaderFooter>
-                <Providers>{children}</Providers>
+                <Providers>
+                  <ClientLayout>{children}</ClientLayout>
+                </Providers>
               </LayoutWithConditionalHeaderFooter>
             </LoadingProvider>
           </ErrorBoundary>
-
-          {/* {!hideHeaderFooter && <Header />}
-          <Providers>
-            <main className="min-h-screen">{children}</main>
-          </Providers>
-          {!hideHeaderFooter && <Footer />} */}
         </AntdRegistry>
       </body>
     </html>

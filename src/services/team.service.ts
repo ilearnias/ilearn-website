@@ -69,6 +69,30 @@ class TeamService {
       throw error;
     }
   }
+
+  // Upload a single image and return its URL
+  async uploadSingleImage(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await apiRequest.upload(API_ENDPOINTS.ADMIN.TEAM.UPLOAD, formData);
+    if (response.status && response.data) {
+      return response.data.url || response.data;
+    }
+    throw new Error(response.message || 'Failed to upload image');
+  }
+
+  // Validate image file
+  validateImageFile(file: File): boolean {
+    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (!acceptedFormats.includes(file.type)) {
+      throw new Error(`${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`);
+    }
+    if (file.size > maxSize) {
+      throw new Error(`${file.name} is larger than 5MB`);
+    }
+    return true;
+  }
 }
 
 export const teamService = new TeamService(); 

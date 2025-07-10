@@ -15,7 +15,6 @@ import {
   Switch,
   Image,
   Upload,
-  UploadFile,
   UploadProps,
 } from "antd";
 import {
@@ -76,7 +75,7 @@ const Achievers = () => {
     setIsModalVisible(true);
   };
 
-  const handleEdit = (record: IAchiever) => {
+  const handleEdit = (record: any) => {
     setEditingAchiever(record);
     setUploadedImageUrl(record.image);
     form.setFieldsValue({
@@ -219,8 +218,12 @@ const Achievers = () => {
     return achievers.filter(
       (achiever) =>
         achiever.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        achiever.details.toLowerCase().includes(searchText.toLowerCase()) ||
-        achiever.description.toLowerCase().includes(searchText.toLowerCase())
+        (achiever.details?.toLowerCase() || "").includes(
+          searchText.toLowerCase()
+        ) ||
+        (achiever.description?.toLowerCase() || "").includes(
+          searchText.toLowerCase()
+        )
     );
   }, [achievers, searchText]);
 
