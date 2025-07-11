@@ -455,7 +455,7 @@ const Team = () => {
           </Form.Item>
 
           <Form.Item
-            label="Profile Image"
+            label="Profile Image (size:300x250)"
             required
             help="Upload a profile image (JPG, PNG, GIF up to 5MB)"
           >

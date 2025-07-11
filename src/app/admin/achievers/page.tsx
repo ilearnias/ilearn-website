@@ -370,7 +370,7 @@ const Achievers = () => {
             </Form.Item>
 
             <Form.Item
-              label="Profile Image"
+              label="Profile Image (size:720x800)"
               required
               help="Upload a profile image (JPG, PNG, GIF up to 5MB)"
             >

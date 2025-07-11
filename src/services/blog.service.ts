@@ -1,7 +1,10 @@
-import { API_CONFIG, API_ENDPOINTS } from '../config/api';
-import { apiRequest, ApiResponse } from '../config/apiRequest';
+import { ReactNode } from "react";
+import { API_CONFIG, API_ENDPOINTS } from "../config/api";
+import { apiRequest, ApiResponse } from "../config/apiRequest";
 
 export interface IBlogPost {
+  order: any;
+  description: any;
   id: string;
   title: string;
   slug: string;
@@ -10,7 +13,7 @@ export interface IBlogPost {
   categoryId: string;
   category?: IBlogCategory;
   author: string;
-  status: 'draft' | 'published';
+  status: "draft" | "published";
   publishDate?: string;
   featuredImage?: string;
   tags: string[];
@@ -18,15 +21,16 @@ export interface IBlogPost {
   createdAt: string;
   updatedAt: string;
   // Added properties to match usage in admin/blog/posts/page.tsx
-  description: string;
+  // description: string;
   subTitle: string;
-  order: number;
+  // order: number;
   isActive: boolean;
   image: string;
   link: string;
 }
 
 export interface IBlogCategory {
+  title: ReactNode;
   id: string;
   name: string;
   slug: string;
@@ -36,57 +40,74 @@ export interface IBlogCategory {
   postCount: number;
   views: number;
   createdAt: string;
-  updatedAt: string;  
+  updatedAt: string;
 }
 
-export interface IBlogPostCreate extends Omit<IBlogPost, 'id' | 'createdAt' | 'updatedAt' | 'views'> {}
+export interface IBlogPostCreate
+  extends Omit<IBlogPost, "id" | "createdAt" | "updatedAt" | "views"> {}
 export interface IBlogPostUpdate extends Partial<IBlogPostCreate> {}
-export interface IBlogCategoryCreate extends Omit<IBlogCategory, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IBlogCategoryCreate
+  extends Omit<IBlogCategory, "id" | "createdAt" | "updatedAt"> {}
 export interface IBlogCategoryUpdate extends Partial<IBlogCategoryCreate> {}
 
 class BlogService {
   // Blog Posts
   async getAllPosts(): Promise<ApiResponse<IBlogPost[]>> {
     try {
-      return await apiRequest.get<IBlogPost[]>(API_ENDPOINTS.ADMIN.BLOG.POSTS.LIST);
+      return await apiRequest.get<IBlogPost[]>(
+        API_ENDPOINTS.ADMIN.BLOG.POSTS.LIST
+      );
     } catch (error) {
-      console.error('Error fetching blog posts:', error);
+      console.error("Error fetching blog posts:", error);
       throw error;
     }
   }
 
   async getPostById(id: string): Promise<ApiResponse<IBlogPost>> {
     try {
-      return await apiRequest.get<IBlogPost>(API_ENDPOINTS.ADMIN.BLOG.POSTS.DETAIL(id));
+      return await apiRequest.get<IBlogPost>(
+        API_ENDPOINTS.ADMIN.BLOG.POSTS.DETAIL(id)
+      );
     } catch (error) {
-      console.error('Error fetching blog post:', error);
+      console.error("Error fetching blog post:", error);
       throw error;
     }
   }
 
   async createPost(data: IBlogPostCreate): Promise<ApiResponse<IBlogPost>> {
     try {
-      return await apiRequest.post<IBlogPost>(API_ENDPOINTS.ADMIN.BLOG.POSTS.CREATE, data);
+      return await apiRequest.post<IBlogPost>(
+        API_ENDPOINTS.ADMIN.BLOG.POSTS.CREATE,
+        data
+      );
     } catch (error) {
-      console.error('Error creating blog post:', error);
+      console.error("Error creating blog post:", error);
       throw error;
     }
   }
 
-  async updatePost(id: string, data: IBlogPostUpdate): Promise<ApiResponse<IBlogPost>> {
+  async updatePost(
+    id: string,
+    data: IBlogPostUpdate
+  ): Promise<ApiResponse<IBlogPost>> {
     try {
-      return await apiRequest.patch<IBlogPost>(API_ENDPOINTS.ADMIN.BLOG.POSTS.UPDATE(id), data);
+      return await apiRequest.patch<IBlogPost>(
+        API_ENDPOINTS.ADMIN.BLOG.POSTS.UPDATE(id),
+        data
+      );
     } catch (error) {
-      console.error('Error updating blog post:', error);
+      console.error("Error updating blog post:", error);
       throw error;
     }
   }
 
   async deletePost(id: string): Promise<ApiResponse<null>> {
     try {
-      return await apiRequest.delete<null>(API_ENDPOINTS.ADMIN.BLOG.POSTS.DELETE(id));
+      return await apiRequest.delete<null>(
+        API_ENDPOINTS.ADMIN.BLOG.POSTS.DELETE(id)
+      );
     } catch (error) {
-      console.error('Error deleting blog post:', error);
+      console.error("Error deleting blog post:", error);
       throw error;
     }
   }
@@ -94,45 +115,62 @@ class BlogService {
   // Blog Categories
   async getAllCategories(): Promise<ApiResponse<IBlogCategory[]>> {
     try {
-      return await apiRequest.get<IBlogCategory[]>(API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.LIST);
+      return await apiRequest.get<IBlogCategory[]>(
+        API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.LIST
+      );
     } catch (error) {
-      console.error('Error fetching blog categories:', error);
+      console.error("Error fetching blog categories:", error);
       throw error;
     }
   }
 
   async getCategoryById(id: string): Promise<ApiResponse<IBlogCategory>> {
     try {
-      return await apiRequest.get<IBlogCategory>(API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.DETAIL(id));
+      return await apiRequest.get<IBlogCategory>(
+        API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.DETAIL(id)
+      );
     } catch (error) {
-      console.error('Error fetching blog category:', error);
+      console.error("Error fetching blog category:", error);
       throw error;
     }
   }
 
-  async createCategory(data: IBlogCategoryCreate): Promise<ApiResponse<IBlogCategory>> {
+  async createCategory(
+    data: IBlogCategoryCreate
+  ): Promise<ApiResponse<IBlogCategory>> {
     try {
-      return await apiRequest.post<IBlogCategory>(API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.CREATE, data);
+      return await apiRequest.post<IBlogCategory>(
+        API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.CREATE,
+        data
+      );
     } catch (error) {
-      console.error('Error creating blog category:', error);
+      console.error("Error creating blog category:", error);
       throw error;
     }
   }
 
-  async updateCategory(id: string, data: IBlogCategoryUpdate): Promise<ApiResponse<IBlogCategory>> {
+  async updateCategory(
+    id: string,
+    data: IBlogCategoryUpdate
+  ): Promise<ApiResponse<IBlogCategory>> {
     try {
-      return await apiRequest.patch<IBlogCategory>(API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.UPDATE(id), data);
+      return await apiRequest.patch<IBlogCategory>(
+        API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.UPDATE(id),
+        data
+      );
     } catch (error) {
-      console.error('Error updating blog category:', error);
+      console.error("Error updating blog category:", error);
       throw error;
     }
   }
 
   async deleteCategory(id: string): Promise<ApiResponse<null>> {
     try {
-      return await apiRequest.delete<null>(API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.DELETE(id));
+      return await apiRequest.delete<null>(
+        API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.DELETE(id)
+      );
     } catch (error) {
-      console.error('Error deleting blog category:', error);
+      console.error("Error deleting blog category:", error);
       throw error;
     }
   }
@@ -141,14 +179,14 @@ class BlogService {
   async uploadSingleImage(file: File): Promise<string> {
     try {
       const formData = new FormData();
-      formData.append('file', file);
-      const response = await apiRequest.upload('/v1/upload/image', formData);
+      formData.append("file", file);
+      const response = await apiRequest.upload("/v1/upload/image", formData);
       if (response.status && response.data) {
         return response.data.url || response.data;
       }
-      throw new Error(response.message || 'Failed to upload image');
+      throw new Error(response.message || "Failed to upload image");
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error("Error uploading image:", error);
       throw error;
     }
   }
@@ -163,18 +201,25 @@ class BlogService {
       }
       return urls;
     } catch (error) {
-      console.error('Error uploading multiple images:', error);
+      console.error("Error uploading multiple images:", error);
       throw error;
     }
   }
 
   // Validate image file
   validateImageFile(file: File): boolean {
-    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const acceptedFormats = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
     const maxSize = 5 * 1024 * 1024; // 5MB
 
     if (!acceptedFormats.includes(file.type)) {
-      throw new Error(`${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`);
+      throw new Error(
+        `${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`
+      );
     }
 
     if (file.size > maxSize) {

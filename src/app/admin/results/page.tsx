@@ -277,7 +277,7 @@ const Results = () => {
         <p>Manage student examination results and performance</p>
       </div>
 
-      <Row gutter={[16, 16]} className="results-stats">
+      {/* <Row gutter={[16, 16]} className="results-stats">
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
@@ -316,7 +316,7 @@ const Results = () => {
             />
           </Card>
         </Col>
-      </Row>
+      </Row> */}
 
       <div className="results-controls">
         <Space>
