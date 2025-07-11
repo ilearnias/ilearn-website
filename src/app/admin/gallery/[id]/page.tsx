@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Card,
   Button,
@@ -48,26 +48,26 @@ const GalleryItemPage = () => {
     }
   }, [galleryId]);
 
-  const fetchGalleryItem = async () => {
+  const fetchGalleryItem = useCallback(async () => {
     try {
       setLoading(true);
       const response = await galleryService.getItemById(galleryId);
       if (response.status) {
         setGalleryItem(response.data);
       } else {
-        message.error(response.message || 'Failed to fetch gallery item');
-        router.push('/admin/gallery');
+        message.error(response.message || "Failed to fetch gallery item");
+        router.push("/admin/gallery");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch gallery item');
-      router.push('/admin/gallery');
+      message.error(error.message || "Failed to fetch gallery item");
+      router.push("/admin/gallery");
     } finally {
       setLoading(false);
     }
-  };
+  }, [galleryId, router]);
 
   const handleBack = () => {
-    router.push('/admin/gallery');
+    router.push("/admin/gallery");
   };
 
   const handleAddPhotos = () => {
@@ -80,24 +80,28 @@ const GalleryItemPage = () => {
     try {
       setLoading(true);
       // Remove the image from the gallery item
-      const updatedImages = galleryItem!.images.filter(img => img !== imageUrl);
-      
+      const updatedImages = galleryItem!.images.filter(
+        (img) => img !== imageUrl
+      );
+
       const updateData = {
         title: galleryItem!.title,
         order: galleryItem!.order,
         isActive: galleryItem!.isActive,
-        images: updatedImages
+        images: updatedImages,
       };
 
       const response = await galleryService.updateItem(galleryId, updateData);
       if (response.status) {
-        message.success('Image removed successfully');
-        setGalleryItem(prev => prev ? { ...prev, images: updatedImages } : null);
+        message.success("Image removed successfully");
+        setGalleryItem((prev) =>
+          prev ? { ...prev, images: updatedImages } : null
+        );
       } else {
-        throw new Error(response.message || 'Failed to remove image');
+        throw new Error(response.message || "Failed to remove image");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to remove image');
+      message.error(error.message || "Failed to remove image");
     } finally {
       setLoading(false);
     }
@@ -112,22 +116,22 @@ const GalleryItemPage = () => {
   const handleAddModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (uploadedFiles.length === 0) {
-        message.error('Please select at least one image');
+        message.error("Please select at least one image");
         return;
       }
 
       setUploading(true);
 
       // Upload new images and get their URLs
-      const newFiles = uploadedFiles.filter(file => file.originFileObj);
+      const newFiles = uploadedFiles.filter((file) => file.originFileObj);
       const filesToUpload = newFiles
-        .map(file => file.originFileObj as File)
+        .map((file) => file.originFileObj as File)
         .filter(Boolean);
 
       if (filesToUpload.length === 0) {
-        message.error('No valid files to upload');
+        message.error("No valid files to upload");
         return;
       }
 
@@ -139,28 +143,33 @@ const GalleryItemPage = () => {
       }
 
       // Add new images to existing gallery item
-      const updatedImages = [...(galleryItem?.images || []), ...uploadedImageUrls];
-      
+      const updatedImages = [
+        ...(galleryItem?.images || []),
+        ...uploadedImageUrls,
+      ];
+
       const updateData = {
         title: galleryItem!.title,
         order: galleryItem!.order,
         isActive: galleryItem!.isActive,
-        images: updatedImages
+        images: updatedImages,
       };
 
       const response = await galleryService.updateItem(galleryId, updateData);
       if (response.status) {
-        message.success('Images added successfully');
-        setGalleryItem(prev => prev ? { ...prev, images: updatedImages } : null);
+        message.success("Images added successfully");
+        setGalleryItem((prev) =>
+          prev ? { ...prev, images: updatedImages } : null
+        );
         setIsAddModalVisible(false);
         form.resetFields();
         setUploadedFiles([]);
       } else {
-        throw new Error(response.message || 'Failed to add images');
+        throw new Error(response.message || "Failed to add images");
       }
     } catch (error: any) {
-      console.error('Error in handleAddModalOk:', error);
-      message.error(error.message || 'Failed to add images');
+      console.error("Error in handleAddModalOk:", error);
+      message.error(error.message || "Failed to add images");
     } finally {
       setUploading(false);
     }
@@ -174,7 +183,7 @@ const GalleryItemPage = () => {
 
   const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
     // Filter out invalid files
-    const validFiles = fileList.filter(file => {
+    const validFiles = fileList.filter((file) => {
       // Check file size
       if (file.size && file.size > 5 * 1024 * 1024) {
         message.error(`${file.name} is larger than 5MB`);
@@ -183,8 +192,13 @@ const GalleryItemPage = () => {
 
       // Check file type if it's a new upload
       if (file.originFileObj) {
-        const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        if (!acceptedFormats.includes(file.type || '')) {
+        const acceptedFormats = [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+        ];
+        if (!acceptedFormats.includes(file.type || "")) {
           message.error(`${file.name} is not a valid image format`);
           return false;
         }
@@ -199,16 +213,21 @@ const GalleryItemPage = () => {
   const uploadProps = {
     beforeUpload: (file: File) => {
       // Check if file is an accepted image format
-      const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      const acceptedFormats = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
       const isAcceptedFormat = acceptedFormats.includes(file.type);
       if (!isAcceptedFormat) {
-        message.error('You can only upload JPG, PNG, GIF or WebP files!');
+        message.error("You can only upload JPG, PNG, GIF or WebP files!");
         return false;
       }
 
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        message.error('Image must be smaller than 5MB!');
+        message.error("Image must be smaller than 5MB!");
         return false;
       }
 
@@ -218,13 +237,20 @@ const GalleryItemPage = () => {
     onChange: handleUploadChange,
     multiple: true,
     listType: "picture-card" as const,
-    accept: '.jpg,.jpeg,.png,.gif,.webp',
+    accept: ".jpg,.jpeg,.png,.gif,.webp",
     maxCount: 10,
   };
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+        }}
+      >
         <Spin size="large" />
       </div>
     );
@@ -232,7 +258,7 @@ const GalleryItemPage = () => {
 
   if (!galleryItem) {
     return (
-      <div style={{ textAlign: 'center', padding: '50px' }}>
+      <div style={{ textAlign: "center", padding: "50px" }}>
         <Text>Gallery item not found</Text>
         <br />
         <Button type="primary" onClick={handleBack} style={{ marginTop: 16 }}>
@@ -245,31 +271,38 @@ const GalleryItemPage = () => {
   return (
     <div className="gallery-item-page">
       <div className="gallery-item-header">
-        <Button 
-          icon={<ArrowLeftOutlined />} 
+        <Button
+          icon={<ArrowLeftOutlined />}
           onClick={handleBack}
           style={{ marginBottom: 16 }}
         >
           Back to Gallery
         </Button>
-        
+
         <Title level={2}>{galleryItem.title}</Title>
-        
+
         <div style={{ marginTop: 16 }}>
           <Space>
             <Text>Order: {galleryItem.order}</Text>
-            <Text>Status: {galleryItem.isActive ? 'Active' : 'Inactive'}</Text>
+            <Text>Status: {galleryItem.isActive ? "Active" : "Inactive"}</Text>
             <Text>Images: {galleryItem.images.length}</Text>
           </Space>
         </div>
       </div>
 
       <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 16,
+          }}
+        >
           <Title level={4}>Images ({galleryItem.images.length})</Title>
-          <Button 
-            type="primary" 
-            icon={<PlusOutlined />} 
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
             onClick={handleAddPhotos}
           >
             Add New Photos
@@ -277,8 +310,11 @@ const GalleryItemPage = () => {
         </div>
 
         {galleryItem.images.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '50px' }}>
-            <Text type="secondary">No images found. Click "Add New Photos" to upload images.</Text>
+          <div style={{ textAlign: "center", padding: "50px" }}>
+            <Text type="secondary">
+              No images found. Click &quot;Add New Photos&quot; to upload
+              images.
+            </Text>
           </div>
         ) : (
           <Row gutter={[16, 16]}>
@@ -290,7 +326,7 @@ const GalleryItemPage = () => {
                     <Image
                       src={imageUrl}
                       alt={`Gallery ${index + 1}`}
-                      style={{ height: 200, objectFit: 'cover' }}
+                      style={{ height: 200, objectFit: "cover" }}
                       preview={{
                         src: imageUrl,
                       }}
@@ -306,7 +342,7 @@ const GalleryItemPage = () => {
                       loading={loading}
                     >
                       Remove
-                    </Button>
+                    </Button>,
                   ]}
                 >
                   <Card.Meta
@@ -348,4 +384,4 @@ const GalleryItemPage = () => {
   );
 };
 
-export default GalleryItemPage; 
+export default GalleryItemPage;
