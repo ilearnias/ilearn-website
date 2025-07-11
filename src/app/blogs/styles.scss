@@ -234,17 +234,10 @@
 
 .blog-cards-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 400px));
   gap: 32px;
   padding: 45px 0;
-}
-
-.blog-cards-list:has(.blog-card:nth-child(2)) {
-  justify-items: stretch;
-}
-
-.blog-cards-list:has(.blog-card):not(:has(.blog-card:nth-child(2))) {
-  justify-items: center;
+  justify-content: center;
 }
 
 .blog-card {
@@ -256,8 +249,8 @@
   flex-direction: column;
   transition: box-shadow 0.2s;
   border: 1px solid #e5e7eb;
-  max-width: 400px;
   width: 100%;
+  height: 450px; // Fixed height for consistent card size
   &:hover {
     box-shadow: 0 4px 24px rgba(30, 64, 175, 0.16);
   }
@@ -275,6 +268,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0; // Prevents flex overflow
 }
 
 .blog-card-title {
@@ -290,6 +284,49 @@
   color: #444;
   flex: 1;
   line-height: 1.6;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  margin-bottom: 12px;
+}
+
+// Tag styles for clickable/interactivity
+.tag-item, .blog-card-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  margin: 2px 4px 2px 0;
+  font-size: 13px;
+  border-radius: 16px;
+  background: #f3f4f6;
+  color: #1a56db;
+  border: 1px solid #e5edff;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  user-select: none;
+}
+
+.blog-card-tags {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.tag-item:hover, .blog-card-tag:hover {
+  background: #e5edff;
+  color: #1741a0;
+  border-color: #b3cfff;
+}
+
+.tag-item.active, .blog-card-tag.selected {
+  background: #1a56db;
+  color: #fff;
+  border-color: #1a56db;
+}
+
+.blog-card--highlight {
+  box-shadow: 0 0 0 3px #1a56db33;
+  border-radius: 12px;
+  transition: box-shadow 0.2s;
 }
 
 @media screen and (max-width: 768px) {
@@ -335,6 +372,11 @@
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 8px 0;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  .blog-card {
+    height: 420px; // Slightly smaller height for mobile
   }
   .blog-card-img {
     height: 160px;

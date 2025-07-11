@@ -1,7 +1,7 @@
 // Base API URL configuration
 export const API_CONFIG = {
-  // BASE_URL: "https://ilearn-server.bairuhatech.com",
-  BASE_URL: "http://localhost:8011",
+  BASE_URL: "https://ilearn-server.bairuhatech.com",
+  // BASE_URL: "http://localhost:8011",
 };
 
 // API Endpoints
@@ -76,7 +76,7 @@ export const API_ENDPOINTS = {
       POSTS: {
         LIST: "/v1/admin/blog/posts",
         DETAIL: (id: string) => `/v1/admin/blog/posts/${id}`,
-        CREATE: "/v1/admin/blog/posts",
+        CREATE: '/v1/admin/blog/posts',
         UPDATE: (id: string) => `/v1/admin/blog/posts/${id}`,
         DELETE: (id: string) => `/v1/admin/blog/posts/${id}`,
       },
@@ -124,9 +124,10 @@ export const API_ENDPOINTS = {
   // Public endpoints
   PUBLIC: {
     PROGRAMMES: "/v1/programmes",
+    PROGRAMS: "/v1/admin/programs", // Using admin endpoint for now, can be changed to public endpoint when available
     SUCCESS_STORIES: "/v1/success-stories",
     TEAM: "/v1/team",
-    GALLERY: "/v1/gallery",
+    GALLERY: "/v1/admin/gallery",
     BLOG: {
       POSTS: "/v1/blog/posts",
       CATEGORIES: "/v1/blog/categories",

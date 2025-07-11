@@ -16,7 +16,7 @@ import {
   message,
   Switch,
   InputNumber,
-  Select
+  Select,
 } from "antd";
 import {
   SearchOutlined,
@@ -53,11 +53,11 @@ const BlogPosts = () => {
       if (response.status) {
         setPosts(response.data);
       } else {
-        message.error(response.message || 'Failed to fetch blog posts');
+        message.error(response.message || "Failed to fetch blog posts");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch blog posts');
-      console.error('Error fetching blog posts:', error);
+      message.error(error.message || "Failed to fetch blog posts");
+      console.error("Error fetching blog posts:", error);
     } finally {
       setLoading(false);
     }
@@ -69,11 +69,11 @@ const BlogPosts = () => {
       if (response.status) {
         setCategories(response.data);
       } else {
-        message.error(response.message || 'Failed to fetch categories');
+        message.error(response.message || "Failed to fetch categories");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch categories');
-      console.error('Error fetching categories:', error);
+      message.error(error.message || "Failed to fetch categories");
+      console.error("Error fetching categories:", error);
     }
   };
 
@@ -91,23 +91,23 @@ const BlogPosts = () => {
 
   const handleDelete = (record: IBlogPost) => {
     confirm({
-      title: 'Are you sure you want to delete this post?',
-      content: 'This action cannot be undone.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      title: "Are you sure you want to delete this post?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: async () => {
         try {
           const response = await blogService.deletePost(record.id);
           if (response.status) {
-            message.success(response.message || 'Post deleted successfully');
+            message.success(response.message || "Post deleted successfully");
             fetchPosts();
           } else {
-            message.error(response.message || 'Failed to delete post');
+            message.error(response.message || "Failed to delete post");
           }
         } catch (error: any) {
-          message.error(error.message || 'Failed to delete post');
-          console.error('Error deleting post:', error);
+          message.error(error.message || "Failed to delete post");
+          console.error("Error deleting post:", error);
         }
       },
     });
@@ -116,29 +116,29 @@ const BlogPosts = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (editingPost) {
         const response = await blogService.updatePost(editingPost.id, values);
         if (response.status) {
-          message.success(response.message || 'Post updated successfully');
+          message.success(response.message || "Post updated successfully");
           setIsModalVisible(false);
           fetchPosts();
         } else {
-          message.error(response.message || 'Failed to update post');
+          message.error(response.message || "Failed to update post");
         }
       } else {
         const response = await blogService.createPost(values);
         if (response.status) {
-          message.success(response.message || 'Post created successfully');
+          message.success(response.message || "Post created successfully");
           setIsModalVisible(false);
           fetchPosts();
         } else {
-          message.error(response.message || 'Failed to create post');
+          message.error(response.message || "Failed to create post");
         }
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to save post');
-      console.error('Error saving post:', error);
+      message.error(error.message || "Failed to save post");
+      console.error("Error saving post:", error);
     }
   };
 
@@ -165,8 +165,8 @@ const BlogPosts = () => {
       dataIndex: "categoryId",
       key: "category",
       render: (categoryId) => {
-        const category = categories.find(c => c.id === categoryId);
-        return category ? category.title : '-';
+        const category = categories.find((c) => c.id === categoryId);
+        return category ? category.name : "-";
       },
     },
     {
@@ -179,9 +179,7 @@ const BlogPosts = () => {
       title: "Status",
       dataIndex: "isActive",
       key: "isActive",
-      render: (isActive) => (
-        <Switch checked={isActive} disabled />
-      ),
+      render: (isActive) => <Switch checked={isActive} disabled />,
     },
     {
       title: "Actions",
@@ -233,7 +231,11 @@ const BlogPosts = () => {
                 onChange={(e) => setSearchText(e.target.value)}
                 style={{ maxWidth: 300 }}
               />
-              <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={handleAdd}
+              >
                 Add Post
               </Button>
             </div>
@@ -278,9 +280,9 @@ const BlogPosts = () => {
                 rules={[{ required: true, message: "Please select category" }]}
               >
                 <Select>
-                  {categories.map(category => (
+                  {categories.map((category) => (
                     <Select.Option key={category.id} value={category.id}>
-                      {category.title}
+                      {category.name}
                     </Select.Option>
                   ))}
                 </Select>
@@ -339,17 +341,15 @@ const BlogPosts = () => {
               <Form.Item
                 name="order"
                 label="Display Order"
-                rules={[{ required: true, message: "Please enter display order" }]}
+                rules={[
+                  { required: true, message: "Please enter display order" },
+                ]}
               >
-                <InputNumber min={1} style={{ width: '100%' }} />
+                <InputNumber min={1} style={{ width: "100%" }} />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item
-                name="isActive"
-                label="Status"
-                valuePropName="checked"
-              >
+              <Form.Item name="isActive" label="Status" valuePropName="checked">
                 <Switch />
               </Form.Item>
             </Col>
@@ -360,4 +360,4 @@ const BlogPosts = () => {
   );
 };
 
-export default BlogPosts; 
+export default BlogPosts;

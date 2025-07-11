@@ -1,8 +1,8 @@
+//800x800 resolution images 400px 400px
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
 import Heading from "@/components/common/Heading";
-
 interface GalleryImage {
   src: string;
   alt?: string;
@@ -110,12 +110,20 @@ export default function GalleryComponent({
                         className="w-full h-full object-cover"
                         width={400}
                         height={400}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = "none";
+                          target.nextElementSibling?.classList.remove("hidden");
+                        }}
                       />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-400">Image placeholder</span>
-                      </div>
-                    )}
+                    ) : null}
+                    <div
+                      className={`w-full h-full bg-gray-200 flex items-center justify-center ${
+                        image.src ? "hidden" : ""
+                      }`}
+                    >
+                      <span className="text-gray-400">Image not available</span>
+                    </div>
                   </div>
                   <div className="absolute bottom-2 md:bottom-6 left-2 md:left-6 bg-white/90 px-1.5 md:px-3 py-0.5 md:py-1.5 text-[10px] md:text-sm text-gray-600 rounded">
                     {image.title || `Art ${String(index + 1).padStart(2, "0")}`}

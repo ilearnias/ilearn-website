@@ -89,7 +89,7 @@ const QuestionsSection = () => {
           <Heading
             text={<>Frequently Asked Questions</>}
             color="tricolor"
-            className="font-bold"
+            className="font-bold md:leading-[0.1] leading-[1.1]"
           />
           <TextLabel
             text="Find answers to common questions about our programs and learning approach"

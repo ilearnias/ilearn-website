@@ -21,7 +21,7 @@ const FAQSection = ({ faqs }: { faqs: FAQ[] }) => {
         <Heading
           color="tricolor"
           text="Frequently Asked Questions"
-          className="!text-center !font-bold !mb-8"
+          className="!text-center md:leading-[0.5] leading-[1.1] !font-bold !mb-8"
           animate={true}
         />
         <div className="faq-container">

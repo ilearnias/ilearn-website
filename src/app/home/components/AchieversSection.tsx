@@ -1,5 +1,6 @@
+//720X800
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./styles.scss";
 import Image from "next/image";
 import Container from "@/components/common/Container";
@@ -7,6 +8,8 @@ import Heading from "@/components/common/Heading";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
+import AchieverCard from "@/components/common/AchieverCard";
+import { achieverService, IAchiever } from "@/services/achievers.service";
 
 interface AchieverCardProps {
   name: string;
@@ -15,52 +18,34 @@ interface AchieverCardProps {
   index: number;
 }
 
-const AchieverCard: React.FC<AchieverCardProps> = ({
-  name,
-  airRank,
-  imageUrl,
-  index,
-}) => {
-  const cardRef = React.useRef(null);
-  const isInView = useInView(cardRef, { once: false });
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="achiever-card md:w-[300px]  my-4"
-    >
-      <div className="image-container">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={name}
-            width={300}
-            height={300}
-            className="achiever-image"
-            loading="lazy"
-            sizes="(max-width: 768px) 260px, 300px"
-          />
-        ) : (
-          <div className="placeholder-image" />
-        )}
-      </div>
-      <div className="achiever-info">
-        <div className="air-rank">{airRank}</div>
-        <Heading
-          text={name}
-          className="!text-lg !font-semibold !leading-normal"
-        />
-      </div>
-    </motion.div>
-  );
-};
-
 const AchieversSection = () => {
   const router = useRouter();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [achievers, setAchievers] = useState<IAchiever[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await achieverService.getAllAchievers();
+        if (res.status && Array.isArray(res.data)) {
+          // Filter for order 1-4 and sort by order
+          const filtered = res.data
+            .filter(
+              (a) =>
+                typeof a.order === "number" && [1, 2, 3, 4].includes(a.order)
+            )
+            .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+          setAchievers(filtered);
+        }
+      } catch (e) {
+        setAchievers([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
   const scrollToNextCard = () => {
     if (scrollContainerRef.current) {
@@ -82,40 +67,6 @@ const AchieversSection = () => {
     }
   };
 
-  // Placeholder data - replace imageUrl when you have the actual images
-  const achievers: Omit<AchieverCardProps, "index">[] = [
-    {
-      name: "John Smith IAS",
-      airRank: "AIR 57",
-      imageUrl: "/Achiver images/dummy.jpg",
-    },
-    {
-      name: "Sarah Johnson",
-      airRank: "AIR 81",
-      imageUrl: "/Achiver images/dummy.jpg",
-    },
-    {
-      name: "Michael Brown",
-      airRank: "AIR 95",
-      imageUrl: "/Achiver images/dummy.jpg",
-    },
-    {
-      name: "Emily Davis IAS",
-      airRank: "AIR 21",
-      imageUrl: "/Achiver images/dummy.jpg",
-    },
-    {
-      name: "Robert Wilson IAS",
-      airRank: "AIR 42",
-      imageUrl: "/Achiver images/dummy.jpg",
-    },
-    {
-      name: "Jennifer Taylor IAS",
-      airRank: "AIR 57",
-      imageUrl: "/Achiver images/dummy.jpg",
-    },
-  ];
-
   return (
     <section className="achievers-section">
       <Container className="w-full">
@@ -127,7 +78,7 @@ const AchieversSection = () => {
           transition={{ duration: 0.5 }}
         >
           <Heading
-            color="tricolor"
+            color="red"
             text="Our Proud Achievers"
             className="!text-center !mb-4"
             animate={true}
@@ -139,15 +90,26 @@ const AchieversSection = () => {
 
         <div className="achievers-carousel relative">
           <div className="achievers-grid flex w-full" ref={scrollContainerRef}>
-            {achievers.map((achiever, index) => (
-              <AchieverCard
-                key={index}
-                index={index}
-                name={achiever.name}
-                airRank={achiever.airRank}
-                imageUrl={achiever.imageUrl}
-              />
-            ))}
+            {loading ? (
+              <div>Loading...</div>
+            ) : (
+              achievers.map((achiever, index) => {
+                // Extract rank number from details (e.g., "Air 33")
+                const details = achiever.details ?? "";
+                const rankMatch = details.match(/AIR\s*(\d+)/i);
+                const rank = rankMatch
+                  ? rankMatch[1]
+                  : details.match(/(\d+)/)?.[1] || "";
+                return (
+                  <AchieverCard
+                    key={achiever.id}
+                    name={achiever.name ?? ""}
+                    rank={rank}
+                    imageUrl={achiever.image ?? ""}
+                  />
+                );
+              })
+            )}
           </div>
 
           {/* Navigation Buttons - Only visible on mobile */}
@@ -203,7 +165,7 @@ const AchieversSection = () => {
         >
           <button
             className="view-all-button"
-            onClick={() => router.push("/results")}
+            onClick={() => router.push("/result")}
           >
             View All Results
             <span className="arrow">→</span>

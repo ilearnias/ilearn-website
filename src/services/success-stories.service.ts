@@ -18,9 +18,34 @@ export interface ISuccessStoryCreate extends Omit<ISuccessStory, 'id' | 'created
 export interface ISuccessStoryUpdate extends Partial<ISuccessStoryCreate> {}
 
 class SuccessStoryService {
+  // Public method to fetch success stories for the frontend
+  async getPublicSuccessStories(page = 1, limit = 10): Promise<ApiResponse<ISuccessStory[]>> {
+    try {
+      return await apiRequest.get<ISuccessStory[]>(`${API_ENDPOINTS.PUBLIC.SUCCESS_STORIES}?page=${page}&limit=${limit}`);
+    } catch (error) {
+      console.error('Error fetching success stories:', error);
+      throw error;
+    }
+  }
+
+  // Admin method to fetch all success stories
   async getAllSuccessStories(): Promise<ApiResponse<ISuccessStory[]>> {
     try {
-      return await apiRequest.get<ISuccessStory[]>(API_ENDPOINTS.ADMIN.SUCCESS_STORIES.LIST);
+      // Make a direct axios call without authentication for public access
+      const response = await fetch(`${API_CONFIG.BASE_URL}${API_ENDPOINTS.ADMIN.SUCCESS_STORIES.LIST}?page=1&limit=10`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      return data;
     } catch (error) {
       console.error('Error fetching success stories:', error);
       throw error;

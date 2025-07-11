@@ -116,7 +116,7 @@ const ResultSection = () => {
         <div className="text-center mb-12">
           <div className="inline-block  px-8 py-3 rounded-full">
             <Heading
-              className="font-bold"
+              className="font-bold md:leading-[0.5] leading-[1.1]"
               text="The Most Genuine Results in Kerala"
               color="tricolor"
             />

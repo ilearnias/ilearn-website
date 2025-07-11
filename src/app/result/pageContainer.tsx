@@ -1,5 +1,5 @@
 "use client";
-import Footer from "@/components/footer";
+
 import Header from "@/components/header";
 import ResultSection from "./components/ResultSection";
 import ResultSummary from "./components/ResultSummary";
@@ -13,7 +13,7 @@ const PageContainer = () => {
       <HeroSection
         className="font-bold"
         title="Our Results"
-        titleClassName="font-bold"
+        titleClassName="font-bold mb-3"
         pageName="Results"
         description="Celebrating excellence and achievement. Explore our track record of success stories and be inspired by the remarkable achievements of our students in civil service examinations."
       />

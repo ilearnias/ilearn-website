@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { API_CONFIG, API_ENDPOINTS } from "../config/api";
 import { apiRequest, ApiResponse } from "../config/apiRequest";
 
@@ -19,10 +20,17 @@ export interface IBlogPost {
   views: number;
   createdAt: string;
   updatedAt: string;
+  // Added properties to match usage in admin/blog/posts/page.tsx
+  // description: string;
+  subTitle: string;
+  // order: number;
+  isActive: boolean;
+  image: string;
+  link: string;
 }
 
 export interface IBlogCategory {
-  title: ReactNode | RenderedCell<IBlogPost>;
+  title: ReactNode;
   id: string;
   name: string;
   slug: string;

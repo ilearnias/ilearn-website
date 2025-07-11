@@ -25,9 +25,9 @@ export interface ITeamMemberCreate extends Omit<ITeamMember, 'id' | 'createdAt' 
 export interface ITeamMemberUpdate extends Partial<ITeamMemberCreate> {}
 
 class TeamService {
-  async getAllTeamMembers(): Promise<ApiResponse<ITeamMember[]>> {
+  async getAllTeamMembers(params?: { order?: string; page?: number; limit?: number }): Promise<ApiResponse<ITeamMember[]>> {
     try {
-      return await apiRequest.get<ITeamMember[]>(API_ENDPOINTS.ADMIN.TEAM.LIST);
+      return await apiRequest.get<ITeamMember[]>(API_ENDPOINTS.ADMIN.TEAM.LIST, { params });
     } catch (error) {
       console.error('Error fetching team members:', error);
       throw error;
