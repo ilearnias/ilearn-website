@@ -280,7 +280,7 @@ const SuccessStories = () => {
         <p>Manage and showcase student achievements and success stories</p>
       </div>
 
-      <Row gutter={[16, 16]} className="success-stories-stats">
+      {/* <Row gutter={[16, 16]} className="success-stories-stats">
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
@@ -299,7 +299,7 @@ const SuccessStories = () => {
             />
           </Card>
         </Col>
-      </Row>
+      </Row> */}
 
       <div className="success-stories-controls">
         <Input
@@ -371,7 +371,7 @@ const SuccessStories = () => {
           </Form.Item>
 
           <Form.Item
-            label="Image"
+            label="Image (size:600x800)"
             name="image"
           >
             <Upload
