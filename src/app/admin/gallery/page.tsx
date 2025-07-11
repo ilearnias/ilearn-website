@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Table,
   Input,
@@ -24,6 +25,7 @@ import {
   DeleteOutlined,
   MoreOutlined,
   UploadOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import type { UploadFile } from "antd/es/upload/interface";
@@ -33,6 +35,7 @@ import "./styles.scss";
 const { confirm } = Modal;
 
 const GalleryPage = () => {
+  const router = useRouter();
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<IGalleryItem[]>([]);
@@ -66,6 +69,10 @@ const GalleryPage = () => {
     form.resetFields();
     setUploadedFiles([]);
     setIsModalVisible(true);
+  };
+
+  const handleView = (record: IGalleryItem) => {
+    router.push(`/admin/gallery/${record.id}`);
   };
 
   const handleEdit = (record: IGalleryItem) => {
@@ -267,71 +274,25 @@ const GalleryPage = () => {
       ),
     },
     {
-      title: "Images",
-      key: "images",
-      render: (_, record) => (
-        <Space>
-          {record.images.slice(0, 3).map((url, index) => (
-            <Image
-              key={index}
-              src={url}
-              alt={`Gallery ${index + 1}`}
-              width={60}
-              height={60}
-              style={{ objectFit: 'cover' }}
-              preview={{
-                src: url,
-              }}
-            />
-          ))}
-          {record.images.length > 3 && (
-            <div style={{ marginLeft: 8 }}>+{record.images.length - 3} more</div>
-          )}
-        </Space>
-      ),
-    },
-    {
-      title: "Order",
-      dataIndex: "order",
-      key: "order",
-      sorter: (a, b) => a.order - b.order,
-    },
-    {
-      title: "Status",
-      dataIndex: "isActive",
-      key: "isActive",
-      render: (isActive) => (
-        <Switch checked={isActive} disabled />
-      ),
-    },
-    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item
-                key="edit"
-                icon={<EditOutlined />}
-                onClick={() => handleEdit(record)}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined />}
-                danger
-                onClick={() => handleDelete(record)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
+        <Space>
+          <Button 
+            type="primary" 
+            icon={<EyeOutlined />} 
+            onClick={() => handleView(record)}
+          >
+            View
+          </Button>
+          <Button 
+            type="default" 
+            icon={<EditOutlined />} 
+            onClick={() => handleEdit(record)}
+          >
+            Edit
+          </Button>
+        </Space>
       ),
     },
   ];
@@ -366,6 +327,7 @@ const GalleryPage = () => {
         />
       </Card>
 
+      {/* Edit/Add Modal */}
       <Modal
         title={editingItem ? "Edit Gallery Item" : "Add Gallery Item"}
         open={isModalVisible}
@@ -413,8 +375,10 @@ const GalleryPage = () => {
           </Form.Item>
         </Form>
       </Modal>
+
+
     </div>
   );
 };
 
-export default GalleryPage; 
+export default GalleryPage;

@@ -135,8 +135,8 @@ const BlogCategories = () => {
 
   const filteredCategories = categories.filter(
     (category) =>
-      category.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      category.description.toLowerCase().includes(searchText.toLowerCase())
+      (category.name?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
+      (category.description?.toLowerCase() || '').includes(searchText.toLowerCase())
   );
 
   const columns: ColumnsType<IBlogCategory> = [

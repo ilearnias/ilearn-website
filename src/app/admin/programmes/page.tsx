@@ -134,8 +134,7 @@ const Programmes = () => {
       if (values.endDate) {
         values.endDate = values.endDate.format("YYYY-MM-DD");
       }
-      // Ensure price is a number
-      values.price = Number(values.price);
+    
       // Only send allowed fields
       const allowedFields = [
         "title",
@@ -143,7 +142,7 @@ const Programmes = () => {
         "description",
         "duration",
         "status",
-        "price",
+        
         "order",
         "isActive",
         "category",
@@ -229,43 +228,39 @@ const Programmes = () => {
       render: (text) => <strong>{text}</strong>,
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (category) => (
-        <Tag color={getCategoryColor(category)}>{category}</Tag>
-      ),
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text) => <span>{text}</span>,
     },
     {
-      title: "Duration",
-      dataIndex: "duration",
-      key: "duration",
-      render: (duration) => (
-        <Space>
-          <ClockCircleOutlined />
-          {duration}
-        </Space>
-      ),
+      title: "Order",
+      dataIndex: "order", // <-- Lowercase 'o'
+      key: "order",
+      render: (text) => <span>{text}</span>,
     },
+    // {
+    //   title: "Category",
+    //   dataIndex: "category",
+    //   key: "category",
+    //   render: (category) => (
+    //     <Tag color={getCategoryColor(category)}>{category}</Tag>
+    //   ),
+    // },
+   
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
       render: (status) => <Tag color={getStatusColor(status)}>{status}</Tag>,
     },
-    {
-      title: "Enrollments",
-      dataIndex: "enrollments",
-      key: "enrollments",
-      sorter: (a, b) => (a.enrollments || 0) - (b.enrollments || 0),
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-      render: (price) => `$${price}`,
-      sorter: (a, b) => Number(a.price) - Number(b.price),
-    },
+    // {
+    //   title: "Enrollments",
+    //   dataIndex: "enrollments",
+    //   key: "enrollments",
+    //   sorter: (a, b) => (a.enrollments || 0) - (b.enrollments || 0),
+    // },
+  
     {
       title: "Actions",
       key: "actions",
@@ -345,29 +340,6 @@ const Programmes = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="category"
-                label="Category"
-                rules={[{ required: true, message: "Please select category" }]}
-              >
-                <Select>
-                  <Option value="Development">Development</Option>
-                  <Option value="Marketing">Marketing</Option>
-                  <Option value="Data Science">Data Science</Option>
-                  <Option value="Design">Design</Option>
-                  <Option value="Business">Business</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Form.Item name="sub_title" label="Sub Title">
-                <Input placeholder="Enter programme sub title" />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
                 name="status"
                 label="Status"
                 rules={[{ required: true, message: "Please select status" }]}
@@ -378,6 +350,11 @@ const Programmes = () => {
           </Row>
 
           <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item name="sub_title" label="Sub Title">
+                <Input placeholder="Enter programme sub title (optional)" />
+              </Form.Item>
+            </Col>
             <Col span={12}>
               <Form.Item
                 name="order"
@@ -399,15 +376,6 @@ const Programmes = () => {
             rules={[{ required: true, message: "Please enter description" }]}
           >
             <Input.TextArea rows={4} />
-          </Form.Item>
-
-          <Form.Item
-            name="isActive"
-            label="Active Status"
-            valuePropName="checked"
-            initialValue={true}
-          >
-            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
           </Form.Item>
         </Form>
       </Modal>
