@@ -1,11 +1,13 @@
 // Inside VideoCard.tsx — clean version
-import React, { useState } from 'react';
-import { motion, Variants, Transition } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, Variants, Transition } from "framer-motion";
+import YouTube from "react-youtube";
 
 interface VideoData {
   title: string;
   subtitle?: string;
-  youtubeUrl: string;  // Original YouTube URL
+  youtubeUrl: string; // Original YouTube URL
+  videoId: string;
 }
 
 interface VideoCardProps {
@@ -17,8 +19,10 @@ interface VideoCardProps {
 // Helper function to convert YouTube URL to embed URL and thumbnail
 const getVideoDetails = (youtubeUrl: string) => {
   // Extract video ID from YouTube URL
-  const videoId = youtubeUrl.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([^"&?\/\s]{11})/)?.[1];
-  
+  const videoId = youtubeUrl.match(
+    /(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([^"&?\/\s]{11})/
+  )?.[1];
+
   if (!videoId) return null;
 
   // Return multiple thumbnail qualities for fallback
@@ -28,15 +32,15 @@ const getVideoDetails = (youtubeUrl: string) => {
       `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`,
       `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
       `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
-      `https://i.ytimg.com/vi/${videoId}/default.jpg`
-    ]
+      `https://i.ytimg.com/vi/${videoId}/default.jpg`,
+    ],
   };
 };
 
 const transition: Transition = {
   type: "tween",
   ease: [0.25, 0.1, 0.25, 1],
-  duration: 0.3
+  duration: 0.3,
 };
 
 const containerVariants: Variants = {
@@ -46,39 +50,41 @@ const containerVariants: Variants = {
   animate: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const cardVariants: Variants = {
   initial: {
     y: 20,
     opacity: 0,
-    scale: 0.95
+    scale: 0.95,
   },
   animate: {
     y: 0,
     opacity: 1,
     scale: 1,
-    transition
+    transition,
   },
   hover: {
     y: -5,
     scale: 1.02,
     transition: {
-      duration: 0.2
-    }
-  }
+      duration: 0.2,
+    },
+  },
 };
 
 const VideoCard2: React.FC<VideoCardProps> = ({
   videos = [],
   onVideoClick,
-  playingIndex: externalPlayingIndex
+  playingIndex: externalPlayingIndex,
 }) => {
   const [internalPlayingIndex, setInternalPlayingIndex] = useState(-1);
-  const [thumbnailErrors, setThumbnailErrors] = useState<{ [key: number]: number }>({});
+  const [thumbnailErrors, setThumbnailErrors] = useState<{
+    [key: number]: number;
+  }>({});
   const playingIndex = externalPlayingIndex ?? internalPlayingIndex;
 
   const handleVideoClick = (index: number) => {
@@ -90,9 +96,9 @@ const VideoCard2: React.FC<VideoCardProps> = ({
   };
 
   const handleThumbnailError = (index: number) => {
-    setThumbnailErrors(prev => ({
+    setThumbnailErrors((prev) => ({
       ...prev,
-      [index]: (prev[index] || 0) + 1
+      [index]: (prev[index] || 0) + 1,
     }));
   };
 
@@ -110,11 +116,17 @@ const VideoCard2: React.FC<VideoCardProps> = ({
         style={{ margin: 0 }}
       >
         {videos.map((video, index) => {
-          const videoDetails = getVideoDetails(video.youtubeUrl);
+          const videoDetails: any = getVideoDetails(video.youtubeUrl);
           if (!videoDetails) return null;
-          
+
           const currentThumbnailIndex = thumbnailErrors[index] || 0;
-          const thumbnailUrl = videoDetails.thumbnailUrls[Math.min(currentThumbnailIndex, videoDetails.thumbnailUrls.length - 1)];
+          const thumbnailUrl =
+            videoDetails.thumbnailUrls[
+              Math.min(
+                currentThumbnailIndex,
+                videoDetails.thumbnailUrls.length - 1
+              )
+            ];
 
           return (
             <motion.div
@@ -125,10 +137,11 @@ const VideoCard2: React.FC<VideoCardProps> = ({
               layout
             >
               <motion.div
-                className="relative w-full pt-[56.25%] cursor-pointer bg-gray-900"
+                className="relative w-full pt-[56.25%] cursor-pointer"
                 onClick={() => handleVideoClick(index)}
               >
                 {playingIndex === index ? (
+                  // <YouTube videoId={videoDetails.videoId} />
                   <iframe
                     src={`${videoDetails.embedUrl}?autoplay=1&rel=0`}
                     title={video.title}
@@ -148,7 +161,7 @@ const VideoCard2: React.FC<VideoCardProps> = ({
                       whileHover={{ opacity: 1 }}
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                      <motion.div 
+                      <motion.div
                         className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center"
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
@@ -165,7 +178,7 @@ const VideoCard2: React.FC<VideoCardProps> = ({
                   </div>
                 )}
               </motion.div>
-              <motion.div 
+              <motion.div
                 className="px-6 py-4 bg-white"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

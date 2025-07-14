@@ -9,29 +9,28 @@ import VideoCard2 from "@/components/common/vediocard2";
 // Video data array with the provided YouTube videos
 const videos = [
   {
-    title: "ILearn Education Video 1",
+    title: "iLearn IAS Academy - Success Stories",
     subtitle: "Learn more about our educational programs and success stories",
-    youtubeUrl: "https://youtu.be/iDBPLD3a8us?si=PgMN7sCK6fXzvSKe",
+    youtubeUrl: "https://youtu.be/mu-eiYz9Ur8?si=npVhpO0o-NCOvzaf",
+    videoId: "ZyAtOz00oEs",
   },
   {
-    title: "ILearn Education Video 2",
+    title: "UPSC Preparation Guide by iLearn",
     subtitle: "Discover our teaching methodology and approach",
-    youtubeUrl: "https://youtu.be/G6RayaBJpAI?si=esN_WaNun-9gymWp",
+    youtubeUrl: "https://youtu.be/mu-eiYz9Ur8?si=npVhpO0o-NCOvzaf",
+    videoId: "ZyAtOz00oEs",
   },
   {
-    title: "ILearn Education Video 3",
+    title: "iLearn Academy Training Program",
     subtitle: "Student testimonials and achievements",
-    youtubeUrl: "https://youtu.be/qbGIAW-NqWk?si=HIQhAHaLswZP5KuA",
+    youtubeUrl: "https://youtu.be/ZyAtOz00oEs",
+    videoId: "ZyAtOz00oEs",
   },
   {
-    title: "ILearn Education Video 4",
+    title: "Civil Services Coaching Excellence",
     subtitle: "Advanced Learning Techniques",
-    youtubeUrl: "https://youtu.be/sdKQC6oPPfQ?si=zTvgZXhlmxAlBfBv",
-  },
-  {
-    title: "ILearn Education Video 5",
-    subtitle: "Student Success Journey",
-    youtubeUrl: "https://youtu.be/x32pHoOjsf8?si=2Rr5a0NJkfWIBD5z",
+    youtubeUrl: "https://www.youtube.com/watch?v=NEehMXQ0zdk",
+    videoId: "ZyAtOz00oEs",
   },
 ];
 

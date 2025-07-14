@@ -24,7 +24,7 @@ const testimonialItems: TestimonialItem[] = [
     subtitle:
       "Listen to Priya's inspiring journey from a small town to becoming an IAS officer. Her dedication and our guidance made her dream come true.",
     videoId: "Y8Tko2YC5hA",
-    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg",
+    thumbnailUrl: "https://youtu.be/dOt8taqXL3k?si=yuWq8B3hLvrT3Ib4",
   },
   {
     id: "2",
@@ -32,7 +32,7 @@ const testimonialItems: TestimonialItem[] = [
     subtitle:
       "Rahul shares his strategy and experience of clearing UPSC in his very first attempt with AIR under 100.",
     videoId: "jNQXAC9IVRw",
-    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg",
+    thumbnailUrl: "https://youtu.be/iYh3iczW0CQ",
   },
   {
     id: "3",

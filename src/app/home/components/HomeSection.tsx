@@ -5,6 +5,7 @@ import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import SubText from "@/components/common/SubText";
 import Container from "@/components/common/Container";
+import YouTube from "react-youtube";
 
 const HomeSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -32,10 +33,10 @@ const HomeSection = () => {
                     <br />
                     <span>results,</span>
                     <br />
-                    <span>we make </span>
-                    <span>genuine</span>
+                    <span style={{ color: "#20468d" }}>we make </span>
+                    <span style={{ color: "#20468d" }}>genuine</span>
                     <br />
-                    <span>results.</span>
+                    <span style={{ color: "#20468d" }}>results.</span>
                   </>
                 }
                 animate={true}
@@ -48,8 +49,9 @@ const HomeSection = () => {
                     <br />
                     <span>results, We</span>
                     <br />
-                    <span>make genuine</span> <br />
-                    <span>results.</span>
+                    <span style={{ color: "#20468d" }}>make genuine</span>{" "}
+                    <br />
+                    <span style={{ color: "#20468d" }}>results.</span>
                   </>
                 }
                 color="red"
@@ -80,8 +82,12 @@ const HomeSection = () => {
             </div>
           </div>
           <div className={`video-container ${isVisible ? "visible" : ""}`}>
-            <iframe
-              src="https://www.youtube.com/embed/3FdY6vrK4y8?si=5z6YSsX-OOz9-UuB&enablejsapi=1"
+            <YouTube
+              videoId="NVGwwVzTeJU"
+              opts={{ width: "100%", height: "100%" }}
+            />
+            {/* <iframe
+              src="https://www.youtube.com/embed/zLwkn6BLJ4U?si=xLhAKmAGK-Ay5YQA"
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -90,7 +96,7 @@ const HomeSection = () => {
               onError={(e) => {
                 console.error("Video failed to load:", e);
               }}
-            />
+            /> */}
             {!isVisible && (
               <div className="loading-overlay">
                 <div className="loading-spinner"></div>
