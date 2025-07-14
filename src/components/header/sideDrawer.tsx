@@ -18,10 +18,10 @@ export default function SideDrawer(props: any) {
       title={
         <div className="Drawer-header">
           <div>
-            <Image 
-              src="/new-logo.png" 
-              width={150} 
-              height={50} 
+            <Image
+              src="/new-logo.png"
+              width={150}
+              height={50}
               alt="iLearn Logo"
               priority
               className="header-logo"

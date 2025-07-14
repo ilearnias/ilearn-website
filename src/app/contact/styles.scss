@@ -168,7 +168,7 @@
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  
+
   @media screen and (min-width: 320px) and (max-width: 768px) {
     padding: 10px;
     padding-top: 15vh;
@@ -190,33 +190,33 @@
   font-size: 14px;
 }
 
-.contact-box2 {
-  padding: 50px 0px;
-  background-image: linear-gradient(
-      to right,
-      #ffff,
-      #ffff,
-      #e4e4e400,
-      #33146100
-    ),
-    url("../assets/images/mappprisum.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: #fff;
-  @media screen and (min-width: 320px) and (max-width: 768px) {
-    padding: 10px;
-    padding-bottom: 20vh;
-    background-image: linear-gradient(
-        to bottom,
-        #ffff,
-        #ffff,
-        #e4e4e400,
-        #33146100
-      ),
-      url("../assets/branch/Headquarters.png");
-  }
-}
+// .contact-box2 {
+//   padding: 50px 0px;
+//   background-image: linear-gradient(
+//       to right,
+//       #ffff,
+//       #ffff,
+//       #e4e4e400,
+//       #33146100
+//     ),
+//     url("../assets/images/mappprisum.png");
+//   background-size: cover;
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   color: #fff;
+//   @media screen and (min-width: 320px) and (max-width: 768px) {
+//     padding: 10px;
+//     padding-bottom: 20vh;
+//     background-image: linear-gradient(
+//         to bottom,
+//         #ffff,
+//         #ffff,
+//         #e4e4e400,
+//         #33146100
+//       ),
+//       url("../assets/branch/Headquarters.png");
+//   }
+// }
 
 .contact-box3 {
   font-family: vars.$Regular;
@@ -347,7 +347,7 @@ a {
 .contact-hero {
   position: relative;
   height: 400px;
-  background-image: url('../assets/images/bg-Lines.png');
+  background-image: url("../assets/images/bg-Lines.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -403,14 +403,14 @@ a {
     height: 100%;
     display: flex;
     flex-direction: column;
-    
+
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1);
 
       .icon-container {
         background-color: vars.$primary;
-        
+
         svg {
           color: white;
           transform: scale(1.1);
@@ -428,7 +428,7 @@ a {
   .map-container {
     iframe {
       transition: transform 0.3s ease;
-      
+
       &:hover {
         transform: scale(1.005);
       }
