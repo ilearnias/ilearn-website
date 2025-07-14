@@ -16,6 +16,8 @@ import {
   ReadOutlined,
   BarChartOutlined,
   DownOutlined,
+  VideoCameraOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
 import "./AdminSidebar.scss";
 
@@ -103,6 +105,27 @@ const AdminSidebar: React.FC = () => {
       label: "Gallery",
       icon: <PictureOutlined />,
       href: "/admin/gallery",
+      subItems: [],
+    },
+    {
+      id: "media",
+      label: "Media",
+      icon: <VideoCameraOutlined />,
+      href: "/admin/media",
+      subItems: [],
+    },
+    {
+      id: "journey",
+      label: "Journey",
+      icon: <HistoryOutlined />,
+      href: "/admin/journey",
+      subItems: [],
+    },
+    {
+      id: "testimonials",
+      label: "Testimonials",
+      icon: <PictureOutlined />,
+      href: "/admin/testimonials",
       subItems: [],
     },
     {

@@ -39,6 +39,10 @@ const AdminHeader: React.FC = () => {
         return "Team Management";
       case "/admin/contacts":
         return "Contacts Management";
+      case "/admin/media":
+        return "Media Management";
+      case "/admin/journey":
+        return "Journey Management";
       case "/admin/gallery/titles":
         return "Gallery Titles";
       case "/admin/gallery/images":

@@ -76,7 +76,7 @@ export const API_ENDPOINTS = {
       POSTS: {
         LIST: "/v1/admin/blog/posts",
         DETAIL: (id: string) => `/v1/admin/blog/posts/${id}`,
-        CREATE: '/v1/admin/blog/posts',
+        CREATE: "/v1/admin/blog/posts",
         UPDATE: (id: string) => `/v1/admin/blog/posts/${id}`,
         DELETE: (id: string) => `/v1/admin/blog/posts/${id}`,
       },
@@ -128,6 +128,7 @@ export const API_ENDPOINTS = {
     SUCCESS_STORIES: "/v1/success-stories",
     TEAM: "/v1/team",
     GALLERY: "/v1/admin/gallery",
+    MEDIA: "/v1/media",
     BLOG: {
       POSTS: "/v1/blog/posts",
       CATEGORIES: "/v1/blog/categories",
