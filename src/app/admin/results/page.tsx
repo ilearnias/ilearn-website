@@ -49,6 +49,7 @@ const { TextArea } = Input;
 const Results = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [results, setResults] = useState<IResult[]>([]);
   const [pagination, setPagination] = useState<IPaginationMeta>({
     limit: 10,
@@ -66,33 +67,67 @@ const Results = () => {
     try {
       setLoading(true);
       const response = await resultService.getAllResults(
-        pagination.page,
-        pagination.limit
+        pagination?.page || 1,
+        pagination?.limit || 10
       );
       if (response.status) {
-        setResults(response.data.data);
-        setPagination(response.data.meta);
+        // Clear any previous errors
+        setError(null);
+
+        // Safely handle the response data
+        const responseData = response.data;
+        if (responseData && responseData.data) {
+          setResults(responseData.data);
+        } else {
+          setResults([]);
+        }
+
+        // Safely handle pagination meta
+        if (responseData && responseData.meta) {
+          setPagination(responseData.meta);
+        } else {
+          // Fallback to current pagination state if meta is missing
+          setPagination((prev) => ({
+            ...prev,
+            itemCount: responseData?.data?.length || 0,
+            totalPages: 1,
+            hasPreviousPage: false,
+            hasNextPage: false,
+          }));
+        }
       } else {
-        message.error(response.message || "Failed to fetch results");
+        const errorMessage = response.message || "Failed to fetch results";
+        message.error(errorMessage);
+        setError(errorMessage);
       }
     } catch (error: any) {
-      message.error(error.message || "Failed to fetch results");
+      const errorMessage = error.message || "Failed to fetch results";
+      message.error(errorMessage);
       console.error("Error fetching results:", error);
+      setError(errorMessage);
+      // Set empty results on error
+      setResults([]);
     } finally {
       setLoading(false);
     }
-  }, [pagination.page, pagination.limit]);
+  }, [pagination?.page, pagination?.limit]);
 
   useEffect(() => {
     fetchResults();
   }, [fetchResults]);
 
   const handleTableChange = (pagination: any) => {
-    setPagination((prev) => ({
-      ...prev,
-      page: pagination.current,
-      limit: pagination.pageSize,
-    }));
+    if (
+      pagination &&
+      typeof pagination.current === "number" &&
+      typeof pagination.pageSize === "number"
+    ) {
+      setPagination((prev) => ({
+        ...prev,
+        page: pagination.current,
+        limit: pagination.pageSize,
+      }));
+    }
   };
 
   const handleAdd = () => {
@@ -102,14 +137,21 @@ const Results = () => {
   };
 
   const handleEdit = (record: IResult) => {
-    setEditingResult(record);
-    form.setFieldsValue({
-      ...record,
-    });
-    setIsModalVisible(true);
+    if (record) {
+      setEditingResult(record);
+      form.setFieldsValue({
+        ...record,
+      });
+      setIsModalVisible(true);
+    }
   };
 
   const handleDelete = (record: IResult) => {
+    if (!record || !record.id) {
+      message.error("Invalid result record");
+      return;
+    }
+
     confirm({
       title: "Are you sure you want to delete this result?",
       content: "This action cannot be undone.",
@@ -139,7 +181,7 @@ const Results = () => {
       // Ensure isActive is boolean (Switch already does this, but for safety)
       values.isActive = Boolean(values.isActive);
 
-      if (editingResult) {
+      if (editingResult && editingResult.id) {
         const response = await resultService.updateResult(
           editingResult.id,
           values
@@ -198,10 +240,11 @@ const Results = () => {
 
   const filteredResults = results.filter(
     (result) =>
-      (result.year || "").toLowerCase().includes(searchText.toLowerCase()) ||
-      (result.description || "")
-        .toLowerCase()
-        .includes(searchText.toLowerCase())
+      result &&
+      ((result.year || "").toLowerCase().includes(searchText.toLowerCase()) ||
+        (result.description || "")
+          .toLowerCase()
+          .includes(searchText.toLowerCase()))
   );
 
   const columns: ColumnsType<IResult> = [
@@ -267,8 +310,23 @@ const Results = () => {
   };
 
   const calculateActiveResults = () => {
-    return results.filter((r) => r.isActive).length;
+    return results.filter((r) => r && r.isActive).length;
   };
+
+  // Safety check to ensure pagination is properly initialized
+  if (!pagination) {
+    return (
+      <div className="results-page">
+        <div className="results-header">
+          <h1>Results Management</h1>
+          <p>Manage student examination results and performance</p>
+        </div>
+        <div style={{ textAlign: "center", padding: "50px" }}>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="results-page">
@@ -276,6 +334,32 @@ const Results = () => {
         <h1>Results Management</h1>
         <p>Manage student examination results and performance</p>
       </div>
+
+      {error && (
+        <div
+          style={{
+            margin: "16px 0",
+            padding: "12px",
+            backgroundColor: "#fff2f0",
+            border: "1px solid #ffccc7",
+            borderRadius: "6px",
+            color: "#cf1322",
+          }}
+        >
+          <strong>Error:</strong> {error}
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              setError(null);
+              fetchResults();
+            }}
+            style={{ marginLeft: "8px", padding: 0 }}
+          >
+            Retry
+          </Button>
+        </div>
+      )}
 
       {/* <Row gutter={[16, 16]} className="results-stats">
         <Col xs={24} sm={12} md={6}>
@@ -339,7 +423,7 @@ const Results = () => {
       <Table
         className="results-table"
         columns={columns}
-        dataSource={filteredResults}
+        dataSource={filteredResults || []}
         rowKey="id"
         loading={loading}
         pagination={false} // Pagination is handled by Pagination component
@@ -348,9 +432,9 @@ const Results = () => {
 
       <Pagination
         className="results-pagination"
-        current={pagination.page}
-        total={pagination.itemCount}
-        pageSize={pagination.limit}
+        current={pagination?.page || 1}
+        total={pagination?.itemCount || 0}
+        pageSize={pagination?.limit || 10}
         showTotal={(total) => `Total ${total} items`}
         onChange={(page, pageSize) => {
           setPagination((prev) => ({
@@ -362,7 +446,9 @@ const Results = () => {
       />
 
       <Modal
-        title={editingResult ? "Edit Result" : "Add New Result"}
+        title={
+          editingResult && editingResult.id ? "Edit Result" : "Add New Result"
+        }
         open={isModalVisible}
         onOk={handleModalOk}
         onCancel={handleModalCancel}
