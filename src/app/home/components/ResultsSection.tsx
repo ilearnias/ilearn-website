@@ -31,7 +31,8 @@ const ResultCard = ({
       <div className="card-content">
         <Heading
           text={title}
-          className="!text-xl !font-semibold !uppercase !leading-normal text-white"
+          size="sm"
+          className="!uppercase !leading-normal text-white"
         />
         <p>{description}</p>
       </div>
@@ -71,10 +72,11 @@ const ResultsSection = () => {
               <span>Result Highlights</span>
             </>
           }
-          className="!text-center leading-[1.1] !mb-8 font-bold"
+      
+          className="!text-center !text-[40px] leading-[1.1] !mb-4"
           animate={true}
         />
-        <div className="results-grid   !w-full">
+        <div className="results-grid !w-full !mt-4">
           {results.map((result, index) => (
             <ResultCard
               key={index}

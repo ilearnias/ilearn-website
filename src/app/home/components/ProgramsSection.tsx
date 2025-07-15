@@ -44,12 +44,9 @@ const ProgramsSection = () => {
         <div className="section-header">
           <Heading
             color="red"
-            text={
-              <>
-                <span>Our</span> <span>Programs</span>
-              </>
-            }
-            className="!text-center !mb-4"
+            text="Our Programs"
+           
+            className="  !text-[40px] !text-center !mb-2"
             animate={true}
           />
           <p className="description">
@@ -71,7 +68,8 @@ const ProgramsSection = () => {
                     Prelims Cum Mains <span>(PCM Program)</span>
                   </>
                 }
-                className="!text-xl !font-semibold !leading-normal"
+                size="sm"
+                className="!leading-normal"
               />
               <p>
                 Comprehensive classroom program covering both preliminary and
@@ -100,7 +98,8 @@ const ProgramsSection = () => {
                     Current Affairs and News Analysis <span>(CANA)</span>
                   </>
                 }
-                className="!text-xl !font-semibold !leading-normal"
+                size="sm"
+                className="!leading-normal"
               />
               <p>
                 Stay updated with the latest current affairs and develop

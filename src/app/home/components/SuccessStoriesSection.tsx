@@ -149,11 +149,12 @@ const SuccessStoriesSection = () => {
               color="tricolor"
               text={
                 <>
-                  <span>Success</span>
+                  <span >Success</span>
                   <span> Stories</span>
                 </>
               }
-              className="!text-center !mb-4"
+              size="3xl"
+              className="!text-center !mb-2"
               animate={true}
             />
             <p className="subtitle">
@@ -175,13 +176,9 @@ const SuccessStoriesSection = () => {
         <div className="section-header">
           <Heading
             color="tricolor"
-            text={
-              <>
-                <span>Success</span>
-                <span> Stories</span>
-              </>
-            }
-            className="!text-center !mb-4"
+            text="Success Stories"
+           
+            className="!text-center !text-[40px] !mb-2"
             animate={true}
           />
           <p className="subtitle">
@@ -248,7 +245,8 @@ const SuccessStoriesSection = () => {
                     <Heading
                       color="white"
                       text={story.name}
-                      className="!text-lg !font-semibold !leading-normal !text-white"
+                      size="sm"
+                      className="!mb-1"
                     />
                     <p className="achievement">{story.achievement}</p>
                     <p className="caption">{story.caption}</p>

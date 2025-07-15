@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AnimatePresence, useInView, motion } from "framer-motion";
 import "./styles.scss";
 import Heading from "@/components/common/Heading";
@@ -7,55 +7,42 @@ import SubText from "@/components/common/SubText";
 import Container from "@/components/common/Container";
 import VideoCard from "@/components/common/VideoCard";
 import { useMediaQuery } from "react-responsive";
+import { getTestimonials } from "@/services/media.service";
 
 export interface TestimonialItem {
   id: string;
-  title: string;
-  subtitle: string;
-  videoId: string;
-  thumbnailUrl: string;
+  description: string;
+  video: string;
+  isActive: boolean;
+  isTestimonial: boolean;
+  order: number;
 }
 
-// Sample testimonial data
-const testimonialItems: TestimonialItem[] = [
-  {
-    id: "1",
-    title: "From Aspirant to IAS Officer",
-    subtitle:
-      "Listen to Priya's inspiring journey from a small town to becoming an IAS officer. Her dedication and our guidance made her dream come true.",
-    videoId: "Y8Tko2YC5hA",
-    thumbnailUrl: "https://youtu.be/dOt8taqXL3k?si=yuWq8B3hLvrT3Ib4",
-  },
-  {
-    id: "2",
-    title: "Cracking UPSC in First Attempt",
-    subtitle:
-      "Rahul shares his strategy and experience of clearing UPSC in his very first attempt with AIR under 100.",
-    videoId: "jNQXAC9IVRw",
-    thumbnailUrl: "https://youtu.be/iYh3iczW0CQ",
-  },
-  {
-    id: "3",
-    title: "Journey to Indian Foreign Service",
-    subtitle:
-      "Watch how Meera's persistent effort and our mentorship helped her achieve her dream of joining the Indian Foreign Service.",
-    videoId: "M7lc1UVf-VE",
-    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg",
-  },
-];
-
-interface TestimonialsProps {
-  testimonials: TestimonialItem[];
+interface TestimonialsSectionProps {
+  testimonials?: TestimonialItem[];
 }
 
-const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
+const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials: propTestimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: false });
   const isMobile = useMediaQuery({ maxWidth: 768 });
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      if (propTestimonials) {
+        setTestimonials(propTestimonials);
+      } else {
+        const data = await getTestimonials();
+        setTestimonials(data.filter((item: TestimonialItem) => item.isActive));
+      }
+    };
+    fetchTestimonials();
+  }, [propTestimonials]);
 
   const handleVideoClick = (videoId: string) => {
     setActiveVideo(activeVideo === videoId ? null : videoId);
@@ -79,6 +66,12 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
 
   const toggleDropdown = (id: string) => {
     setOpenDropdownId(openDropdownId === id ? null : id);
+  };
+
+  // Extract video ID from YouTube URL
+  const getVideoId = (url: string) => {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    return match ? match[1] : url;
   };
 
   const dropdownVariants = {
@@ -109,12 +102,13 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
           <Heading
             text="Student Testimonials"
             color="tricolor"
+            // size="3xl"
             animate={true}
-            className={`font-bold mb-4 ${isMobile ? "leading-[1.1]" : ""}`}
+            className={`!text-center !text-[40px] !mb-2 ${isMobile ? "leading-[1.1]" : ""}`}
           />
           <SubText
             text="Hear success stories from our students"
-            className="!text-gray-600 !font-light !text-lg !leading-relaxed"
+            className="!text-gray-600 !font-light !text-lg !leading-relaxed !mt-2"
           />
         </div>
 
@@ -131,7 +125,7 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
                   }}
                 >
                   <span className="font-medium text-gray-800">
-                    {item.title}
+                    {item.description}
                   </span>
                   <motion.svg
                     className="w-6 h-6 text-gray-600"
@@ -162,7 +156,7 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
                         opacity: 1,
                         transition: {
                           height: {
-                            type: "spring" as const,
+                            type: "spring",
                             stiffness: 300,
                             damping: 24,
                           },
@@ -176,7 +170,7 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
                         opacity: 0,
                         transition: {
                           height: {
-                            type: "spring" as const,
+                            type: "spring",
                             stiffness: 300,
                             damping: 24,
                           },
@@ -193,17 +187,17 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
                       >
                         <VideoCard
                           id={item.id}
-                          title={item.title}
-                          subtitle={item.subtitle}
+                          title={item.description}
+                          subtitle=""
                           videoUrl={
-                            activeVideo === item.videoId
-                              ? `https://www.youtube.com/embed/${item.videoId}?autoplay=1&rel=0&modestbranding=1`
-                              : item.thumbnailUrl
+                            activeVideo === item.video
+                              ? `https://www.youtube.com/embed/${getVideoId(item.video)}?autoplay=1&rel=0&modestbranding=1`
+                              : item.video
                           }
-                          thumbnailUrl={item.thumbnailUrl}
-                          isPlaying={activeVideo === item.videoId}
+                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(item.video)}/maxresdefault.jpg`}
+                          isPlaying={activeVideo === item.video}
                           onVideoClick={() => {
-                            handleVideoClick(item.videoId);
+                            handleVideoClick(item.video);
                             toggleDropdown(item.id);
                           }}
                           direction={direction}
@@ -249,16 +243,16 @@ const TestimonialsSection: React.FC<TestimonialsProps> = ({ testimonials }) => {
                         <VideoCard
                           key={item.id}
                           id={item.id}
-                          title={item.title}
-                          subtitle={item.subtitle}
+                          title={item.description}
+                          subtitle=""
                           videoUrl={
-                            activeVideo === item.videoId
-                              ? `https://www.youtube.com/embed/${item.videoId}?autoplay=1&rel=0&modestbranding=1`
-                              : item.thumbnailUrl
+                            activeVideo === item.video
+                              ? `https://www.youtube.com/embed/${getVideoId(item.video)}?autoplay=1&rel=0&modestbranding=1`
+                              : item.video
                           }
-                          thumbnailUrl={item.thumbnailUrl}
-                          isPlaying={activeVideo === item.videoId}
-                          onVideoClick={() => handleVideoClick(item.videoId)}
+                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(item.video)}/maxresdefault.jpg`}
+                          isPlaying={activeVideo === item.video}
+                          onVideoClick={() => handleVideoClick(item.video)}
                           direction={direction}
                         />
                       )

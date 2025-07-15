@@ -26,28 +26,28 @@ import { motion } from "framer-motion";
 const igpTestimonials: TestimonialItem[] = [
   {
     id: "igp1",
-    title: "Success in UPSC Interview",
-    subtitle:
-      "How iLearn's IGP helped me ace my UPSC interview with confidence.",
-    videoId: "Y8Tko2YC5hA",
-    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg",
+    description: "Success in UPSC Interview - How iLearn's IGP helped me ace my UPSC interview with confidence.",
+    video: "Y8Tko2YC5hA",
+    isActive: true,
+    isTestimonial: true,
+    order: 1
   },
   {
     id: "igp2",
-    title: "From Nervous to Confident",
-    subtitle:
-      "My journey through IGP and how it transformed my interview preparation.",
-    videoId: "jNQXAC9IVRw",
-    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg",
+    description: "Interview Preparation Journey - My experience with iLearn's comprehensive IGP.",
+    video: "jNQXAC9IVRw",
+    isActive: true,
+    isTestimonial: true,
+    order: 2
   },
   {
     id: "igp3",
-    title: "IGP - The Game Changer",
-    subtitle:
-      "How mock interviews and personality development sessions made the difference.",
-    videoId: "M7lc1UVf-VE",
-    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg",
-  },
+    description: "IGP Success Story - How the program's structured approach made the difference.",
+    video: "M7lc1UVf-VE",
+    isActive: true,
+    isTestimonial: true,
+    order: 3
+  }
 ];
 
 // Program Highlights Section

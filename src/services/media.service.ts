@@ -186,3 +186,21 @@ export const mediaService = {
     }
   },
 };
+
+export const getTestimonials = async () => {
+  try {
+    const response = await fetch(
+      'https://ilearn-server.bairuhatech.com/v1/media?page=1&limit=10&isTestimonial=true',
+      {
+        headers: {
+          accept: '*/*',
+        },
+      }
+    );
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching testimonials:', error);
+    return [];
+  }
+};

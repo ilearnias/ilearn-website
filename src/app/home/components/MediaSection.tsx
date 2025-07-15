@@ -10,43 +10,79 @@ import { Col, Row } from "react-bootstrap";
 import { Avatar, Card } from "antd";
 import { Meta } from "antd/es/list/Item";
 import YouTube from "react-youtube";
+import axios from "axios";
 
-// Video data array with the provided YouTube videos
-const videos = [
-  {
-    title: "iLearn IAS Academy - Success Stories",
-    subtitle: "Learn more about our educational programs and success stories",
-    youtubeUrl: "https://youtu.be/mu-eiYz9Ur8?si=npVhpO0o-NCOvzaf",
-    videoId: "ZyAtOz00oEs",
-  },
-  {
-    title: "UPSC Preparation Guide by iLearn",
-    subtitle: "Discover our teaching methodology and approach",
-    youtubeUrl: "https://youtu.be/mu-eiYz9Ur8?si=npVhpO0o-NCOvzaf",
-    videoId: "ZyAtOz00oEs",
-  },
-  {
-    title: "iLearn Academy Training Program",
-    subtitle: "Student testimonials and achievements",
-    youtubeUrl: "https://youtu.be/ZyAtOz00oEs",
-    videoId: "ZyAtOz00oEs",
-  },
-  {
-    title: "Civil Services Coaching Excellence",
-    subtitle: "Advanced Learning Techniques",
-    youtubeUrl: "https://www.youtube.com/watch?v=NEehMXQ0zdk",
-    videoId: "ZyAtOz00oEs",
-  },
-];
+// Types for API response
+interface MediaItem {
+  id: string;
+  description: string;
+  video: string;
+  isActive: boolean;
+  isTestimonial: boolean;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: null | string;
+}
+
+interface MediaResponse {
+  status: boolean;
+  message: string;
+  data: MediaItem[];
+  meta: {
+    limit: number;
+    itemCount: number;
+    page: number;
+    totalPages: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+  };
+}
 
 const MediaSection = () => {
   const [playingIndex, setPlayingIndex] = useState(-1);
   const [startIndex, setStartIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [videos, setVideos] = useState<MediaItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const containerRef = React.useRef(null);
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(containerRef, { once: false });
+
+  useEffect(() => {
+    const fetchMediaData = async () => {
+      try {
+        setError(null);
+        const response = await axios.get<MediaResponse>(
+          'https://ilearn-server.bairuhatech.com/v1/media',
+          {
+            params: {
+              page: 1,
+              limit: 10,
+              isTestimonial: false
+            }
+          }
+        );
+        
+        if (!response.data.status) {
+          throw new Error(response.data.message || 'Failed to fetch media data');
+        }
+        
+        // Filter out inactive videos
+        const activeVideos = response.data.data.filter(video => video.isActive);
+        setVideos(activeVideos);
+      } catch (error) {
+        console.error('Error fetching media data:', error);
+        setError('Failed to load media content. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMediaData();
+  }, []);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -87,9 +123,31 @@ const MediaSection = () => {
     }
   };
 
+  const getVideoId = (url: string) => {
+    try {
+      // Check if it's a YouTube URL
+      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        // Handle youtube.com URLs
+        if (url.includes('youtube.com')) {
+          const urlParams = new URLSearchParams(new URL(url).search);
+          return urlParams.get('v') || '';
+        }
+        // Handle youtu.be URLs
+        if (url.includes('youtu.be')) {
+          return url.split('youtu.be/')[1]?.split('?')[0] || '';
+        }
+      }
+      // For non-YouTube URLs, return the full URL
+      return url;
+    } catch (error) {
+      console.error('Error parsing video URL:', error);
+      return url;
+    }
+  };
+
   const getCurrentVideos = () => {
     if (isMobile && !isExpanded) {
-      return [videos[startIndex]];
+      return videos.length > 0 ? [videos[startIndex]] : [];
     }
 
     if (isMobile && isExpanded) {
@@ -99,119 +157,61 @@ const MediaSection = () => {
     const result = [];
     for (let i = 0; i < 3; i++) {
       const index = (startIndex + i) % videos.length;
-      result.push(videos[index]);
+      if (videos[index]) {
+        result.push(videos[index]);
+      }
     }
     return result;
   };
+
+  if (isLoading) {
+    return (
+      <section className="bg-gray-50 py-16">
+        <Container className="!w-full">
+          <div className="text-center">
+            <div className="animate-pulse">Loading media content...</div>
+          </div>
+        </Container>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="bg-gray-50 py-16">
+        <Container className="!w-full">
+          <div className="text-center text-red-600">{error}</div>
+        </Container>
+      </section>
+    );
+  }
+
+  if (!videos.length) {
+    return (
+      <section className="bg-gray-50 py-16">
+        <Container className="!w-full">
+          <div className="text-center text-gray-600">No media content available.</div>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section ref={sectionRef} className="bg-gray-50 py-16 scroll-mt-16">
       <Container className="!w-full">
         <div className="text-center mb-12">
           <Heading
-            text="iLearn in Media"
-            color="red"
+            text="Media Coverage"
+            color="tricolor"
+            size="3xl"
             animate={true}
-            className="font-bold mb-4"
+            className="!text-center !text-[40px] !mb-2"
           />
           <SubHeading
-            text="Watch our featured videos and success stories"
-            animate={true}
-            delay={0.4}
-            className="!text-gray-600 !font-light !text-lg !leading-relaxed"
+            text="iLearn in the News"
+            className="!text-gray-600 !font-light !text-lg !leading-relaxed !mt-2"
           />
         </div>
-
-        {/* <Fade>
-          <Row>
-            <Col md={4}>
-              <Card
-                style={{ width: "100%", borderRadius: "10px" }}
-                cover={
-                  <div className="media-card-box1">
-                    <div className="media-card-box1-inner">
-                      <YouTube
-                        videoId="ZyAtOz00oEs"
-                        opts={{
-                          width: "100%",
-                          height: "100%",
-                          playerVars: {
-                            modestbranding: 1,
-                            rel: 0,
-                          },
-                        }}
-                        className="youtube-box1"
-                      />
-                    </div>
-                  </div>
-                }
-              >
-                <Meta
-                  title="Card title"
-                  description="This is the description"
-                />
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card
-                style={{ width: "100%" }}
-                cover={
-                  <div className="media-card-box1">
-                    <div className="media-card-box1-inner">
-                      <YouTube
-                        videoId="ZyAtOz00oEs"
-                        opts={{
-                          width: "100%",
-                          height: "100%",
-                          playerVars: {
-                            modestbranding: 1,
-                            rel: 0,
-                          },
-                        }}
-                        className="youtube-box1"
-                      />
-                    </div>
-                  </div>
-                }
-              >
-                <Meta
-                  title="Card title"
-                  description="This is the description"
-                />
-              </Card>
-            </Col>
-
-            <Col md={4}>
-              <Card
-                style={{ width: "100%" }}
-                cover={
-                  <div className="media-card-box1">
-                    <div className="media-card-box1-inner">
-                      <YouTube
-                        videoId="ZyAtOz00oEs"
-                        opts={{
-                          width: "100%",
-                          height: "100%",
-                          playerVars: {
-                            modestbranding: 1,
-                            rel: 0,
-                          },
-                        }}
-                        className="youtube-box1"
-                      />
-                    </div>
-                  </div>
-                }
-              >
-                <Meta
-                  title="Card title"
-                  description="This is the description"
-                />
-              </Card>
-            </Col>
-          </Row>
-        </Fade> */}
 
         <motion.div
           ref={containerRef}
@@ -270,7 +270,12 @@ const MediaSection = () => {
             {!isMobile && (
               <div className="hidden md:block">
                 <VideoCard2
-                  videos={getCurrentVideos()}
+                  videos={getCurrentVideos().map(item => ({
+                    title: item.description || "Video",
+                    subtitle: "",
+                    youtubeUrl: item.video,
+                    videoId: getVideoId(item.video)
+                  }))}
                   onVideoClick={(index) =>
                     handleVideoClick((startIndex + index) % videos.length)
                   }
@@ -298,7 +303,12 @@ const MediaSection = () => {
                     }}
                   >
                     <VideoCard2
-                      videos={[videos[startIndex]]}
+                      videos={getCurrentVideos().map(item => ({
+                        title: item.description || "Video",
+                        subtitle: "",
+                        youtubeUrl: item.video,
+                        videoId: getVideoId(item.video)
+                      }))}
                       onVideoClick={(index) =>
                         handleVideoClick((startIndex + index) % videos.length)
                       }
@@ -312,61 +322,32 @@ const MediaSection = () => {
                   </motion.div>
                 </div>
 
-                <div className="perspective-1000">
-                  <motion.div
-                    className="origin-top"
-                    initial={{ rotateX: -90, opacity: 0 }}
-                    animate={{
-                      rotateX: isExpanded ? 0 : -90,
-                      opacity: isExpanded ? 1 : 0,
-                    }}
-                    transition={{
-                      duration: 0.8,
-                      ease: [0.4, 0, 0.2, 1],
-                      opacity: { duration: 0.3 },
-                    }}
-                    style={{
-                      transformStyle: "preserve-3d",
-                      backfaceVisibility: "hidden",
-                      display: isExpanded ? "block" : "none",
-                    }}
-                  >
-                    {isExpanded && (
-                      <VideoCard2
-                        videos={videos.slice(1)}
-                        onVideoClick={(index) => handleVideoClick(index + 1)}
-                        playingIndex={playingIndex > 0 ? playingIndex - 1 : -1}
-                      />
-                    )}
-                  </motion.div>
-                </div>
+                {videos.length > 1 && (
+                  <div className="mt-6 text-center">
+                    <button
+                      onClick={handleDropdownToggle}
+                      className="inline-flex items-center justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                    >
+                      {isExpanded ? "Show Less" : "Show More"}
+                      <svg
+                        className={`ml-2 w-5 h-5 transform transition-transform duration-200 ${
+                          isExpanded ? "rotate-180" : ""
+                        }`}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                )}
               </>
-            )}
-
-            {isMobile && (
-              <div className="mt-6 text-center">
-                <button
-                  onClick={handleDropdownToggle}
-                  className="inline-flex items-center justify-center px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
-                >
-                  {isExpanded ? "Show Less" : "Show More"}
-                  <svg
-                    className={`ml-2 w-5 h-5 transform transition-transform duration-200 ${
-                      isExpanded ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-              </div>
             )}
           </div>
         </motion.div>
