@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, createContext, useContext } from 'react'
-import Loader from '@/app/loader/page'
+import React, { useState, useEffect, createContext, useContext } from "react";
+import Loader from "@/app/loader/page";
 
 export const LoadingContext = createContext<{
   isLoading: boolean;
@@ -16,55 +16,55 @@ export function useLoading() {
 }
 
 export default function LoadingProvider({
-  children
+  children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [isReady, setIsReady] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     // Check if the document and window are fully loaded
     const handleLoad = () => {
-      setIsReady(true)
-    }
+      setIsReady(true);
+    };
 
     // Set a maximum loading time of 5 seconds as a fallback
     const maxLoadingTimer = setTimeout(() => {
-      setIsLoading(false)
-    }, 5000)
+      setIsLoading(false);
+    }, 5000);
 
-    if (typeof window !== 'undefined') {
-      if (document.readyState === 'complete') {
-        handleLoad()
+    if (typeof window !== "undefined") {
+      if (document.readyState === "complete") {
+        handleLoad();
       } else {
-        window.addEventListener('load', handleLoad)
+        window.addEventListener("load", handleLoad);
       }
     }
 
     return () => {
-      clearTimeout(maxLoadingTimer)
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('load', handleLoad)
+      clearTimeout(maxLoadingTimer);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("load", handleLoad);
       }
-    }
-  }, [])
+    };
+  }, []);
 
   // Once the page is ready, start fading out the loader
   useEffect(() => {
     if (isReady) {
       const minLoadingTimer = setTimeout(() => {
-        setIsLoading(false)
-      }, 1000) // Minimum loading time of 1 second for better UX
+        setIsLoading(false);
+      }, 100000000); // Minimum loading time of 1 second for better UX
 
-      return () => clearTimeout(minLoadingTimer)
+      return () => clearTimeout(minLoadingTimer);
     }
-  }, [isReady])
+  }, [isReady]);
 
   return (
     <LoadingContext.Provider value={{ isLoading, setLoading: setIsLoading }}>
       {isLoading && <Loader />}
       {children}
     </LoadingContext.Provider>
-  )
-} 
+  );
+}
