@@ -14,7 +14,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+
     .spinner-container {
       position: relative;
       width: 200px;
@@ -46,11 +46,11 @@
       }
 
       .logo-container {
-        animation: pulse 2s infinite;
+        // animation: pulse 2s infinite;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: white;
+        background: rgb(0, 0, 0);
         border-radius: 50%;
         padding: 1rem;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);

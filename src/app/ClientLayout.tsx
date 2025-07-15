@@ -5,6 +5,7 @@ import LoadingProvider from "@/components/common/LoadingProvider";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Providers from "@/components/Providers";
+import WhatsAppButton from "@/components/common/WhatsAppButton";
 
 export default function ClientLayout({
   children,
@@ -20,6 +21,7 @@ export default function ClientLayout({
       <LoadingProvider>
         {!hideHeaderFooter && <Header />}
         {children}
+        {!hideHeaderFooter && <WhatsAppButton />}
       </LoadingProvider>
     </Providers>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   Input,
@@ -20,6 +20,7 @@ import {
   InputNumber,
   DatePicker,
   Switch,
+  Pagination,
 } from "antd";
 import {
   SearchOutlined,
@@ -33,8 +34,12 @@ import {
   DownloadOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { resultService, IResult } from "@/services/results.service";
-import dayjs from 'dayjs';
+import {
+  resultService,
+  IResult,
+  IPaginationMeta,
+} from "@/services/results.service";
+import dayjs from "dayjs";
 import "./styles.scss";
 
 const { confirm } = Modal;
@@ -45,29 +50,49 @@ const Results = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<IResult[]>([]);
+  const [pagination, setPagination] = useState<IPaginationMeta>({
+    limit: 10,
+    itemCount: 0,
+    page: 1,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingResult, setEditingResult] = useState<IResult | null>(null);
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    fetchResults();
-  }, []);
-
-  const fetchResults = async () => {
+  const fetchResults = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await resultService.getAllResults();
+      const response = await resultService.getAllResults(
+        pagination.page,
+        pagination.limit
+      );
       if (response.status) {
-        setResults(response.data);
+        setResults(response.data.data);
+        setPagination(response.data.meta);
       } else {
-        message.error(response.message || 'Failed to fetch results');
+        message.error(response.message || "Failed to fetch results");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch results');
-      console.error('Error fetching results:', error);
+      message.error(error.message || "Failed to fetch results");
+      console.error("Error fetching results:", error);
     } finally {
       setLoading(false);
     }
+  }, [pagination.page, pagination.limit]);
+
+  useEffect(() => {
+    fetchResults();
+  }, [fetchResults]);
+
+  const handleTableChange = (pagination: any) => {
+    setPagination((prev) => ({
+      ...prev,
+      page: pagination.current,
+      limit: pagination.pageSize,
+    }));
   };
 
   const handleAdd = () => {
@@ -80,30 +105,29 @@ const Results = () => {
     setEditingResult(record);
     form.setFieldsValue({
       ...record,
-      examDate: record.examDate ? dayjs(record.examDate) : undefined,
     });
     setIsModalVisible(true);
   };
 
   const handleDelete = (record: IResult) => {
     confirm({
-      title: 'Are you sure you want to delete this result?',
-      content: 'This action cannot be undone.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      title: "Are you sure you want to delete this result?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: async () => {
         try {
           const response = await resultService.deleteResult(record.id);
           if (response.status) {
-            message.success(response.message || 'Result deleted successfully');
+            message.success(response.message || "Result deleted successfully");
             fetchResults();
           } else {
-            message.error(response.message || 'Failed to delete result');
+            message.error(response.message || "Failed to delete result");
           }
         } catch (error: any) {
-          message.error(error.message || 'Failed to delete result');
-          console.error('Error deleting result:', error);
+          message.error(error.message || "Failed to delete result");
+          console.error("Error deleting result:", error);
         }
       },
     });
@@ -114,39 +138,32 @@ const Results = () => {
       const values = await form.validateFields();
       // Ensure isActive is boolean (Switch already does this, but for safety)
       values.isActive = Boolean(values.isActive);
-      
-      // Format dates
-      if (values.examDate) {
-        values.examDate = values.examDate.format('YYYY-MM-DD');
-      }
 
       if (editingResult) {
-        const response = await resultService.updateResult(editingResult.id, values);
+        const response = await resultService.updateResult(
+          editingResult.id,
+          values
+        );
         if (response.status) {
-          message.success(response.message || 'Result updated successfully');
+          message.success(response.message || "Result updated successfully");
           setIsModalVisible(false);
           fetchResults();
         } else {
-          message.error(response.message || 'Failed to update result');
+          message.error(response.message || "Failed to update result");
         }
       } else {
         const response = await resultService.createResult(values);
         if (response.status) {
-          message.success(response.message || 'Result created successfully');
+          message.success(response.message || "Result created successfully");
           setIsModalVisible(false);
-          // If response.data is an array, update results with it, else refetch
-          if (Array.isArray(response.data)) {
-            setResults(response.data);
-          } else {
-            fetchResults();
-          }
+          fetchResults();
         } else {
-          message.error(response.message || 'Failed to create result');
+          message.error(response.message || "Failed to create result");
         }
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to save result');
-      console.error('Error saving result:', error);
+      message.error(error.message || "Failed to save result");
+      console.error("Error saving result:", error);
     }
   };
 
@@ -160,48 +177,32 @@ const Results = () => {
       const response = await resultService.exportResults();
       if (response.status) {
         // Handle the export file download
-        const blob = new Blob([response.data], { type: 'text/csv' });
+        const blob = new Blob([response.data], { type: "text/csv" });
         const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
-        a.download = 'results-export.csv';
+        a.download = "results-export.csv";
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
-        message.success('Results exported successfully');
+        message.success("Results exported successfully");
       } else {
-        message.error(response.message || 'Failed to export results');
+        message.error(response.message || "Failed to export results");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to export results');
-      console.error('Error exporting results:', error);
+      message.error(error.message || "Failed to export results");
+      console.error("Error exporting results:", error);
     }
   };
 
   const filteredResults = results.filter(
     (result) =>
-      (result.studentName || '').toLowerCase().includes(searchText.toLowerCase()) ||
-      (result.subject || '').toLowerCase().includes(searchText.toLowerCase()) ||
-      (result.examType || '').toLowerCase().includes(searchText.toLowerCase())
+      (result.year || "").toLowerCase().includes(searchText.toLowerCase()) ||
+      (result.description || "")
+        .toLowerCase()
+        .includes(searchText.toLowerCase())
   );
-
-  const getGradeColor = (grade: string) => {
-    switch ((grade || '').toUpperCase()) {
-      case 'A':
-        return 'green';
-      case 'B':
-        return 'cyan';
-      case 'C':
-        return 'blue';
-      case 'D':
-        return 'orange';
-      case 'F':
-        return 'red';
-      default:
-        return 'default';
-    }
-  };
 
   const columns: ColumnsType<IResult> = [
     {
@@ -224,7 +225,9 @@ const Results = () => {
       dataIndex: "isActive",
       key: "isActive",
       render: (isActive) => (
-        <Tag color={isActive ? "green" : "red"}>{isActive ? "Active" : "Inactive"}</Tag>
+        <Tag color={isActive ? "green" : "red"}>
+          {isActive ? "Active" : "Inactive"}
+        </Tag>
       ),
     },
     {
@@ -259,15 +262,12 @@ const Results = () => {
     },
   ];
 
-  const calculateAverageScore = () => {
-    if (results.length === 0) return 0;
-    return Math.round(results.reduce((sum, r) => sum + r.score, 0) / results.length);
+  const calculateTotalResults = () => {
+    return results.length;
   };
 
-  const calculatePassRate = () => {
-    if (results.length === 0) return 0;
-    const passCount = results.filter(r => r.grade !== 'F').length;
-    return Math.round((passCount / results.length) * 100);
+  const calculateActiveResults = () => {
+    return results.filter((r) => r.isActive).length;
   };
 
   return (
@@ -342,6 +342,23 @@ const Results = () => {
         dataSource={filteredResults}
         rowKey="id"
         loading={loading}
+        pagination={false} // Pagination is handled by Pagination component
+        onChange={handleTableChange}
+      />
+
+      <Pagination
+        className="results-pagination"
+        current={pagination.page}
+        total={pagination.itemCount}
+        pageSize={pagination.limit}
+        showTotal={(total) => `Total ${total} items`}
+        onChange={(page, pageSize) => {
+          setPagination((prev) => ({
+            ...prev,
+            page: page,
+            limit: pageSize,
+          }));
+        }}
       />
 
       <Modal
@@ -351,10 +368,7 @@ const Results = () => {
         onCancel={handleModalCancel}
         width={800}
       >
-        <Form
-          form={form}
-          layout="vertical"
-        >
+        <Form form={form} layout="vertical">
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -365,11 +379,37 @@ const Results = () => {
                 <Input />
               </Form.Item>
             </Col>
+
             <Col span={12}>
+              <Form.Item
+                name="order"
+                label="Order"
+                rules={[{ required: true, message: "Please enter order" }]}
+              >
+                <InputNumber min={0} style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+
+            <Col span={24}>
+              <Form.Item
+                name="media"
+                label="Media"
+                rules={[{ required: false, message: "Please add video link" }]}
+              >
+                <Input
+                  placeholder="Enter video link (optional)"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Col>
+
+            <Col span={24}>
               <Form.Item
                 name="description"
                 label="Description"
-                rules={[{ required: true, message: "Please enter description" }]}
+                rules={[
+                  { required: true, message: "Please enter description" },
+                ]}
               >
                 <TextArea rows={4} />
               </Form.Item>
@@ -379,19 +419,10 @@ const Results = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="order"
-                label="Order"
-                rules={[{ required: true, message: "Please enter order" }]}
-              >
-                <InputNumber min={0} style={{ width: '100%' }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item
                 name="isActive"
                 label="Is Active"
                 valuePropName="checked"
-                rules={[{ required: true, message: "Please select isActive" }]}
+                initialValue={true}
               >
                 <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
               </Form.Item>
@@ -403,4 +434,4 @@ const Results = () => {
   );
 };
 
-export default Results; 
+export default Results;
