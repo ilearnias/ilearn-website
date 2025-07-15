@@ -45,7 +45,7 @@ const ResultsSummary = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await resultService.getAllResults();
+      const response: any = await resultService.getAllResults();
       if (response.status) {
         setData(response.data);
       }
@@ -75,16 +75,18 @@ const ResultsSummary = () => {
       dataIndex: "isActive",
       key: "isActive",
       render: (isActive) => (
-        <Tag color={isActive ? "green" : "red"}>{isActive ? "Active" : "Inactive"}</Tag>
+        <Tag color={isActive ? "green" : "red"}>
+          {isActive ? "Active" : "Inactive"}
+        </Tag>
       ),
     },
   ];
 
   // Simple stats
   const total = data.length;
-  const active = data.filter(d => d.isActive).length;
+  const active = data.filter((d) => d.isActive).length;
   const inactive = total - active;
-  const years = Array.from(new Set(data.map(d => d.year))).length;
+  const years = Array.from(new Set(data.map((d) => d.year))).length;
 
   return (
     <div className="results-summary-page">
@@ -95,22 +97,30 @@ const ResultsSummary = () => {
       <Row gutter={[16, 16]} className="results-summary-stats">
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <div>Total Entries: <b>{total}</b></div>
+            <div>
+              Total Entries: <b>{total}</b>
+            </div>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <div>Active: <b>{active}</b></div>
+            <div>
+              Active: <b>{active}</b>
+            </div>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <div>Inactive: <b>{inactive}</b></div>
+            <div>
+              Inactive: <b>{inactive}</b>
+            </div>
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
           <Card>
-            <div>Years: <b>{years}</b></div>
+            <div>
+              Years: <b>{years}</b>
+            </div>
           </Card>
         </Col>
       </Row>
@@ -127,4 +137,4 @@ const ResultsSummary = () => {
   );
 };
 
-export default ResultsSummary; 
+export default ResultsSummary;
