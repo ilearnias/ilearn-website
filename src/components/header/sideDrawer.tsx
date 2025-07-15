@@ -77,7 +77,7 @@ export default function SideDrawer(props: any) {
         <div
           className="Drawer-items join-now-mobile"
           onClick={() => {
-            router.push("/quote");
+            router.push("/contact");
             props?.close();
           }}
         >
