@@ -2,8 +2,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '@/redux/slices/authSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "@/redux/slices/authSlice";
 import { Form, Input, Button, Card, message } from "antd";
 import {
   UserOutlined,
@@ -34,12 +34,12 @@ const AdminLogin = () => {
   const handleSubmit = async (values: LoginForm) => {
     setLoading(true);
 
-    try { 
+    try {
       // Make API call to login
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
       });
@@ -48,14 +48,17 @@ const AdminLogin = () => {
 
       if (response.ok && data.status) {
         console.log("data1111", data);
-        // Store token in localStorage
-        localStorage.setItem('adminToken', data.data.accessToken);
-        
+        // Store token and user data in localStorage
+        localStorage.setItem("adminToken", data.data.accessToken);
+        localStorage.setItem("adminUser", JSON.stringify(data.data.user));
+
         // Dispatch Redux action to update state
-        dispatch(login({
-          user: data.data.user,
-          token: data.data.token
-        }));
+        dispatch(
+          login({
+            user: data.data.user,
+            token: data.data.accessToken,
+          })
+        );
 
         message.success("Login successful!");
         router.push("/admin/dashboard");
