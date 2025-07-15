@@ -67,8 +67,8 @@ const Journey = () => {
         pageSize
       );
       if (response.status) {
-        setJourneyList(response.data.data || response.data);
-        setTotalItems(response.data.total || response.data.length);
+        setJourneyList(response.data);
+        setTotalItems(response.total || response.data.length);
       } else {
         message.error(response.message || "Failed to fetch journey items");
       }

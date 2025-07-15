@@ -2,25 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 import { Thumb } from './EmblaCarouselThumbsButton'
-import { getJourneyList } from '@/services/journey.service'
+import { journeyService, IJourney } from '@/services/journey.service'
 import Image from 'next/image'
 
 type PropType = {
   options?: EmblaOptionsType
 }
 
-interface JourneyItem {
-  id: string;
-  year: string;
-  description: string;
-  media: string;
-  order: number;
-}
-
 const EmblaCarousel: React.FC<PropType> = (props) => {
   const { options } = props
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [journeyData, setJourneyData] = useState<JourneyItem[]>([])
+  const [journeyData, setJourneyData] = useState<IJourney[]>([])
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options)
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
     containScroll: 'keepSnaps',
@@ -30,7 +22,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
   useEffect(() => {
     const fetchJourneyData = async () => {
       try {
-        const response = await getJourneyList();
+        const response = await journeyService.getAllJourney();
         if (response.status && response.data) {
           setJourneyData(response.data);
         }
