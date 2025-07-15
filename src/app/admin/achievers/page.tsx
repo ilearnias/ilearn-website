@@ -25,7 +25,11 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
-import { achieverService, IAchiever } from "@/services/achievers.service";
+import {
+  achieverService,
+  IAchiever,
+  IPaginationMeta,
+} from "@/services/achievers.service";
 import { API_CONFIG, API_ENDPOINTS } from "@/config/api";
 import { apiRequest } from "@/config/apiRequest";
 import "./styles.scss";
@@ -38,6 +42,14 @@ const Achievers = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [achievers, setAchievers] = useState<IAchiever[]>([]);
+  const [pagination, setPagination] = useState<IPaginationMeta>({
+    limit: 10,
+    itemCount: 0,
+    page: 1,
+    totalPages: 0,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingAchiever, setEditingAchiever] = useState<IAchiever | null>(
     null
@@ -46,26 +58,31 @@ const Achievers = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
   const [form] = Form.useForm();
 
-  const fetchAchievers = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await achieverService.getAllAchievers();
-      if (response.status) {
-        setAchievers(response.data);
-      } else {
-        message.error(response.message || "Failed to fetch achievers");
-      }
-    } catch (error: any) {
-      message.error(error.message || "Failed to fetch achievers");
-      console.error("Error fetching achievers:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetchAchievers = useCallback(
+    async (page = 1, limit = 10, search?: string) => {
+      try {
+        setLoading(true);
+        const params: any = { page, limit };
+        if (search) params.search = search;
 
-  useEffect(() => {
-    fetchAchievers();
-  }, [fetchAchievers]);
+        const response: any = await achieverService.getAllAchievers(params);
+        if (response.status) {
+          setAchievers(response.data);
+          setPagination(response.meta);
+        } else {
+          message.error(response || "Failed to fetch achievers");
+        }
+      } catch (error: any) {
+        message.error(error.message || "Failed to fetch achievers");
+        console.error("Error fetching achievers:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  // Initial load is handled by the search effect
 
   const handleAdd = () => {
     setEditingAchiever(null);
@@ -214,18 +231,25 @@ const Achievers = () => {
     message.info("Image removed");
   };
 
-  const filteredAchievers = useMemo(() => {
-    return achievers.filter(
-      (achiever) =>
-        achiever.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        (achiever.details?.toLowerCase() || "").includes(
-          searchText.toLowerCase()
-        ) ||
-        (achiever.description?.toLowerCase() || "").includes(
-          searchText.toLowerCase()
-        )
-    );
-  }, [achievers, searchText]);
+  const handleTableChange = (pagination: any) => {
+    fetchAchievers(pagination.current, pagination.pageSize, searchText);
+  };
+
+  // No need for client-side filtering since we're using server-side search
+
+  // Handle search with pagination reset
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+  };
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchAchievers(1, pagination.limit, searchText);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchText, fetchAchievers, pagination.limit]);
 
   const columns: ColumnsType<IAchiever> = [
     {
@@ -315,7 +339,7 @@ const Achievers = () => {
             placeholder="Search achievers..."
             prefix={<SearchOutlined />}
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e) => handleSearch(e.target.value)}
             style={{ width: 300 }}
           />
           <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
@@ -325,9 +349,20 @@ const Achievers = () => {
 
         <Table
           columns={columns}
-          dataSource={filteredAchievers}
+          dataSource={achievers}
           rowKey="id"
           loading={loading}
+          pagination={{
+            current: pagination.page,
+            pageSize: pagination.limit,
+            total: pagination.itemCount,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
+            pageSizeOptions: ["10", "20", "50", "100"],
+          }}
+          onChange={handleTableChange}
         />
 
         <Modal

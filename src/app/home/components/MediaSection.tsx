@@ -5,6 +5,11 @@ import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import VideoCard2 from "@/components/common/vediocard2";
+import { Fade } from "react-awesome-reveal";
+import { Col, Row } from "react-bootstrap";
+import { Avatar, Card } from "antd";
+import { Meta } from "antd/es/list/Item";
+import YouTube from "react-youtube";
 
 // Video data array with the provided YouTube videos
 const videos = [
@@ -116,6 +121,98 @@ const MediaSection = () => {
             className="!text-gray-600 !font-light !text-lg !leading-relaxed"
           />
         </div>
+
+        {/* <Fade>
+          <Row>
+            <Col md={4}>
+              <Card
+                style={{ width: "100%", borderRadius: "10px" }}
+                cover={
+                  <div className="media-card-box1">
+                    <div className="media-card-box1-inner">
+                      <YouTube
+                        videoId="ZyAtOz00oEs"
+                        opts={{
+                          width: "100%",
+                          height: "100%",
+                          playerVars: {
+                            modestbranding: 1,
+                            rel: 0,
+                          },
+                        }}
+                        className="youtube-box1"
+                      />
+                    </div>
+                  </div>
+                }
+              >
+                <Meta
+                  title="Card title"
+                  description="This is the description"
+                />
+              </Card>
+            </Col>
+
+            <Col md={4}>
+              <Card
+                style={{ width: "100%" }}
+                cover={
+                  <div className="media-card-box1">
+                    <div className="media-card-box1-inner">
+                      <YouTube
+                        videoId="ZyAtOz00oEs"
+                        opts={{
+                          width: "100%",
+                          height: "100%",
+                          playerVars: {
+                            modestbranding: 1,
+                            rel: 0,
+                          },
+                        }}
+                        className="youtube-box1"
+                      />
+                    </div>
+                  </div>
+                }
+              >
+                <Meta
+                  title="Card title"
+                  description="This is the description"
+                />
+              </Card>
+            </Col>
+
+            <Col md={4}>
+              <Card
+                style={{ width: "100%" }}
+                cover={
+                  <div className="media-card-box1">
+                    <div className="media-card-box1-inner">
+                      <YouTube
+                        videoId="ZyAtOz00oEs"
+                        opts={{
+                          width: "100%",
+                          height: "100%",
+                          playerVars: {
+                            modestbranding: 1,
+                            rel: 0,
+                          },
+                        }}
+                        className="youtube-box1"
+                      />
+                    </div>
+                  </div>
+                }
+              >
+                <Meta
+                  title="Card title"
+                  description="This is the description"
+                />
+              </Card>
+            </Col>
+          </Row>
+        </Fade> */}
+
         <motion.div
           ref={containerRef}
           className="relative max-w-[1200px] mx-auto"
