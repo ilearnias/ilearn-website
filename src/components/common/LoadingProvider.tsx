@@ -55,7 +55,7 @@ export default function LoadingProvider({
     if (isReady) {
       const minLoadingTimer = setTimeout(() => {
         setIsLoading(false);
-      }, 100000000); // Minimum loading time of 1 second for better UX
+      }, 1000); // Minimum loading time of 1 second for better UX
 
       return () => clearTimeout(minLoadingTimer);
     }
