@@ -11,12 +11,7 @@ const HomeSection = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Set visibility after the loader is expected to disappear
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 2000); // Matches the loader timeout
-
-    return () => clearTimeout(timer);
+    setIsVisible(true);
   }, []);
 
   return (
@@ -41,7 +36,7 @@ const HomeSection = () => {
                 }
                 animate={true}
                 size="4xl"
-                className="md:block hidden leading-[1.1]"
+                className="!text-[4rem] md:block hidden leading-[1.1]"
               />
               <Heading
                 text={

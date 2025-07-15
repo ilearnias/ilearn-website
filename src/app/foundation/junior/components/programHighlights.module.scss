@@ -1,0 +1,187 @@
+@use "@/config/variables.scss" as vars;
+
+.highlights {
+  padding: 100px 0;
+  position: relative;
+
+  h2 {
+    text-align: center;
+    font-size: 2.8rem;
+    background: linear-gradient(135deg, vars.$primary 0%, #64B5F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4rem;
+    font-weight: 700;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, vars.$primary, #64B5F6);
+      border-radius: 2px;
+    }
+  }
+}
+
+.mainFeatures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 5rem;
+  position: relative;
+  z-index: 1;
+
+  .feature {
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    text-align: center;
+    transition: all 0.4s ease;
+    position: relative;
+
+    &:hover {
+      transform: translateY(-10px);
+
+      svg {
+        transform: scale(1.1) rotate(5deg);
+      }
+    }
+
+    svg {
+      font-size: 3rem;
+      background: linear-gradient(135deg, vars.$primary 0%, #64B5F6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+      transition: transform 0.4s ease;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      color: vars.$text-color;
+      font-weight: 600;
+    }
+
+    p {
+      color: vars.$text-color-light;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.schedule {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem;
+  margin-bottom: 5rem;
+  position: relative;
+  z-index: 1;
+
+  .day {
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    transition: transform 0.4s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    h3 {
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, vars.$primary 0%, #64B5F6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 2px solid rgba(vars.$primary, 0.1);
+      font-weight: 600;
+    }
+  }
+
+  .session {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateX(5px);
+
+      svg {
+        transform: scale(1.1);
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    svg {
+      font-size: 1.8rem;
+      color: vars.$primary;
+      flex-shrink: 0;
+      margin-top: 0.25rem;
+      transition: transform 0.3s ease;
+    }
+
+    h4 {
+      font-size: 1.2rem;
+      color: vars.$text-color;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+
+    p, ul {
+      color: vars.$text-color-light;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    ul {
+      list-style: disc;
+      margin-left: 1.2rem;
+    }
+  }
+}
+
+.mentorship {
+  padding: 3rem;
+  border-radius: 1.5rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.4s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h3 {
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, vars.$primary 0%, #64B5F6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, vars.$primary, #64B5F6);
+      border-radius: 2px;
+    }
+  }
+} 
