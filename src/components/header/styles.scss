@@ -37,7 +37,7 @@
   .header-logo {
     object-fit: contain;
     transition: transform 0.3s ease;
-    
+
     &:hover {
       transform: scale(1.05);
     }
@@ -52,7 +52,7 @@
   gap: 30px;
   height: 100%;
   font-size: 14px;
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   @media screen and (min-width: 320px) and (max-width: 768px) {
     display: none;
   }
@@ -66,12 +66,11 @@
 }
 
 .Header-Button {
-
   padding: 4px 15px;
   font-size: 14px;
 
   cursor: pointer;
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   transition: transform 0.3s ease, color 0.3s ease;
 
   @media screen and (min-width: 320px) and (max-width: 768px) {
@@ -87,18 +86,17 @@
   align-items: center;
   &:hover {
     p {
-      color: red   !important;
+      color: red !important;
     }
   }
 }
 
 .Header-Button2 {
- 
   padding: 8px 24px;
   font-size: 14px;
- 
+
   cursor: pointer;
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -122,7 +120,7 @@
 .header-popoverItem {
   cursor: pointer;
   transition: transform 0.3s ease, color 0.3s ease !important;
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   &:hover {
     transform: translateX(3px) !important;
     color: #ff4000;
@@ -163,16 +161,16 @@
   text-decoration: underline;
 }
 .Header-popoverTxt1 {
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   font-size: 12px;
   text-transform: uppercase;
 }
 .Header-popoverTxt2 {
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   font-size: 14px;
 }
 .Header-popoverTxt3 {
-  font-family: 'Montserrat', Arial, sans-serif;
+  font-family: "Montserrat", Arial, sans-serif;
   font-size: 12px;
   margin-bottom: 3px;
 }
@@ -187,7 +185,7 @@
   justify-content: space-between;
   &:hover {
     .Drawer-itemsTxt {
-      color: red;
+      color: rgb(255, 255, 255);
     }
 
     .Drawer-itemsIcon {
@@ -198,7 +196,7 @@
   &.join-now-mobile {
     margin-top: 20px;
     background-color: transparent;
-   
+
     transition: all 0.3s ease;
 
     &:hover {
@@ -236,7 +234,7 @@
   color: #ffffff;
   font-size: 20px;
   transition: color 0.3s ease;
-  
+
   &:hover {
     color: red;
   }

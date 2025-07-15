@@ -15,6 +15,7 @@ import Providers from "@/components/Providers";
 import { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import ClientLayout from "./ClientLayout";
+import "./styles.scss";
 
 const merriweather = Merriweather({
   weight: ["300", "400", "700", "900"],

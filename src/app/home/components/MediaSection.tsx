@@ -7,10 +7,11 @@ import SubHeading from "@/components/common/SubHeading";
 import VideoCard2 from "@/components/common/vediocard2";
 import { Fade } from "react-awesome-reveal";
 import { Col, Row } from "react-bootstrap";
-import { Avatar, Card } from "antd";
+import { Avatar, Card, message } from "antd";
 import { Meta } from "antd/es/list/Item";
 import YouTube from "react-youtube";
 import axios from "axios";
+import { mediaService } from "@/services/media.service";
 
 // Types for API response
 interface MediaItem {
@@ -45,44 +46,71 @@ const MediaSection = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [videos, setVideos] = useState<MediaItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const containerRef = React.useRef(null);
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(containerRef, { once: false });
 
-  useEffect(() => {
-    const fetchMediaData = async () => {
-      try {
-        setError(null);
-        const response = await axios.get<MediaResponse>(
-          'https://ilearn-server.bairuhatech.com/v1/media',
-          {
-            params: {
-              page: 1,
-              limit: 10,
-              isTestimonial: false
-            }
-          }
-        );
-        
-        if (!response.data.status) {
-          throw new Error(response.data.message || 'Failed to fetch media data');
-        }
-        
-        // Filter out inactive videos
-        const activeVideos = response.data.data.filter(video => video.isActive);
-        setVideos(activeVideos);
-      } catch (error) {
-        console.error('Error fetching media data:', error);
-        setError('Failed to load media content. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchMediaData = async () => {
+  //     try {
+  //       setError(null);
+  //       const response = await axios.get<MediaResponse>(
+  //         "https://ilearn-server.bairuhatech.com/v1/media",
+  //         {
+  //           params: {
+  //             page: 1,
+  //             limit: 10,
+  //             isTestimonial: false,
+  //           },
+  //         }
+  //       );
 
-    fetchMediaData();
+  //       if (!response.data.status) {
+  //         throw new Error(
+  //           response.data.message || "Failed to fetch media data"
+  //         );
+  //       }
+
+  //       // Filter out inactive videos
+  //       const activeVideos = response.data.data.filter(
+  //         (video) => video.isActive
+  //       );
+  //       setVideos(activeVideos);
+  //     } catch (error) {
+  //       console.error("Error fetching media data:", error);
+  //       setError("Failed to load media content. Please try again later.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchMediaData();
+  // }, []);
+
+  useEffect(() => {
+    fetchMedia();
   }, []);
+
+  const fetchMedia = async () => {
+    try {
+      // setLoading(true);
+      const response: any = await mediaService.getAllMedia(1, 10, false);
+      console.log("response", response?.data);
+      if (response.status) {
+        setVideos(response.data || response.data);
+        // setTotalItems(response.data.total || response.data.length);
+      } else {
+        console.error(response.message || "Failed to fetch media");
+      }
+    } catch (error: any) {
+      // message.error(error.message || "Failed to fetch media");
+      console.error("Error fetching media:", error);
+    } finally {
+      // setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -126,21 +154,21 @@ const MediaSection = () => {
   const getVideoId = (url: string) => {
     try {
       // Check if it's a YouTube URL
-      if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      if (url.includes("youtube.com") || url.includes("youtu.be")) {
         // Handle youtube.com URLs
-        if (url.includes('youtube.com')) {
+        if (url.includes("youtube.com")) {
           const urlParams = new URLSearchParams(new URL(url).search);
-          return urlParams.get('v') || '';
+          return urlParams.get("v") || "";
         }
         // Handle youtu.be URLs
-        if (url.includes('youtu.be')) {
-          return url.split('youtu.be/')[1]?.split('?')[0] || '';
+        if (url.includes("youtu.be")) {
+          return url.split("youtu.be/")[1]?.split("?")[0] || "";
         }
       }
       // For non-YouTube URLs, return the full URL
       return url;
     } catch (error) {
-      console.error('Error parsing video URL:', error);
+      console.error("Error parsing video URL:", error);
       return url;
     }
   };
@@ -164,17 +192,21 @@ const MediaSection = () => {
     return result;
   };
 
-  if (isLoading) {
-    return (
-      <section className="bg-gray-50 py-16">
-        <Container className="!w-full">
-          <div className="text-center">
-            <div className="animate-pulse">Loading media content...</div>
-          </div>
-        </Container>
-      </section>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <section className="bg-gray-50 py-16">
+  //       <Container className="!w-full">
+  //         <div className="text-center">
+  //           <div className="animate-pulse">Loading media content...</div>
+  //         </div>
+  //       </Container>
+  //     </section>
+  //   );
+  // }
+
+  const TeamName = (name: any) => {
+    return <div className="_team_name_txt">{name}</div>;
+  };
 
   if (error) {
     return (
@@ -190,7 +222,9 @@ const MediaSection = () => {
     return (
       <section className="bg-gray-50 py-16">
         <Container className="!w-full">
-          <div className="text-center text-gray-600">No media content available.</div>
+          <div className="text-center text-gray-600">
+            No media content available.
+          </div>
         </Container>
       </section>
     );
@@ -199,21 +233,49 @@ const MediaSection = () => {
   return (
     <section ref={sectionRef} className="bg-gray-50 py-16 scroll-mt-16">
       <Container className="!w-full">
-        <div className="text-center mb-12">
-          <Heading
-            text="Media Coverage"
-            color="tricolor"
-            size="3xl"
-            animate={true}
-            className="!text-center !text-[40px] !mb-2"
-          />
-          <SubHeading
-            text="iLearn in the News"
-            className="!text-gray-600 !font-light !text-lg !leading-relaxed !mt-2"
-          />
-        </div>
+        <Fade direction="up" duration={1000}>
+          <div className="_heading-box">
+            <div className="_heading-box-title1">Media Coverage</div>
+            <div className="_heading-box-sub-title1">iLearn in the News</div>
+          </div>
+        </Fade>
 
-        <motion.div
+        <Row>
+          {videos.map((item: any) => (
+            <Col md={4} key={item.id}>
+              <Fade direction="up" duration={1000}>
+                <Card
+                  style={{
+                    width: "100%",
+                    borderRadius: "15px",
+                    boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+                    overflow: "hidden",
+                    transition: "transform 0.3s ease",
+                    border: "none",
+                  }}
+                  cover={
+                    <YouTube
+                      videoId={"zLwkn6BLJ4U"}
+                      opts={{
+                        borderTopLeftRadius: "15px",
+                        borderTopRightRadius: "15px",
+                        width: "100%",
+                        height: "250px",
+                        playerVars: {
+                          autoplay: 0,
+                        },
+                      }}
+                    />
+                  }
+                >
+                  <Meta title={TeamName(item.description)} />
+                </Card>
+              </Fade>
+            </Col>
+          ))}
+        </Row>
+
+        {/* <motion.div
           ref={containerRef}
           className="relative max-w-[1200px] mx-auto"
           initial={{ y: 100, opacity: 0 }}
@@ -223,8 +285,8 @@ const MediaSection = () => {
           }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <div className="w-full">
-            {videos.length > 3 && !isMobile && (
+          <div className="w-full"> */}
+        {/* {videos.length > 3 && !isMobile && (
               <div className="hidden md:block">
                 <button
                   onClick={handlePrev}
@@ -265,16 +327,16 @@ const MediaSection = () => {
                   </svg>
                 </button>
               </div>
-            )}
+            )} */}
 
-            {!isMobile && (
+        {/* {!isMobile && (
               <div className="hidden md:block">
                 <VideoCard2
-                  videos={getCurrentVideos().map(item => ({
+                  videos={videos.map((item: any) => ({
                     title: item.description || "Video",
                     subtitle: "",
                     youtubeUrl: item.video,
-                    videoId: getVideoId(item.video)
+                    videoId: getVideoId(item.video),
                   }))}
                   onVideoClick={(index) =>
                     handleVideoClick((startIndex + index) % videos.length)
@@ -303,11 +365,11 @@ const MediaSection = () => {
                     }}
                   >
                     <VideoCard2
-                      videos={getCurrentVideos().map(item => ({
+                      videos={videos.map((item) => ({
                         title: item.description || "Video",
                         subtitle: "",
                         youtubeUrl: item.video,
-                        videoId: getVideoId(item.video)
+                        videoId: getVideoId(item.video),
                       }))}
                       onVideoClick={(index) =>
                         handleVideoClick((startIndex + index) % videos.length)
@@ -348,9 +410,9 @@ const MediaSection = () => {
                   </div>
                 )}
               </>
-            )}
-          </div>
-        </motion.div>
+            )} */}
+        {/* </div>
+        </motion.div> */}
       </Container>
     </section>
   );

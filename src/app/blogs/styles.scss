@@ -7,7 +7,8 @@
   background-color: #fff;
 
   .blog-box1 {
-    background: url("../assets/images/bg-Lines.png"), linear-gradient(to right, #1a56db, #1e40af);
+    background: url("../assets/images/bg-Lines.png"),
+      linear-gradient(to right, #1a56db, #1e40af);
     background-size: cover;
     background-position: center;
     padding: 80px 20px;
@@ -35,16 +36,16 @@
     color: #666;
     background-color: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
-    
+
     a {
       color: #666;
       text-decoration: none;
-      
+
       &:hover {
         color: #1a56db;
       }
     }
-    
+
     span {
       margin: 0 8px;
     }
@@ -60,17 +61,17 @@
     .blog-sidebar {
       width: 280px;
       padding-top: 45px;
-      
+
       h2 {
         font-size: 18px;
         font-weight: 600;
-       
+
         margin-bottom: 16px;
       }
 
       .categories-section {
         margin-bottom: 40px;
-        
+
         .category-list {
           display: flex;
           flex-direction: column;
@@ -111,25 +112,25 @@
 
     .blog-main {
       flex: 1;
-      
+
       .no-posts {
         text-align: center;
         padding: 60px 20px;
         background-color: #f8f9fa;
         border-radius: 8px;
-        
+
         h2 {
           font-size: 24px;
           font-weight: 600;
           color: #1a1a1a;
           margin-bottom: 12px;
         }
-        
+
         p {
           color: #666;
           margin-bottom: 24px;
         }
-        
+
         .view-all-btn {
           padding: 8px 24px;
           background-color: #1a56db;
@@ -139,7 +140,7 @@
           font-size: 14px;
           cursor: pointer;
           transition: background-color 0.2s;
-          
+
           &:hover {
             background-color: #1e40af;
           }
@@ -172,7 +173,7 @@
 .blog-text2 {
   color: #fff;
   text-align: center;
-  font-family: vars.$Thin;
+  font-family: vars.$Light;
   font-size: 14px;
   letter-spacing: 2px;
 }
@@ -292,7 +293,8 @@
 }
 
 // Tag styles for clickable/interactivity
-.tag-item, .blog-card-tag {
+.tag-item,
+.blog-card-tag {
   display: inline-block;
   padding: 4px 12px;
   margin: 2px 4px 2px 0;
@@ -311,13 +313,15 @@
   flex-shrink: 0;
 }
 
-.tag-item:hover, .blog-card-tag:hover {
+.tag-item:hover,
+.blog-card-tag:hover {
   background: #e5edff;
   color: #1741a0;
   border-color: #b3cfff;
 }
 
-.tag-item.active, .blog-card-tag.selected {
+.tag-item.active,
+.blog-card-tag.selected {
   background: #1a56db;
   color: #fff;
   border-color: #1a56db;
@@ -349,11 +353,12 @@
       bottom: 24px;
       z-index: 1000;
       margin: 0;
-      background: rgba(255,255,255,0.85);
+      background: rgba(255, 255, 255, 0.85);
       color: #1a56db;
       border: none;
       border-radius: 50%;
-      box-shadow: 0 4px 16px rgba(30, 64, 175, 0.10), 0 1.5px 6px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 16px rgba(30, 64, 175, 0.1),
+        0 1.5px 6px rgba(0, 0, 0, 0.08);
       cursor: pointer;
       transition: background 0.2s, box-shadow 0.2s;
       font-size: 32px;
@@ -394,7 +399,8 @@
     flex-direction: column !important;
     gap: 0 !important;
   }
-  .categories-section, .tags-section {
+  .categories-section,
+  .tags-section {
     margin: 0 !important;
     width: 100%;
   }
@@ -403,7 +409,7 @@
   }
   .ant-drawer-bottom .ant-drawer-content {
     border-radius: 18px 18px 0 0;
-    box-shadow: 0 -4px 24px rgba(30, 64, 175, 0.10);
+    box-shadow: 0 -4px 24px rgba(30, 64, 175, 0.1);
     background: #f8fafd;
   }
   .ant-drawer-title {
@@ -434,21 +440,24 @@
     margin: 10px auto 18px auto;
     display: block;
   }
-  .categories-section, .tags-section {
+  .categories-section,
+  .tags-section {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(30, 64, 175, 0.06);
     padding: 14px 10px 10px 10px;
     margin-bottom: 14px;
   }
-  .categories-section h2, .tags-section h2 {
+  .categories-section h2,
+  .tags-section h2 {
     font-size: 16px;
     font-weight: 600;
     color: #1a56db;
     margin-bottom: 10px;
     text-align: left;
   }
-  .category-list, .tags-list {
+  .category-list,
+  .tags-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -465,7 +474,9 @@
     box-shadow: 0 1px 4px rgba(30, 64, 175, 0.04);
     transition: background 0.2s, color 0.2s;
   }
-  .category-item.active, .category-item:active, .category-item:hover {
+  .category-item.active,
+  .category-item:active,
+  .category-item:hover {
     background: #1a56db;
     color: #fff;
   }

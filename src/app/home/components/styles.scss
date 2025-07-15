@@ -94,15 +94,16 @@ $charcoal: #1f2937; // Text - Primary text
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      135deg,
-      $ghost-white 0%,
-      $ghost-white 45%,
-      #bfdbfe 55%,
-      #bfdbfe 100%
-    );
-    background-size: 400% 400%;
-    animation: gradientAnimation 15s ease infinite;
+    // background: linear-gradient(
+    //   135deg,
+    //   $ghost-white 0%,
+    //   $ghost-white 45%,
+    //   #bfdbfe 55%,
+    //   #bfdbfe 100%
+    // );
+    // background-size: 400% 400%;
+    // animation: gradientAnimation 15s ease infinite;
+    background-color: #ffffff;
     z-index: 0;
   }
 

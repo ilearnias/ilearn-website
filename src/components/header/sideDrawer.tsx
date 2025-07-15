@@ -56,7 +56,7 @@ export default function SideDrawer(props: any) {
         </div>
       }
     >
-      <div style={{ marginTop: -20 }}>
+      <div style={{}}>
         {menuItems.map((item: any, index: any) => {
           return (
             <div

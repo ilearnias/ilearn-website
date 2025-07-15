@@ -40,10 +40,10 @@ export default function Header() {
       <div
         className={`${
           lastScrollY ? "Header scrolled" : "Header"
-        } w-full bg-gray-900  `}
+        } w-full bg-white shadow-[0_4px_12px_-4px_rgba(0,0,0,0.10)]`}
       >
         <Container className="w-full h-full  ">
-          <div className="flex  justify-between w-full h-full">
+          <div className="flex justify-between w-full h-full">
             <div
               className="Header-LogoBox h-full flex items-center"
               onClick={() => router.push("/")}
@@ -68,7 +68,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Home"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -80,7 +80,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="About"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -92,7 +92,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Results"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -104,7 +104,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Programs"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -116,7 +116,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Blog"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -128,7 +128,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="iLearn App"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -140,7 +140,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Gallery"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -152,7 +152,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Contact Us"
-                      color="white"
+                      color="black"
                     />
                   </div>
                 </div>
@@ -166,10 +166,10 @@ export default function Header() {
                 Join Now
               </div>
               <div
-                className="Header-menuIcon md:hidden"
+                className="Header-menuIcon"
                 onClick={() => setDawerOpen(!dawerOpen)}
               >
-                <CgMenuRight size={25} />
+                <CgMenuRight color={"#20468d"} size={25} />
               </div>
             </div>
           </div>

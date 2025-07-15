@@ -9,12 +9,24 @@ import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import { FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { teamService } from "@/services/team.service";
+import { Card, Carousel } from "antd";
 const TeamSection = () => {
   const { t } = useTranslation();
   const [imgError, setImgError] = useState<{ [key: string]: boolean }>({});
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const { Meta } = Card;
+
+  const contentStyle: React.CSSProperties = {
+    margin: 0,
+    height: "160px",
+    color: "#fff",
+    lineHeight: "160px",
+    textAlign: "center",
+    background: "#364d79",
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -38,10 +50,18 @@ const TeamSection = () => {
     setImgError((prev) => ({ ...prev, [memberName]: true }));
   };
 
+  const TeamName = (name: any) => {
+    return <div className="_team_name_txt">{name}</div>;
+  };
+
+  const TeamDesig = (name: any) => {
+    return <div className="_team_desig_txt">{name}</div>;
+  };
+
   return (
     <section className="team-section" aria-labelledby="team-section-title">
       <Container>
-        <Fade>
+        {/* <Fade>
           <div id="team-section-title">
             <Heading
               color="tricolor"
@@ -53,8 +73,78 @@ const TeamSection = () => {
           <p className="section-subtitle text-center mb-5">
             Meet the experts who guide aspirants towards their UPSC dreams
           </p>
+        </Fade> */}
+
+        <Fade>
+          <div className="_heading-box">
+            <div className="_heading-box-title1">Our Leadership Team</div>
+            <div className="_heading-box-sub-title1">
+              Meet the experts who guide aspirants towards their UPSC dreams
+            </div>
+          </div>
         </Fade>
-        {loading ? (
+
+        <div className="_team_section_mobile">
+          <Carousel arrows infinite={false}>
+            {teamMembers &&
+              teamMembers?.map((team: any) => {
+                return (
+                  <div style={contentStyle} key={team?.id}>
+                    <Card
+                      style={{ width: "100%" }}
+                      cover={
+                        <Image
+                          alt={team?.name}
+                          src={team?.image}
+                          width={300}
+                          height={250}
+                        />
+                      }
+                    >
+                      <Meta
+                        title={TeamName(team?.name)}
+                        description={TeamDesig(team?.designation)}
+                      />
+                    </Card>
+                  </div>
+                );
+              })}
+          </Carousel>
+        </div>
+
+        <div className="_team_section_box">
+          <Row>
+            {teamMembers &&
+              teamMembers?.map((team: any, ind: any) => {
+                return (
+                  <>
+                    <Col style={{ marginBottom: "20px" }} md={3} key={team?.id}>
+                      <Fade direction="up" duration={900}>
+                        <Card
+                          style={{ width: "100%" }}
+                          cover={
+                            <Image
+                              alt={team?.name}
+                              src={team?.image}
+                              width={300}
+                              height={250}
+                            />
+                          }
+                        >
+                          <Meta
+                            title={TeamName(team?.name)}
+                            description={TeamDesig(team?.designation)}
+                          />
+                        </Card>
+                      </Fade>
+                    </Col>
+                  </>
+                );
+              })}
+          </Row>
+        </div>
+
+        {/* {loading ? (
           <div className="text-center my-5">Loading...</div>
         ) : error ? (
           <div className="text-center text-red-500 my-5">{error}</div>
@@ -129,7 +219,7 @@ const TeamSection = () => {
               </Col>
             ))}
           </Row>
-        )}
+        )} */}
       </Container>
     </section>
   );

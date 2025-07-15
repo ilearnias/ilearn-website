@@ -26,7 +26,7 @@ const CoreValuesSection = () => {
       aria-labelledby="core-values-title"
     >
       <Container>
-        <Fade>
+        {/* <Fade>
           <div id="core-values-title">
             <Heading
               color="tricolor"
@@ -34,6 +34,13 @@ const CoreValuesSection = () => {
               className="!text-center font-bold !mb-8"
               animate={true}
             />
+          </div>
+        </Fade> */}
+
+        <Fade direction="up" duration={1000}>
+          <div className="_heading-box">
+            <div className="_heading-box-title1">Our Core Values</div>
+            <div className="_heading-box-sub-title1"></div>
           </div>
         </Fade>
         <Row className="g-4">

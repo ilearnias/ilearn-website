@@ -21,7 +21,7 @@ const testimonialData: TestimonialItem[] = [
     video: "wMTD8maO6U4",
     isActive: true,
     isTestimonial: true,
-    order: 1
+    order: 1,
   },
   {
     id: "2",
@@ -29,7 +29,7 @@ const testimonialData: TestimonialItem[] = [
     video: "wMTD8maO6U4",
     isActive: true,
     isTestimonial: true,
-    order: 2
+    order: 2,
   },
   {
     id: "3",
@@ -37,8 +37,8 @@ const testimonialData: TestimonialItem[] = [
     video: "wMTD8maO6U4",
     isActive: true,
     isTestimonial: true,
-    order: 3
-  }
+    order: 3,
+  },
 ];
 
 export default function PageContainer() {
@@ -48,37 +48,30 @@ export default function PageContainer() {
       <section id="home" className="section-home">
         <HomeSection />
       </section>
-
       {/* 2. Result Highlights Section */}
       <section id="results">
         <ResultsSection />
       </section>
-
       {/* 3. Achievers Section */}
       <section id="achievers">
         <AchieversSection />
       </section>
-
       {/* 4. Media Section */}
       <section id="media">
         <MediaSection />
       </section>
-
       {/* 5. Student Testimonials Section */}
       <section id="testimonials">
         <TestimonialsSection />
       </section>
-
       {/* 6. Success Stories Section */}
       <section id="success-stories">
         <SuccessStoriesSection />
       </section>
-
       {/* 7. Our Programs Section */}
       <section id="programs">
         <ProgramsSection />
       </section>
-
       {/* 8. Apply Section */}
       <section id="apply">
         <ApplySection />
