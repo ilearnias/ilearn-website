@@ -118,7 +118,7 @@ const GalleryPage = () => {
                 images={images}
                 title={title}
                 color="tricolor"
-                headingClassName="font-bold text-center pt-10"
+                headingClassName="font-bold text-center pt-5"
               />
             </section>
           ))

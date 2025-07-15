@@ -17,25 +17,28 @@ import ApplySection from "./components/ApplySection";
 const testimonialData: TestimonialItem[] = [
   {
     id: "1",
-    title: "Preparation Strategy",
-    subtitle: "Learn from our top students",
-    videoId: "wMTD8maO6U4",
-    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`,
+    description: "Preparation Strategy - Learn from our top students",
+    video: "wMTD8maO6U4",
+    isActive: true,
+    isTestimonial: true,
+    order: 1
   },
   {
     id: "2",
-    title: "Malavika G Nair",
-    subtitle: "AIR 45 - Success Story",
-    videoId: "wMTD8maO6U4",
-    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`,
+    description: "Malavika G Nair - AIR 45 Success Story",
+    video: "wMTD8maO6U4",
+    isActive: true,
+    isTestimonial: true,
+    order: 2
   },
   {
     id: "3",
-    title: "Success Journey",
-    subtitle: "Path to achievement",
-    videoId: "wMTD8maO6U4",
-    thumbnailUrl: `https://img.youtube.com/vi/wMTD8maO6U4/maxresdefault.jpg`,
-  },
+    description: "Success Journey - Path to achievement",
+    video: "wMTD8maO6U4",
+    isActive: true,
+    isTestimonial: true,
+    order: 3
+  }
 ];
 
 export default function PageContainer() {
@@ -63,7 +66,7 @@ export default function PageContainer() {
 
       {/* 5. Student Testimonials Section */}
       <section id="testimonials">
-        <TestimonialsSection testimonials={testimonialData} />
+        <TestimonialsSection />
       </section>
 
       {/* 6. Success Stories Section */}

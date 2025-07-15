@@ -28,17 +28,10 @@ export default function GalleryComponent({
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-b from-black via-gray-600 to-gray-600 relative ${className}`}
+    className={`min-h-screen bg-white relative  ${className}`}
     >
-      {title && (
-        <Heading
-          text={title}
-          color={color}
-          className={`font-bold text-center ${headingClassName}`}
-        />
-      )}
       <div
-        className="pt-24 md:pt-10 overflow-x-auto overflow-y-hidden pb-5 scrollbar-hide"
+        className="  pt-24 md:pt-5 overflow-x-auto overflow-y-hidden  scrollbar-hide"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
@@ -47,7 +40,14 @@ export default function GalleryComponent({
           scrollBehavior: "smooth",
           overflowY: "hidden",
         }}
-      >
+        >
+        {title && (
+          <Heading
+            text={title}
+            color={color}
+            className={`font-bold text-center ${headingClassName}`}
+          />
+        )}
         <div
           className="relative flex gap-3 pb-40 md:gap-12 px-4 md:px-12 min-h-[calc(100vh-64px)] items-center"
           style={{}}

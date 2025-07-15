@@ -33,14 +33,15 @@ const HomeSection = () => {
                     <br />
                     <span>results,</span>
                     <br />
-                    <span style={{ color: "#20468d" }}>we make </span>
+                    <span style={{ color: "#20468d" }}>We make </span>
                     <span style={{ color: "#20468d" }}>genuine</span>
                     <br />
                     <span style={{ color: "#20468d" }}>results.</span>
                   </>
                 }
                 animate={true}
-                className="md:block hidden leading-[1.1] font-bold"
+                size="4xl"
+                className="md:block hidden leading-[1.1]"
               />
               <Heading
                 text={
@@ -56,23 +57,25 @@ const HomeSection = () => {
                 }
                 color="red"
                 animate={true}
-                className=" leading-[1.1] font-bold md:hidden"
+                size="3xl"
+                className="leading-[1.1] md:hidden"
               />
             </div>
             <SubHeading
-              text="Kerala's highest Prelims-cum-Mains & Classroom program success rate."
+              text="Kerala's highest Prelims-cum-Mains & Classroom program success rate.
+              "
               animate={true}
               delay={0.4}
               className="!text-[#1F2937] !font-light !text-[16px] !m-0 !p-0"
             />
-            <SubText
-              text="343 Selections in 10 years."
-              size="large"
+            <SubHeading
+              text="
+              343 Selections in 10 years."
               animate={true}
-              delay={0.6}
-              className="!text-[#1F2937] !font-light !text-[16px]"
+              delay={0.4}
+              className="!text-[#1F2937] !font-light !text-[16px] !m-0 !p-0"
             />
-            <div className="buttons !m-0 !p-0">
+            <div className="buttons !m-0 !pt-2">
               <button className="secondary-btn !text-white !bg-blue-600">
                 Explore Programs
               </button>

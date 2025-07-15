@@ -80,7 +80,8 @@ const AchieversSection = () => {
           <Heading
             color="red"
             text="Our Proud Achievers"
-            className="!text-center !mb-4"
+   
+            className="!text-center !text-[40px] !mb-2"
             animate={true}
           />
           <p className="section-subtitle">

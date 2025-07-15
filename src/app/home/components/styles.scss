@@ -27,34 +27,6 @@ $charcoal: #1f2937; // Text - Primary text
   }
 }
 
-@mixin section-header {
-  text-align: center;
-  // margin-bottom: 10px;
-
-  .section-title,
-  h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    position: relative;
-    display: inline-block;
-
-    @media (max-width: 768px) {
-      font-size: 2rem;
-    }
-  }
-
-  .section-subtitle,
-  .subtitle {
-    color: #666;
-    font-size: 1.2rem;
-
-    @media (max-width: 768px) {
-      font-size: 1rem;
-    }
-  }
-}
-
 // Common styles for all sections
 .section-home,
 .section-results,
@@ -78,12 +50,21 @@ $charcoal: #1f2937; // Text - Primary text
 }
 
 // Common section headers
-.section-header,
-.testimonials-header,
-.media-section .section-header,
-.achievers-section .section-header,
-.success-stories-section .section-header {
-  @include section-header;
+.section-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  .section-subtitle,
+  .subtitle {
+    color: #666;
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+
+    @media (max-width: 768px) {
+      font-size: 1rem;
+      margin-top: 0.375rem;
+    }
+  }
 }
 
 @keyframes gradientAnimation {
