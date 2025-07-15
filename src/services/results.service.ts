@@ -30,15 +30,28 @@ export interface IPaginatedResponse<T> {
 }
 
 export interface IResultSummary {
-  totalStudents: number;
-  passRate: number;
-  averageScore: number;
-  highestScore: number;
-  lowestScore: number;
-  gradeDistribution: {
-    [key: string]: number;
-  };
+  id: string;
+  year: string;
+  totalSelection: number;
+  topRanks: number;
+  order: number;
+  pcmClassroom: number;
+  firstAttempt: number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
 }
+
+export interface IResultSummaryCreate {
+  year: string;
+  totalSelection: number;
+  topRanks: number;
+  order: number;
+  pcmClassroom: number;
+  firstAttempt: number;
+}
+
+export interface IResultSummaryUpdate extends Partial<IResultSummaryCreate> {}
 
 export interface IResultCreate
   extends Omit<IResult, "id" | "createdAt" | "updatedAt"> {}
@@ -130,6 +143,86 @@ class ResultService {
       });
     } catch (error) {
       console.error("Error exporting results:", error);
+      throw error;
+    }
+  }
+
+  // Result Summary methods
+  async getAllResultSummaries(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<ApiResponse<IPaginatedResponse<IResultSummary>>> {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+      const response = await apiRequest.get<IPaginatedResponse<IResultSummary>>(
+        `/v1/result-summary?${params}`
+      );
+      console.log("API Response:", response); // Debug log
+      return response;
+    } catch (error) {
+      console.error("Error fetching result summaries:", error);
+      throw error;
+    }
+  }
+
+  async getResultSummaryById(id: string): Promise<ApiResponse<IResultSummary>> {
+    try {
+      const response = await apiRequest.get<IResultSummary>(
+        `/v1/result-summary/${id}`
+      );
+      console.log("Get by ID Response:", response); // Debug log
+      return response;
+    } catch (error) {
+      console.error("Error fetching result summary:", error);
+      throw error;
+    }
+  }
+
+  async createResultSummary(
+    data: IResultSummaryCreate
+  ): Promise<ApiResponse<IResultSummary>> {
+    try {
+      const response = await apiRequest.post<IResultSummary>(
+        "/v1/result-summary",
+        data
+      );
+      console.log("Create Response:", response); // Debug log
+      return response;
+    } catch (error) {
+      console.error("Error creating result summary:", error);
+      throw error;
+    }
+  }
+
+  async updateResultSummary(
+    id: string,
+    data: IResultSummaryUpdate
+  ): Promise<ApiResponse<IResultSummary>> {
+    try {
+      const response = await apiRequest.patch<IResultSummary>(
+        `/v1/result-summary/${id}`,
+        data
+      );
+      console.log("Update Response:", response); // Debug log
+      return response;
+    } catch (error) {
+      console.error("Error updating result summary:", error);
+      throw error;
+    }
+  }
+
+  async deleteResultSummary(id: string): Promise<ApiResponse<null>> {
+    try {
+      const response = await apiRequest.delete<null>(
+        `/v1/result-summary/${id}`
+      );
+      console.log("Delete Response:", response); // Debug log
+      return response;
+    } catch (error) {
+      console.error("Error deleting result summary:", error);
       throw error;
     }
   }

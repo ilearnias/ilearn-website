@@ -344,10 +344,9 @@ export default function IGProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
-        className="font-bold"
-        titleClassName="font-bold"
         title="Interview Guidance"
-        description="Expert guidance for UPSC personality test"
+        titleClassName="font-bold"
+        description="Comprehensive interview preparation for UPSC Personality Test"
         buttons={buttons}
       />
       <ProgramHighlights />

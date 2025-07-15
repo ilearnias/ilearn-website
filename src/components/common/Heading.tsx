@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 interface HeadingProps {
   text: string | React.ReactNode;
-  color?: "white" | "black" | "gradient" | "tricolor" | "red";
+  color?: "white" | "black" | "gradient" | "tricolor" | "red"|"blue";
   className?: string;
   animate?: boolean;
   delay?: number;
@@ -25,6 +25,7 @@ const Heading: React.FC<HeadingProps> = ({
     red: "text-red-600",
     gradient: "bg-gradient-to-r from-green-50 to-white bg-clip-text text-transparent",
     tricolor: "text-red-600",
+    blue: "text-blue-900",
   };
 
   const sizeStyles = {
@@ -39,7 +40,7 @@ const Heading: React.FC<HeadingProps> = ({
 
   // Base styles that should always be applied
   const baseStyles = twMerge(
-    "font-bold tracking-[-0.02em] leading-[1.2]",
+    "font-bold tracking-[-0.02em] !text-[2.5rem] leading-[1.2]",
     sizeStyles[size],
     colorStyles[color],
     className

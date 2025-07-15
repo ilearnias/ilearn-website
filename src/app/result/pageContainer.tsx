@@ -11,9 +11,9 @@ const PageContainer = () => {
     <div className="results-container">
       <Header />
       <HeroSection
-        className="font-bold"
+
         title="Our Results"
-        titleClassName="font-bold mb-3"
+        titleClassName="font-bold mb-2"
         pageName="Results"
         description="Celebrating excellence and achievement. Explore our track record of success stories and be inspired by the remarkable achievements of our students in civil service examinations."
       />
