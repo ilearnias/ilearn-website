@@ -139,7 +139,7 @@ const ImageCarouselSection = () => {
           <Heading
             color="tricolor"
             text="Our Academy"
-            className="!text-center !mb-4 font-bold"
+            className="!text-center !text-[2.5rem] !mb-4 font-bold"
             animate={true}
           />
           <p className="section-subtitle text-center md:mb-3 mb-2">

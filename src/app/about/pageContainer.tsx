@@ -15,8 +15,8 @@ const PageContainer = () => {
     <div className="about-Container">
       <Header />
       <HeroSection
-        className="font-bold"
-        titleClassName="font-bold mb-3"
+        className=""
+        titleClassName="font-bold !text-[4rem] mb-2"
         title="About Us"
         pageName="About"
         description="Discover the story behind iLearn's journey in shaping civil service aspirants. We're committed to excellence, innovation, and your success in the UPSC examination."

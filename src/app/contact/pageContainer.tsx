@@ -22,8 +22,8 @@ const PageContainer = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       <HeroSection
-        className="font-bold"
-        titleClassName="font-bold mb-3"
+        
+        titleClassName="font-bold mb-2"
         title="Get in Touch"
         pageName="Contact Us"
         description="Have questions? We're here to help! Connect with our team for program inquiries, counseling sessions, or any assistance you need in your UPSC journey."
