@@ -469,7 +469,7 @@ const Journey = () => {
               />
             </Form.Item>
 
-            <Form.Item label="Media (size:600x800)" name="media">
+            <Form.Item label="Media (size: 1920x1080px)" name="media">
               <Upload
                 listType="picture-card"
                 fileList={uploadedFile ? [uploadedFile] : []}
