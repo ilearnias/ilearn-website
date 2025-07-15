@@ -93,13 +93,13 @@ const AdminSidebar: React.FC = () => {
       href: "/admin/team",
       subItems: [],
     },
-    {
-      id: "contacts",
-      label: "Contacts",
-      icon: <ContactsOutlined />,
-      href: "/admin/contacts",
-      subItems: [],
-    },
+    // {
+    //   id: "contacts",
+    //   label: "Contacts",
+    //   icon: <ContactsOutlined />,
+    //   href: "/admin/contacts",
+    //   subItems: [],
+    // },
     {
       id: "gallery",
       label: "Gallery",
