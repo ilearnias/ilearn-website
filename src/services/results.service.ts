@@ -1,25 +1,32 @@
-import { API_CONFIG, API_ENDPOINTS } from '../config/api';
-import { apiRequest, ApiResponse } from '../config/apiRequest';
+import { API_CONFIG, API_ENDPOINTS } from "../config/api";
+import { apiRequest, ApiResponse } from "../config/apiRequest";
 
 export interface IResult {
   id: string;
-  studentName: string;
-  studentId: string;
-  subject: string;
-  examType: string;
-  score: number;
-  grade: string;
-  examDate: string;
-  status: 'pass' | 'fail' | 'pending';
-  remarks?: string;
-  semester?: string;
-  year?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  isActive?: boolean;
-  order?: number | null;
-  deletedAt?: string | null;
-  description?: string | null;
+  year: string;
+  description: string;
+  media: string | null;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
+
+export interface IPaginationMeta {
+  limit: number;
+  itemCount: number;
+  page: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface IPaginatedResponse<T> {
+  status: boolean;
+  message: string;
+  data: T[];
+  meta: IPaginationMeta;
 }
 
 export interface IResultSummary {
@@ -33,60 +40,85 @@ export interface IResultSummary {
   };
 }
 
-export interface IResultCreate extends Omit<IResult, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IResultCreate
+  extends Omit<IResult, "id" | "createdAt" | "updatedAt"> {}
 export interface IResultUpdate extends Partial<IResultCreate> {}
 
 class ResultService {
-  async getAllResults(): Promise<ApiResponse<IResult[]>> {
+  async getAllResults(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<ApiResponse<IPaginatedResponse<IResult>>> {
     try {
-      return await apiRequest.get<IResult[]>(API_ENDPOINTS.ADMIN.RESULTS.LIST);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+      return await apiRequest.get<IPaginatedResponse<IResult>>(
+        `${API_ENDPOINTS.ADMIN.RESULTS.LIST}?${params}`
+      );
     } catch (error) {
-      console.error('Error fetching results:', error);
+      console.error("Error fetching results:", error);
       throw error;
     }
   }
 
   async getResultById(id: string): Promise<ApiResponse<IResult>> {
     try {
-      return await apiRequest.get<IResult>(API_ENDPOINTS.ADMIN.RESULTS.DETAIL(id));
+      return await apiRequest.get<IResult>(
+        API_ENDPOINTS.ADMIN.RESULTS.DETAIL(id)
+      );
     } catch (error) {
-      console.error('Error fetching result:', error);
+      console.error("Error fetching result:", error);
       throw error;
     }
   }
 
   async createResult(data: IResultCreate): Promise<ApiResponse<IResult[]>> {
     try {
-      return await apiRequest.post<IResult[]>(API_ENDPOINTS.ADMIN.RESULTS.CREATE, data);
+      return await apiRequest.post<IResult[]>(
+        API_ENDPOINTS.ADMIN.RESULTS.CREATE,
+        data
+      );
     } catch (error) {
-      console.error('Error creating result:', error);
+      console.error("Error creating result:", error);
       throw error;
     }
   }
 
-  async updateResult(id: string, data: IResultUpdate): Promise<ApiResponse<IResult>> {
+  async updateResult(
+    id: string,
+    data: IResultUpdate
+  ): Promise<ApiResponse<IResult>> {
     try {
-      return await apiRequest.patch<IResult>(API_ENDPOINTS.ADMIN.RESULTS.UPDATE(id), data);
+      return await apiRequest.patch<IResult>(
+        API_ENDPOINTS.ADMIN.RESULTS.UPDATE(id),
+        data
+      );
     } catch (error) {
-      console.error('Error updating result:', error);
+      console.error("Error updating result:", error);
       throw error;
     }
   }
 
   async deleteResult(id: string): Promise<ApiResponse<null>> {
     try {
-      return await apiRequest.delete<null>(API_ENDPOINTS.ADMIN.RESULTS.DELETE(id));
+      return await apiRequest.delete<null>(
+        API_ENDPOINTS.ADMIN.RESULTS.DELETE(id)
+      );
     } catch (error) {
-      console.error('Error deleting result:', error);
+      console.error("Error deleting result:", error);
       throw error;
     }
   }
 
   async getResultsSummary(): Promise<ApiResponse<IResultSummary>> {
     try {
-      return await apiRequest.get<IResultSummary>(API_ENDPOINTS.ADMIN.RESULTS.SUMMARY);
+      return await apiRequest.get<IResultSummary>(
+        API_ENDPOINTS.ADMIN.RESULTS.SUMMARY
+      );
     } catch (error) {
-      console.error('Error fetching results summary:', error);
+      console.error("Error fetching results summary:", error);
       throw error;
     }
   }
@@ -94,13 +126,13 @@ class ResultService {
   async exportResults(): Promise<ApiResponse<Blob>> {
     try {
       return await apiRequest.get<Blob>(API_ENDPOINTS.ADMIN.RESULTS.EXPORT, {
-        responseType: 'blob'
+        responseType: "blob",
       });
     } catch (error) {
-      console.error('Error exporting results:', error);
+      console.error("Error exporting results:", error);
       throw error;
     }
   }
 }
 
-export const resultService = new ResultService(); 
+export const resultService = new ResultService();

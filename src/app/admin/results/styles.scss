@@ -52,9 +52,27 @@
 
   .ant-tag {
     margin: 0 4px 4px 0;
-    
+
     .anticon {
       margin-right: 4px;
     }
   }
-} 
+
+  .results-pagination {
+    margin-top: 24px;
+    text-align: center;
+
+    .ant-pagination-item {
+      border-radius: 6px;
+    }
+
+    .ant-pagination-item-active {
+      border-color: #1890ff;
+      background: #1890ff;
+
+      a {
+        color: white;
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import { API_CONFIG, API_ENDPOINTS } from '../config/api';
-import { apiRequest, ApiResponse } from '../config/apiRequest';
+import { API_CONFIG, API_ENDPOINTS } from "../config/api";
+import { apiRequest, ApiResponse } from "../config/apiRequest";
 
 export interface IAchiever {
   id: string;
@@ -20,51 +20,98 @@ export interface IAchiever {
   deletedAt?: string | null;
 }
 
-export interface IAchieverCreate extends Omit<IAchiever, 'id' | 'createdAt' | 'updatedAt'> {}
+export interface IAchieverCreate
+  extends Omit<IAchiever, "id" | "createdAt" | "updatedAt"> {}
 export interface IAchieverUpdate extends Partial<IAchieverCreate> {}
 
+export interface IPaginationMeta {
+  limit: number;
+  itemCount: number;
+  page: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
+
+export interface IPaginatedResponse<T> {
+  status: boolean;
+  message: string;
+  data: T[];
+  meta: IPaginationMeta;
+}
+
+export interface IPaginationParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
+
 class AchieverService {
-  async getAllAchievers(): Promise<ApiResponse<IAchiever[]>> {
+  async getAllAchievers(params?: IPaginationParams) {
     try {
-      return await apiRequest.get<IAchiever[]>(API_ENDPOINTS.ADMIN.ACHIEVERS.LIST);
+      const queryParams = new URLSearchParams();
+      if (params?.page) queryParams.append("page", params.page.toString());
+      if (params?.limit) queryParams.append("limit", params.limit.toString());
+      if (params?.search) queryParams.append("search", params.search);
+
+      const url = `${API_ENDPOINTS.ADMIN.ACHIEVERS.LIST}${
+        queryParams.toString() ? `?${queryParams.toString()}` : ""
+      }`;
+      const response = await apiRequest.get<any>(url);
+      console.log("achievers response", response);
+
+      return response;
     } catch (error) {
-      console.error('Error fetching achievers:', error);
+      console.error("Error fetching achievers:", error);
       throw error;
     }
   }
 
   async getAchieverById(id: string): Promise<ApiResponse<IAchiever>> {
     try {
-      return await apiRequest.get<IAchiever>(API_ENDPOINTS.ADMIN.ACHIEVERS.DETAIL(id));
+      return await apiRequest.get<IAchiever>(
+        API_ENDPOINTS.ADMIN.ACHIEVERS.DETAIL(id)
+      );
     } catch (error) {
-      console.error('Error fetching achiever:', error);
+      console.error("Error fetching achiever:", error);
       throw error;
     }
   }
 
   async createAchiever(data: IAchieverCreate): Promise<ApiResponse<IAchiever>> {
     try {
-      return await apiRequest.post<IAchiever>(API_ENDPOINTS.ADMIN.ACHIEVERS.CREATE, data);
+      return await apiRequest.post<IAchiever>(
+        API_ENDPOINTS.ADMIN.ACHIEVERS.CREATE,
+        data
+      );
     } catch (error) {
-      console.error('Error creating achiever:', error);
+      console.error("Error creating achiever:", error);
       throw error;
     }
   }
 
-  async updateAchiever(id: string, data: IAchieverUpdate): Promise<ApiResponse<IAchiever>> {
+  async updateAchiever(
+    id: string,
+    data: IAchieverUpdate
+  ): Promise<ApiResponse<IAchiever>> {
     try {
-      return await apiRequest.patch<IAchiever>(API_ENDPOINTS.ADMIN.ACHIEVERS.UPDATE(id), data);
+      return await apiRequest.patch<IAchiever>(
+        API_ENDPOINTS.ADMIN.ACHIEVERS.UPDATE(id),
+        data
+      );
     } catch (error) {
-      console.error('Error updating achiever:', error);
+      console.error("Error updating achiever:", error);
       throw error;
     }
   }
 
   async deleteAchiever(id: string): Promise<ApiResponse<null>> {
     try {
-      return await apiRequest.delete<null>(API_ENDPOINTS.ADMIN.ACHIEVERS.DELETE(id));
+      return await apiRequest.delete<null>(
+        API_ENDPOINTS.ADMIN.ACHIEVERS.DELETE(id)
+      );
     } catch (error) {
-      console.error('Error deleting achiever:', error);
+      console.error("Error deleting achiever:", error);
       throw error;
     }
   }
@@ -73,15 +120,18 @@ class AchieverService {
   async uploadSingleImage(file: File): Promise<string> {
     try {
       const formData = new FormData();
-      formData.append('file', file); // field name must be 'file'
-      const response = await apiRequest.upload(API_ENDPOINTS.ADMIN.ACHIEVERS.UPLOAD, formData);
+      formData.append("file", file); // field name must be 'file'
+      const response = await apiRequest.upload(
+        API_ENDPOINTS.ADMIN.ACHIEVERS.UPLOAD,
+        formData
+      );
       if (response.status && response.data) {
         // If backend returns { data: { url: '...' } }
         return response.data.url || response.data;
       }
-      throw new Error(response.message || 'Failed to upload image');
+      throw new Error(response.message || "Failed to upload image");
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error("Error uploading image:", error);
       throw error;
     }
   }
@@ -96,18 +146,25 @@ class AchieverService {
       }
       return urls;
     } catch (error) {
-      console.error('Error uploading multiple images:', error);
+      console.error("Error uploading multiple images:", error);
       throw error;
     }
   }
 
   // Validate image file
   validateImageFile(file: File): boolean {
-    const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    const acceptedFormats = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/webp",
+    ];
     const maxSize = 5 * 1024 * 1024; // 5MB
 
     if (!acceptedFormats.includes(file.type)) {
-      throw new Error(`${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`);
+      throw new Error(
+        `${file.name} is not a valid image format. Accepted formats: JPEG, PNG, GIF, WebP`
+      );
     }
 
     if (file.size > maxSize) {
@@ -118,4 +175,4 @@ class AchieverService {
   }
 }
 
-export const achieverService = new AchieverService(); 
+export const achieverService = new AchieverService();
