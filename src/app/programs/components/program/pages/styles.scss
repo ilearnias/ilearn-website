@@ -1,0 +1,109 @@
+.program-card {
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  z-index: 1;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  &::before,
+  &::after {
+    display: none;
+  }
+
+  .icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    background: rgba(13, 71, 161, 0.1);
+    margin: 0 auto 1.5rem;
+
+    .program-icon {
+      font-size: 2.5rem;
+      color: #0d47a1;
+    }
+  }
+
+  h3 {
+    color: #0d47a1;
+    margin-bottom: 1.2rem;
+    font-size: 1.3rem;
+    line-height: 1.4;
+    min-height: 2.8rem;
+    text-align: center;
+    font-weight: 600;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .duration {
+    color: #dc3545;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(220, 53, 69, 0.1);
+    border-radius: 20px;
+    display: inline-block;
+    text-align: center;
+    width: fit-content;
+    margin: 0 auto 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background: #0d47a1;
+    border: none;
+
+    &:hover {
+      background: #1565c0;
+    }
+  }
+}
+
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  background: rgba(13, 71, 161, 0.1);
+  margin: 0 auto 1.5rem;
+
+  .program-icon {
+    font-size: 2.5rem;
+    color: #0d47a1;
+  }
+}
