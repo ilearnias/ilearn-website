@@ -1,0 +1,270 @@
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+.hero {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 140px 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.content {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  text-align: center;
+}
+
+.titleWrapper {
+  .iconTitle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+
+    .titleIcon {
+      font-size: 3.5rem;
+      color: #FFD700;
+    }
+
+    .title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin: 0;
+      background: linear-gradient(to right, #FFFFFF, #FFD700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .features {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+
+    .featureItem {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      svg {
+        font-size: 1.25rem;
+        color: #FFD700;
+      }
+
+      span {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.contactInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  .phoneIcon {
+    font-size: 1.5rem;
+    color: #FFD700;
+  }
+
+  .phoneLink {
+    color: white;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.actionArea {
+  .enrollButton {
+    background: #FF4081;
+    color: white;
+    border: none;
+    padding: 1.25rem 2.5rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 20px rgba(255, 64, 129, 0.25);
+
+    &:hover {
+      background: #FF5090;
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(255, 64, 129, 0.35);
+
+      .arrowIcon {
+        transform: translateX(5px);
+      }
+    }
+
+    .arrowIcon {
+      font-size: 1.25rem;
+      transition: transform 0.3s ease;
+    }
+  }
+}
+
+.eligibilityBox {
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+
+  .eligibilityContent {
+    .eligibilityHeader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+
+      .bookIcon {
+        font-size: 1.5rem;
+        color: #FFD700;
+      }
+
+      .label {
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+    }
+
+    .classes {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+
+      .classItem {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .checkIcon {
+          font-size: 1.75rem;
+          color: #FFD700;
+        }
+
+        span {
+          font-size: 2.5rem;
+          font-weight: 800;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .titleWrapper {
+    .iconTitle {
+      .titleIcon, .title {
+        font-size: 3rem;
+      }
+    }
+
+    .features {
+      flex-direction: column;
+      gap: 1rem;
+
+      .featureItem {
+        width: fit-content;
+        margin: 0 auto;
+      }
+    }
+  }
+
+  .eligibilityBox {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero {
+    padding: 3rem 0;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .titleWrapper {
+    .iconTitle {
+      .titleIcon, .title {
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  .contactInfo {
+    padding: 0.75rem 1.5rem;
+    
+    .phoneLink {
+      font-size: 1.1rem;
+    }
+  }
+
+  .actionArea {
+    .enrollButton {
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+    }
+  }
+
+  .eligibilityBox {
+    padding: 1.5rem;
+
+    .eligibilityContent {
+      .classes {
+        gap: 1.5rem;
+
+        .classItem {
+          span {
+            font-size: 2rem;
+          }
+        }
+      }
+    }
+  }
+} 

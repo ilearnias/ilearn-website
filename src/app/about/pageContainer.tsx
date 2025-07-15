@@ -25,7 +25,7 @@ const PageContainer = () => {
       <Header />
 
       <div className="_banner-box1">
-        <Fade direction="up" duration={1000}>
+        <Fade direction="up" duration={900}>
           <div className="_banner-header-txt1">
             {/* <span style={{ color: "#dc2626" }}>About</span> Us */}
             About Us
@@ -45,6 +45,7 @@ const PageContainer = () => {
       <br />
       <br /> */}
       <Container>
+        {/* <Fade direction="up" duration={1000}> */}
         <Row>
           <Col md={6}>
             <div className="_about_box_4">
@@ -135,17 +136,16 @@ const PageContainer = () => {
             </div>
           </Col>
           <Col md={6}>
-            <Fade direction="up" duration={1000}>
-              <Image
-                src={Classroom}
-                alt="classroom"
-                width={500}
-                height={500}
-                className="_about-us-img"
-              />
-            </Fade>
+            <Image
+              src={Classroom}
+              alt="classroom"
+              width={500}
+              height={500}
+              className="_about-us-img"
+            />
           </Col>
         </Row>
+        {/* </Fade> */}
         <br />
       </Container>
 

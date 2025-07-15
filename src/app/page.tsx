@@ -1,11 +1,7 @@
-import Home from "./home/page";
-import Loader from "./loader/page";
+import HomePageContainer from "./home/pageContainer";
 
-export default function Page() {
+export default function Home() {
   return (
-    <>
-    {/* <Loader/> */}
-      <Home />
-    </>
+    <HomePageContainer />
   );
 }
