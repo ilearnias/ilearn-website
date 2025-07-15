@@ -1,7 +1,8 @@
 .common-hero {
   position: relative;
   height: 60vh;
-  background: rgb(167, 181, 255);
+  // background: rgb(167, 181, 255);
+  background: #e0f2ff;
   overflow: hidden;
 
   @media (max-width: 768px) {
@@ -31,11 +32,10 @@
     z-index: 2;
 
     .hero-content {
-      padding-top: 100px;  // More padding for desktop
-   // More padding for desktop
-      
-      h1 {  
-       
+      padding-top: 100px; // More padding for desktop
+      // More padding for desktop
+
+      h1 {
         font-size: 4.5rem;
         font-weight: 700;
         margin-bottom: 20px;
@@ -54,12 +54,10 @@
         margin-left: auto;
         margin-right: auto;
         opacity: 0.9;
-       font-size: 17px
-       ;
+        font-size: 17px;
         color: black;
         @media (max-width: 768px) {
           font-size: 14px;
-
         }
       }
 
@@ -87,7 +85,6 @@
     z-index: 1;
   }
 }
-
 
 .video-card {
   background: #fff;
@@ -210,4 +207,4 @@
   .video-card__subtitle {
     font-size: 1rem;
   }
-} 
+}
