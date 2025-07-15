@@ -41,12 +41,14 @@ const HeroSection = ({
       <div className={twMerge(baseStyles.overlay, overlayClassName)}>
         <Container>
           <div className={twMerge(baseStyles.content, contentClassName)}>
-            <Heading
+            {/* <Heading
               text={title}
               color="blue"
+
               className={titleClassName}
               animate={true}
-            />
+            /> */}
+            <h1 className="text-blue-900 text-[2.5rem] font-bold !normal-case">{title}</h1>
             {description && <p className="hero-description">{description}</p>}
             {buttons && <div className="hero-buttons">{buttons}</div>}
             {children}

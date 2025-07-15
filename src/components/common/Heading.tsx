@@ -40,7 +40,7 @@ const Heading: React.FC<HeadingProps> = ({
 
   // Base styles that should always be applied
   const baseStyles = twMerge(
-    "font-bold tracking-[-0.02em] leading-[1.2]",
+    "font-bold tracking-[-0.02em] !text-[2.5rem] leading-[1.2]",
     sizeStyles[size],
     colorStyles[color],
     className
