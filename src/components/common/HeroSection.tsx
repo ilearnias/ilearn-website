@@ -43,7 +43,7 @@ const HeroSection = ({
           <div className={twMerge(baseStyles.content, contentClassName)}>
             <Heading
               text={title}
-              color="red"
+              color="blue"
               className={titleClassName}
               animate={true}
             />

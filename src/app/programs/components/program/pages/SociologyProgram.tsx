@@ -349,10 +349,9 @@ export default function SociologyProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
-        className="font-bold"
-        titleClassName="font-bold"
         title="Sociology Optional"
-        description="Master sociology with our comprehensive optional course"
+        titleClassName="font-bold"
+        description="Master Sociology for UPSC Mains with our comprehensive program"
         buttons={buttons}
       />
       <ProgramHighlights />

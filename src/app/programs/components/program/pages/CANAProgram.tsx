@@ -421,9 +421,9 @@ export default function CANAProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
+        title="Current Affairs & News Analysis"
         titleClassName="font-bold"
-        title="Current Affairs and News Analysis (CANA)"
-        description="Stay ahead with daily current affairs coverage and analytical skills for UPSC success"
+        description="Stay updated with UPSC-focused current affairs analysis"
         buttons={buttons}
       />
       <WhyCANAMatters />

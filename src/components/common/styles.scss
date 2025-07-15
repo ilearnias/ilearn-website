@@ -1,12 +1,19 @@
 .common-hero {
   position: relative;
   height: 60vh;
-  background: linear-gradient(135deg,#071A2D 0%, #071A2D 25%, #4A7BA7 50%, #2E5984 75%, #071A2D 100%);
+  background: rgb(174, 174, 234);
   overflow: hidden;
 
   @media (max-width: 768px) {
-    &::before {
-      
+    height: 40vh;
+    padding-top: 100px;
+
+    .hero-overlay {
+      .hero-content {
+        padding-top: 100px;
+        padding-right: 30px;
+        padding-left: 30px;
+      }
     }
   }
 
@@ -24,7 +31,11 @@
     z-index: 2;
 
     .hero-content {
-      h1 {
+      padding-top: 100px;  // More padding for desktop
+   // More padding for desktop
+      
+      h1 {  
+       
         font-size: 3.5rem;
         font-weight: 700;
         margin-bottom: 20px;
@@ -39,6 +50,13 @@
         margin-left: auto;
         margin-right: auto;
         opacity: 0.9;
+       font-size: 17px
+       ;
+        color: black;
+        @media (max-width: 768px) {
+          font-size: 14px;
+
+        }
       }
 
       .hero-buttons {
@@ -66,43 +84,7 @@
   }
 }
 
-/* Add the shimmer effect using ::after pseudo-element */
-.common-hero::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-  animation: shimmer 3s infinite;
-  pointer-events: none; /* Allows clicks to pass through */
-}
 
-/* Keep your keyframes outside the class */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* Optional: Add different shimmer variations */
-.common-hero.shimmer-slow::after {
-  animation: shimmer 5s infinite;
-}
-
-.common-hero.shimmer-fast::after {
-  animation: shimmer 1.5s infinite;
-}
-
-.common-hero.shimmer-subtle::after {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
-}
-
-.common-hero.shimmer-bright::after {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
-}
-
-// Video Card Styles
 .video-card {
   background: #fff;
   border-radius: 12px;

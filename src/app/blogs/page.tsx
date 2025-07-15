@@ -219,8 +219,8 @@ export default function BlogPage() {
   return (
     <div>
       <HeroSection
-        className="font-bold"
-        titleClassName="font-bold mb-3"
+     
+        titleClassName="font-bold mb-2"
         title="Our Blog"
         pageName="Blog"
         description="Stay informed and inspired with our latest articles, success stories, and expert insights on civil service examination preparation."
