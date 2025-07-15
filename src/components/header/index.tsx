@@ -160,8 +160,8 @@ export default function Header() {
             </div>
             <div className="flex items-center gap-4 h-full">
               <div
-                className="!text-[16px] !font-semibold !text-white border-2 border-red-500 hover:bg-red-500 transition-all duration-300 ease-in-out rounded-md px-4 py-2 cursor-pointer md:block hidden"
-                onClick={() => router.push("/quote")}
+                className="!text-[16px] !font-semibold !text-white bg-red-500  hover:bg-red-600 transition-all duration-300 ease-in-out rounded-md px-4 py-2 cursor-pointer md:block hidden"
+                onClick={() => router.push("/contact")}
               >
                 Join Now
               </div>

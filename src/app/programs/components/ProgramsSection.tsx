@@ -113,10 +113,10 @@ const ProgramsSection = () => {
                 <Heading
                   text={program.title}
                   color="tricolor"
-                  className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl"
+                  className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl text-center"
                 />
                 <p>{program.description}</p>
-                <div className="duration">{program.duration} months</div>
+                <div className="duration">{program?.status}</div>
                 <button
                   className="btn btn-primary mt-3"
                   onClick={() => handleProgramClick(program)}

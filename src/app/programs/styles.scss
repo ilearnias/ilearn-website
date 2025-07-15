@@ -44,7 +44,7 @@
   flex-direction: row;
   align-items: center;
 }
-.vendor-title{
+.vendor-title {
   font-family: vars.$Bold;
   font-size: 30px;
   margin-bottom: 20px;
@@ -161,7 +161,7 @@
       transition: all 0.3s ease;
       background: #0d47a1;
       border: none;
-      
+
       &:hover {
         background: #1565c0;
       }
@@ -182,7 +182,7 @@
     .program-card {
       margin-bottom: 1.5rem;
       padding: 2rem 1.5rem;
-      
+
       h3 {
         font-size: 1.2rem;
         min-height: auto;
@@ -271,5 +271,3 @@
     }
   }
 }
-
-
