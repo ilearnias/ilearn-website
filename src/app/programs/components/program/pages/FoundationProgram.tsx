@@ -4,6 +4,10 @@ import React from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import HeroSection from "@/components/common/HeroSection";
+import { Container, Row, Col } from "react-bootstrap";
+import Heading from "@/components/common/Heading";
+import "./styles.scss";
+import { useRouter } from "next/navigation";
 
 export default function FoundationProgram() {
   const buttons = (
@@ -17,6 +21,8 @@ export default function FoundationProgram() {
     </div>
   );
 
+  const router = useRouter();
+
   return (
     <div className="program-page">
       <Header />
@@ -27,20 +33,54 @@ export default function FoundationProgram() {
         description="Build a strong foundation for your UPSC preparation journey"
         buttons={buttons}
       />
-      <div className="flex flex-col items-center justify-center py-20 px-4 bg-gray-50">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">
-          No Data Available
-        </h2>
-        <p className="text-gray-600 text-center mb-8">
-          The program details are currently being updated. Please check back
-          later or contact us for more information.
-        </p>
-        <a
-          href="/contact"
-          className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition-colors"
-        >
-          Contact Us
-        </a>
+      <div className="">
+        <br />
+        <br />
+        <Container>
+          <Row>
+            <Col md={2} className="mb-4" />
+            <Col md={4} className="mb-4">
+              <div className="program-card">
+                <div className="icon-wrapper mb-3"></div>
+                <Heading
+                  text={"iLearn IAS Ignite"}
+                  color="tricolor"
+                  className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl text-center"
+                />
+                <p>An Exclusive UPSC Foundation Program for College Students</p>
+                <div className="duration">{"10 months"}</div>
+                <button
+                  className="btn btn-primary mt-3"
+                  onClick={() => router.replace("/foundation/ignite")}
+                >
+                  View Program Details
+                </button>
+              </div>
+            </Col>
+            <Col md={4} className="mb-4">
+              <div className="program-card">
+                <div className="icon-wrapper mb-3"></div>
+                <Heading
+                  text={"iLearn IAS Junior"}
+                  color="tricolor"
+                  className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl text-center"
+                />
+                <p>
+                  A Flagship IAS Skill Development Program for School Students
+                </p>
+                <div className="duration">{"10 months"}</div>
+                <button
+                  className="btn btn-primary mt-3"
+                  onClick={() => router.replace("/foundation/junior")}
+                >
+                  View Program Details
+                </button>
+              </div>
+            </Col>
+            <Col md={2} className="mb-4" />
+          </Row>
+        </Container>
+        <br />
       </div>
     </div>
   );
