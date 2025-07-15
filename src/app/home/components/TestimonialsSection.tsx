@@ -18,7 +18,11 @@ export interface TestimonialItem {
   order: number;
 }
 
-const TestimonialsSection: React.FC = () => {
+interface TestimonialsSectionProps {
+  testimonials?: TestimonialItem[];
+}
+
+const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials: propTestimonials }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
@@ -30,11 +34,15 @@ const TestimonialsSection: React.FC = () => {
 
   useEffect(() => {
     const fetchTestimonials = async () => {
-      const data = await getTestimonials();
-      setTestimonials(data.filter((item: TestimonialItem) => item.isActive));
+      if (propTestimonials) {
+        setTestimonials(propTestimonials);
+      } else {
+        const data = await getTestimonials();
+        setTestimonials(data.filter((item: TestimonialItem) => item.isActive));
+      }
     };
     fetchTestimonials();
-  }, []);
+  }, [propTestimonials]);
 
   const handleVideoClick = (videoId: string) => {
     setActiveVideo(activeVideo === videoId ? null : videoId);

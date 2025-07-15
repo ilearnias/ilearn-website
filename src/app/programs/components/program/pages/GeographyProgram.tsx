@@ -26,25 +26,28 @@ import { motion } from "framer-motion";
 const geographyTestimonials: TestimonialItem[] = [
   {
     id: "geo1",
-    title: "Geography Optional Success",
-    subtitle: "How iLearn's Geography program helped me secure a top rank.",
-    videoId: "Y8Tko2YC5hA",
-    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg",
+    description: "Geography Optional Success - How iLearn's Geography program helped me secure a top rank.",
+    video: "Y8Tko2YC5hA",
+    isActive: true,
+    isTestimonial: true,
+    order: 1
   },
   {
     id: "geo2",
-    title: "Mastering Geography Maps",
-    subtitle: "My journey through the comprehensive map practice sessions.",
-    videoId: "jNQXAC9IVRw",
-    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg",
+    description: "Mastering Geography Maps - My journey through the comprehensive map practice sessions.",
+    video: "jNQXAC9IVRw",
+    isActive: true,
+    isTestimonial: true,
+    order: 2
   },
   {
     id: "geo3",
-    title: "Geography Optional Strategy",
-    subtitle: "How the program's structured approach made the difference.",
-    videoId: "M7lc1UVf-VE",
-    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg",
-  },
+    description: "Geography Optional Strategy - How the program's structured approach made the difference.",
+    video: "M7lc1UVf-VE",
+    isActive: true,
+    isTestimonial: true,
+    order: 3
+  }
 ];
 
 // Program Highlights Section

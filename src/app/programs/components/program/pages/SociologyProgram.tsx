@@ -26,25 +26,28 @@ import { motion } from "framer-motion";
 const sociologyTestimonials: TestimonialItem[] = [
   {
     id: "soc1",
-    title: "Success in Sociology Optional",
-    subtitle: "How iLearn's comprehensive notes helped me score high marks.",
-    videoId: "Y8Tko2YC5hA",
-    thumbnailUrl: "https://img.youtube.com/vi/Y8Tko2YC5hA/maxresdefault.jpg",
+    description: "Success in Sociology Optional - How iLearn's comprehensive notes helped me score high marks.",
+    video: "Y8Tko2YC5hA",
+    isActive: true,
+    isTestimonial: true,
+    order: 1
   },
   {
     id: "soc2",
-    title: "From Basics to Advanced",
-    subtitle: "My journey through the sociology optional preparation.",
-    videoId: "jNQXAC9IVRw",
-    thumbnailUrl: "https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg",
+    description: "From Basics to Advanced - My journey through the sociology optional preparation.",
+    video: "jNQXAC9IVRw",
+    isActive: true,
+    isTestimonial: true,
+    order: 2
   },
   {
     id: "soc3",
-    title: "Sociology - The Right Choice",
-    subtitle: "How conceptual clarity and test series made the difference.",
-    videoId: "M7lc1UVf-VE",
-    thumbnailUrl: "https://img.youtube.com/vi/M7lc1UVf-VE/maxresdefault.jpg",
-  },
+    description: "Sociology - The Right Choice - How conceptual clarity and test series made the difference.",
+    video: "M7lc1UVf-VE",
+    isActive: true,
+    isTestimonial: true,
+    order: 3
+  }
 ];
 
 // Program Highlights Section
