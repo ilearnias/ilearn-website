@@ -16,21 +16,24 @@
     }
   }
 
-  .results-summary-stats {
+  .summary-stats {
     margin-bottom: 24px;
 
     .ant-card {
       height: 100%;
-      
+      text-align: center;
+
       .ant-statistic {
         .ant-statistic-title {
           color: #666;
           font-size: 14px;
+          margin-bottom: 8px;
         }
 
         .ant-statistic-content {
           font-size: 24px;
-          
+          font-weight: 600;
+
           .anticon {
             margin-right: 8px;
           }
@@ -63,6 +66,13 @@
 
       .ant-table-tbody > tr > td {
         vertical-align: middle;
+      }
+
+      .ant-statistic {
+        .ant-statistic-content {
+          font-size: 14px;
+          font-weight: 500;
+        }
       }
     }
 
@@ -104,9 +114,43 @@
 
   .ant-tag {
     margin: 0 4px 4px 0;
-    
+
     .anticon {
       margin-right: 4px;
     }
   }
-} 
+
+  // Modal styles
+  .ant-modal {
+    .ant-form-item {
+      margin-bottom: 16px;
+    }
+
+    .ant-input-number {
+      width: 100%;
+    }
+  }
+
+  // Action buttons
+  .ant-btn {
+    &.ant-btn-primary {
+      &.ant-btn-dangerous {
+        &:hover {
+          background-color: #ff4d4f;
+          border-color: #ff4d4f;
+        }
+      }
+    }
+  }
+
+  // Table action buttons
+  .ant-table-tbody {
+    .ant-btn {
+      margin-right: 4px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

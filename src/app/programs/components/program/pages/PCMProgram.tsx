@@ -313,7 +313,6 @@ export default function PCMProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
-        className="font-bold"
         title="Prelims Cum Mains Program"
         titleClassName="font-bold"
         description="Comprehensive preparation for both UPSC Prelims and Mains"
