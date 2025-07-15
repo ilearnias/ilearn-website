@@ -16,6 +16,10 @@
     "path": "/programs"
   },
   {
+    "name": "Foundation",
+    "path": "/programs/foundation-course"
+  },
+  {
     "name": "Blog",
     "path": "/blogs"
   },

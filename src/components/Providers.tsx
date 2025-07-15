@@ -1,10 +1,10 @@
 "use client";
 
-import { Provider } from 'react-redux';
+import { Provider } from "react-redux";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
-import store from '@/redux/store';
-import { ReactNode, useEffect, useState } from 'react';
-import { initializeAuth } from '@/redux/slices/authSlice';
+import store from "@/redux/store";
+import { ReactNode, useEffect, useState } from "react";
+import { initializeAuth } from "@/redux/slices/authSlice";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -15,20 +15,32 @@ const Providers = ({ children }: ProvidersProps) => {
 
   useEffect(() => {
     // Initialize auth state from localStorage
-    const token = localStorage.getItem('adminToken');
-    const userData = localStorage.getItem('adminUser');
+    const token = localStorage.getItem("adminToken");
+    const userData = localStorage.getItem("adminUser");
+
+    console.log("Providers: Initializing auth state", {
+      token: !!token,
+      userData: !!userData,
+    });
 
     if (token && userData) {
       try {
         const user = JSON.parse(userData);
+        console.log(
+          "Providers: Dispatching initializeAuth with user data",
+          user
+        );
         store.dispatch(initializeAuth({ user, token }));
       } catch (error) {
-        console.error('Error parsing user data:', error);
-        localStorage.removeItem('adminToken');
-        localStorage.removeItem('adminUser');
+        console.error("Error parsing user data:", error);
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("adminUser");
         store.dispatch(initializeAuth(null));
       }
     } else {
+      console.log(
+        "Providers: No auth data found, dispatching initializeAuth(null)"
+      );
       store.dispatch(initializeAuth(null));
     }
 
@@ -48,11 +60,9 @@ const Providers = ({ children }: ProvidersProps) => {
 
   return (
     <Provider store={store}>
-      <AntdRegistry>
-        {children}
-      </AntdRegistry>
+      <AntdRegistry>{children}</AntdRegistry>
     </Provider>
   );
 };
 
-export default Providers; 
+export default Providers;
