@@ -46,48 +46,9 @@ const MediaSection = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [videos, setVideos] = useState<MediaItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const containerRef = React.useRef(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(containerRef, { once: false });
-
-  // useEffect(() => {
-  //   const fetchMediaData = async () => {
-  //     try {
-  //       setError(null);
-  //       const response = await axios.get<MediaResponse>(
-  //         "https://ilearn-server.bairuhatech.com/v1/media",
-  //         {
-  //           params: {
-  //             page: 1,
-  //             limit: 10,
-  //             isTestimonial: false,
-  //           },
-  //         }
-  //       );
-
-  //       if (!response.data.status) {
-  //         throw new Error(
-  //           response.data.message || "Failed to fetch media data"
-  //         );
-  //       }
-
-  //       // Filter out inactive videos
-  //       const activeVideos = response.data.data.filter(
-  //         (video) => video.isActive
-  //       );
-  //       setVideos(activeVideos);
-  //     } catch (error) {
-  //       console.error("Error fetching media data:", error);
-  //       setError("Failed to load media content. Please try again later.");
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchMediaData();
-  // }, []);
 
   useEffect(() => {
     fetchMedia();
@@ -270,6 +231,8 @@ const MediaSection = () => {
                 >
                   <Meta title={TeamName(item.description)} />
                 </Card>
+                <br />
+                {/* <br /> */}
               </Fade>
             </Col>
           ))}

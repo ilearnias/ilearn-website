@@ -31,7 +31,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+  background: linear-gradient(135deg, #bec6ff 0%, #ffacac 100%);
   z-index: 9999;
 }
 
@@ -39,9 +39,9 @@
   position: relative;
   width: 120px;
   height: 120px;
-  
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -10px;
     left: -10px;
@@ -59,5 +59,7 @@
   height: 100%;
   object-fit: contain;
   animation: pulse 1.5s ease-in-out infinite;
-  filter: brightness(1.2); /* Makes the white parts of the logo slightly brighter */
-} 
+  filter: brightness(
+    1.2
+  ); /* Makes the white parts of the logo slightly brighter */
+}

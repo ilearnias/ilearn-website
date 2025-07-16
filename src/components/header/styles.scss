@@ -37,6 +37,9 @@
   .header-logo {
     object-fit: contain;
     transition: transform 0.3s ease;
+    @media (max-width: 768px) {
+      width: 130px;
+    }
 
     &:hover {
       transform: scale(1.05);
@@ -144,10 +147,21 @@
 .Header-menuIcon {
   display: none;
   cursor: pointer;
-  @media screen and (min-width: 320px) and (max-width: 768px) {
+  // @media screen and (min-width: 320px) and (max-width: 768px) {
+  //   display: flex;
+  // }
+  @media (max-width: 768px) {
     display: flex;
   }
 }
+
+._nav_bar_items {
+  // flex-1 flex justify-center h-full
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
 .Header-popoverContent {
   display: flex;
   align-items: baseline;

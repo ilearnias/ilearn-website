@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import Image from 'next/image';
-import './LoadingSpinner.scss';
+import Image from "next/image";
+import "./LoadingSpinner.scss";
 
 const LoadingSpinner = () => {
   return (
@@ -20,4 +20,4 @@ const LoadingSpinner = () => {
   );
 };
 
-export default LoadingSpinner; 
+export default LoadingSpinner;

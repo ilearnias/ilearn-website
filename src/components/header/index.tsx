@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { CgMenuRight } from "react-icons/cg";
 import SideDrawer from "./sideDrawer";
 import SubText from "../common/SubText";
+import Menu from "./menu.json";
 
 export default function Header() {
   const router = useRouter();
@@ -57,10 +58,27 @@ export default function Header() {
                 className="header-logo"
               />
             </div>
-            <div className="flex-1 flex justify-center h-full">
+            <div className="_nav_bar_items">
               <div className="Header-MenuBox flex justify-center items-center gap-10 h-full">
                 <div className="!flex !items-center !justify-center !gap-7 pt-3">
-                  <div
+                  {Menu?.map((menu: any, index: any) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => router.push(menu?.path)}
+                        className="header-hover"
+                      >
+                        <SubText
+                          size="small"
+                          className="!font-semibold"
+                          text={menu?.name}
+                          color="black"
+                        />
+                      </div>
+                    );
+                  })}
+
+                  {/* <div
                     onClick={() => router.push("/")}
                     className="header-hover"
                   >
@@ -104,6 +122,18 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Programs"
+                      color="black"
+                    />
+                  </div>
+
+                  <div
+                    onClick={() => router.push("/programs/foundation-course")}
+                    className="header-hover"
+                  >
+                    <SubText
+                      size="small"
+                      className="!font-semibold"
+                      text="Foundation"
                       color="black"
                     />
                   </div>
@@ -154,7 +184,7 @@ export default function Header() {
                       text="Contact Us"
                       color="black"
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
