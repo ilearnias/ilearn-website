@@ -1304,29 +1304,39 @@ $charcoal: #1f2937; // Text - Primary text
     max-width: 1440px;
     margin: 0 auto;
     gap: 60px;
+    @media (max-width: 480px) {
+      gap: 18px;
+    }
   }
 
   .apply-text {
     flex: 1;
     max-width: 600px;
 
-    h1 {
-      font-size: 52px;
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 24px;
-
-      .underline {
-        text-decoration: underline;
-        text-underline-offset: 8px;
+    h1,
+    .section-title,
+    .heading {
+      font-family: 'Montserrat', Arial, sans-serif !important;
+      font-weight: 800 !important;
+      font-size: clamp(1.5rem, 5vw, 2.5rem) !important;
+      color: #fff !important;
+      letter-spacing: 0 !important;
+      line-height: 1.1 !important;
+      @media (max-width: 480px) {
+        font-size: 1.3rem !important;
       }
     }
-
     p {
-      font-size: 18px;
-      line-height: 1.6;
-      margin-bottom: 32px;
-      opacity: 0.9;
+      font-family: 'Montserrat', Arial, sans-serif !important;
+      font-weight: 500 !important;
+      font-size: clamp(1rem, 3vw, 1.1rem) !important;
+      color: #fff !important;
+      letter-spacing: 0 !important;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      @media (max-width: 480px) {
+        font-size: 0.95rem !important;
+      }
     }
   }
 
@@ -1343,9 +1353,9 @@ $charcoal: #1f2937; // Text - Primary text
       display: flex !important;
       align-items: center !important;
       gap: 8px !important;
-      padding: 16px 32px !important;
+      padding: 8px 18px !important;
       border-radius: 100px !important;
-      font-size: 16px !important;
+      font-size: 14px !important;
     }
 
     .apply-secondary-btn {
@@ -1356,8 +1366,63 @@ $charcoal: #1f2937; // Text - Primary text
       display: flex !important;
       align-items: center !important;
       gap: 8px !important;
-      padding: 16px 32px !important;
+      padding: 8px 18px !important;
       border-radius: 100px !important;
+      font-size: 14px !important;
+    }
+    @media (max-width: 768px) {
+      flex-direction: column;
+      width: 100%;
+      .apply-primary-btn,
+      .apply-secondary-btn {
+        width: 100%;
+        justify-content: center;
+        font-size: 1rem !important;
+        padding: 12px 0 !important;
+      }
+    }
+    @media (max-width: 480px) {
+      gap: 10px;
+      .apply-primary-btn,
+      .apply-secondary-btn {
+        font-size: 0.95rem !important;
+        padding: 10px 0 !important;
+      }
+    }
+  }
+
+  .cta-buttons.exact-clone {
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+    margin-top: 32px;
+    align-items: center;
+    .exact-clone-btn {
+      height: 50px;
+      min-width: 100px;
+      font-size: 10px !important;
+      font-weight: 600 !important;
+      border-radius: 24px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 22px !important;
+      box-shadow: none;
+      line-height: 1;
+      transition: background 0.2s, color 0.2s;
+    }
+    .apply-primary-btn {
+      background: #fff !important;
+      color: #e31837 !important;
+      border: 2px solid #e31837 !important;
+    }
+    .apply-secondary-btn {
+      background: #20468d !important;
+      color: #fff !important;
+      border: none !important;
+    }
+    svg {
       font-size: 16px !important;
     }
   }
@@ -1368,31 +1433,97 @@ $charcoal: #1f2937; // Text - Primary text
     position: absolute;
     bottom: 32px;
     right: 32px;
-
-    .stat-item {
-      background: white;
-      padding: 8px 20px;
-      border-radius: 100px;
-
-      span {
-        font-weight: 500;
-        font-size: 14px;
-        color: #e31837;
-      }
+    @media (max-width: 1440px) {
+      position: static;
+      margin-top: 32px;
+    }
+    @media (max-width: 768px) {
+      position: static;
+      margin-top: 16px;
+      justify-content: flex-start;
+    }
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-start;
     }
   }
 
-  .free-counselling-tag {
-    position: absolute;
-    top: 24px;
-    right: 24px;
-    background: white;
-    color: #e31837;
-    padding: 8px 20px;
+  .free-counselling-tag,
+  .exact-clone-tag {
+    padding: 4px 12px;
+    font-size: 11px;
     border-radius: 100px;
     font-weight: 500;
-    font-size: 14px;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #fff;
+    color: #e31837;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
+
+  .apply-image-container,
+  .exact-clone-img {
+    width: 400px;
+    height: 250px;
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    @media (max-width: 768px) {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      min-height: 180px;
+    }
+    @media (max-width: 480px) {
+      min-height: 120px;
+      border-radius: 12px;
+    }
+  }
+  .apply-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    @media (max-width: 480px) {
+      border-radius: 12px;
+    }
+  }
+  @media (max-width: 480px) {
+    padding: 12px 4px;
+    margin: 4px;
+    border-radius: 10px;
+    // Decrease all text sizes by 4px from previous values
+    .apply-text {
+      h1,
+      .section-title,
+      .heading,
+      [class*="Heading"] {
+        font-size: 1.05rem !important;
+      }
+      p {
+        font-size: 0.7rem !important;
+      }
+    }
+    .cta-buttons {
+      .apply-primary-btn,
+      .apply-secondary-btn {
+        font-size: 0.7rem !important;
+      }
+    }
+  }
+}
+
+.apply-section .apply-text h1,
+.apply-section .apply-text .section-title,
+.apply-section .apply-text .heading,
+.apply-section .apply-text [class*="Heading"] {
+  color: #fff !important;
 }
 
 @media (max-width: 1440px) {
@@ -1770,4 +1901,9 @@ h2 {
 .youtube-box1 {
   width: 100%;
   height: 100%;
+}
+
+.poppins-bold {
+  font-family: 'Poppins', Arial, Helvetica, sans-serif !important;
+  font-weight: 700 !important;
 }
