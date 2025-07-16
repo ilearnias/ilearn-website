@@ -49,17 +49,17 @@ const ProgramHighlights = () => {
     {
       icon: <FiCalendar className="w-6 h-6" />,
       title: "Duration",
-      description: "10 months till June 2026",
+      description: "10 months (Aug 15, 2025 - June 20, 2026)",
     },
     {
       icon: <FiMonitor className="w-6 h-6" />,
       title: "Delivery Mode",
-      description: "Online (LIVE + REC)",
+      description: "Online (REC + LIVE)",
     },
     {
       icon: <FiClock className="w-6 h-6" />,
-      title: "Daily Analysis",
-      description: "15-minute Newspaper Analysis [REC]",
+      title: "Total Hours",
+      description: "300+ hrs of structured content",
     }
   ];
 
@@ -69,16 +69,36 @@ const ProgramHighlights = () => {
     description: (
       <>
         <SessionDetails 
-          title="Saturdays"
-          details="2-hour General Studies [GS] Session - Content aligned with UPSC foundation themes [LIVE + REC]"
+          title="Saturday"
+          details="3-hour LIVE GS Session led by iLearn IAS Faculty Team"
         />
         <SessionDetails 
-          title="Sundays"
+          title="Sunday"
           details={
             <>
-              2 &quot;Think like a Civil Servant&quot; - 2-hour LIVE case study-solving sessions (moderated by serving IAS/IPS officers)<br/>
-              2 &quot;QUIZZYBEE&quot; - weekly mixed-format tests (MCQ + descriptive)<br/>
-              • Skill Development Sessions on Debate/Public Speaking, Communicative English etc
+              LIVE STRATEGY Session on:<br/>
+              <ul className="list-disc pl-6">
+                <li>Solving Prelims MCQs</li>
+                <li>Mains Answer Writing</li>
+                <li>Note Making</li>
+                <li>Essay writing</li>
+                <li>Doubt Clearance</li>
+              </ul>
+            </>
+          }
+        />
+        <SessionDetails
+          title="Weekly Prelims Practice Tests"
+          details={
+            <>25 Q on portal; Open from Saturday 5 PM till end of next day</>
+          }
+        />
+        <SessionDetails
+          title="Monthly Mains Answer Writing Test"
+          details={
+            <>
+              On a Sunday, followed by a brief discussion<br/>
+              5 Q per test; Evaluation & feedback by mentor
             </>
           }
         />
@@ -89,10 +109,48 @@ const ProgramHighlights = () => {
 
   const mentorship = {
     icon: <FiUsers className="w-6 h-6" />,
-    title: "Personalized Mentorship",
-    description: "1-on-1 Personalized Mentorship sessions for students along with parents' participation and regular progress tracking (thrice a month)",
+    title: "Mentorship & Feedback",
+    description: (
+      <>
+        <ul className="list-disc pl-6">
+          <li>1-on-1 Personal Mentorship & Feedback (twice a month; on weekdays)</li>
+          <li>One Group Mentorship on monthly basis (Sunday)</li>
+        </ul>
+      </>
+    ),
     className: "col-span-full"
   };
+
+  const additionalFeatures = [
+    {
+      icon: <FiAward className="w-6 h-6" />,
+      title: "Subject wise UPSC PYQ Compilation",
+      description: "(2013-2025)",
+    },
+    {
+      icon: <FiClock className="w-6 h-6" />,
+      title: "Daily Newspaper Analysis",
+      description: "Daily 30 Min Newspaper Analysis (REC) with experts curated notes",
+    },
+    {
+      icon: <FiBookOpen className="w-6 h-6" />,
+      title: "Current Affairs Material Support",
+      description: (
+        <ul className="list-disc pl-6">
+          <li>Daily News Headlines: iLearn BEACON</li>
+          <li>Daily Prelims Practice: Chai Pe Quest</li>
+          <li>Daily Mains Practice: iMPACT</li>
+        </ul>
+      ),
+    },
+    {
+      icon: <FiUsers className="w-6 h-6" />,
+      title: "Officer On Duty",
+      description: (
+        <>Learn how real civil servants think, decide and lead through monthly LIVE skill-building sessions curated by serving IAS/IPS officers.</>
+      ),
+    },
+  ];
 
   return (
     <section className="py-16 bg-gray-50">
@@ -110,6 +168,12 @@ const ProgramHighlights = () => {
           <ProgramFeature {...weeklySchedule} />
           <div className="h-6"></div>
           <ProgramFeature {...mentorship} />
+          <div className="h-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {additionalFeatures.map((feature, index) => (
+              <ProgramFeature key={index} {...feature} />
+            ))}
+          </div>
         </div>
       </Container>
     </section>

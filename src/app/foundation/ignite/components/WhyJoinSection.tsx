@@ -48,23 +48,23 @@ const WhyJoinSection = () => {
   const benefits = [
     {
       icon: <FiBook className="w-6 h-6" />,
-      description: "Learn age-appropriate concepts from History, Polity, Geography, Economics etc",
+      description: " Learn directly from experienced iLearn IAS faculty",
     },
     {
       icon: <FiAward className="w-6 h-6" />,
-      description: "Build general awareness and critical thinking from a young age",
+      description: " Build strong UPSC fundamentals during college with periodic assessment ",
     },
     {
       icon: <FiUsers className="w-6 h-6" />,
-      description: "Get guided by serving IAS/IPS officers, trained iLearn IAS mentors, expert teachers",
+      description: "Receive structured weekly guidance to stay on track with personalised mentorship ",
     },
     {
       icon: <FiMessageSquare className="w-6 h-6" />,
-      description: "Develop life skills like public speaking, leadership, presentation & teamwork",
+      description: "Develop critical thinking and problem-solving skills from serving IAS/IPS officers ",
     },
     {
       icon: <FiCompass className="w-6 h-6" />,
-      description: "Build early clarity about the Civil Services journey",
+      description: "Be part of Kerala’s most vibrant UPSC student network ",
     },
   ];
 
@@ -112,7 +112,7 @@ const WhyJoinSection = () => {
         <Container>
           <div className="max-w-[1400px] mx-auto">
           
-            <div className='_heading-box-title1 text-center'>Why Join iLearn IAS Junior?</div>
+            <div className='_heading-box-title1 text-center'>Why Join iLearn IAS Ignite?</div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {benefits.map((benefit, index) => (

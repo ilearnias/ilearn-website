@@ -18,9 +18,18 @@
   color: vars.$p_red;
   font-size: 45px;
   font-family: vars.$Bold;
-  margin-bottom: -10px;
+  margin-bottom: 5px;
   @media (max-width: 768px) {
     font-size: 30px;
+  }
+}
+._heading-box-title2 {
+  color: vars.$p_blue;
+  font-size: 35px;
+  font-family: vars.$Bold;
+  margin-bottom: -10px;
+  @media (max-width: 768px) {
+    font-size: 20px;
   }
 }
 
