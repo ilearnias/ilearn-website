@@ -12,6 +12,7 @@ import { Meta } from "antd/es/list/Item";
 import YouTube from "react-youtube";
 import axios from "axios";
 import { mediaService } from "@/services/media.service";
+// import Slider from "react-slick";
 
 // Types for API response
 interface MediaItem {
@@ -153,6 +154,14 @@ const MediaSection = () => {
     return result;
   };
 
+  // var settings = {
+  //   dots: true,
+  //   infinite: true,
+  //   speed: 500,
+  //   slidesToShow: 1,
+  //   slidesToScroll: 1,
+  // };
+
   // if (isLoading) {
   //   return (
   //     <section className="bg-gray-50 py-16">
@@ -200,6 +209,39 @@ const MediaSection = () => {
             <div className="_heading-box-sub-title1">iLearn in the News</div>
           </div>
         </Fade>
+
+        {/* <Slider {...settings}>
+          {videos.map((item: any) => (
+            <div key={item.id}>
+              <Card
+                style={{
+                  width: "100%",
+                  borderRadius: "15px",
+                  boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+                  overflow: "hidden",
+                  transition: "transform 0.3s ease",
+                  border: "none",
+                }}
+                cover={
+                  <YouTube
+                    videoId={"zLwkn6BLJ4U"}
+                    opts={{
+                      borderTopLeftRadius: "15px",
+                      borderTopRightRadius: "15px",
+                      width: "100%",
+                      height: "250px",
+                      playerVars: {
+                        autoplay: 0,
+                      },
+                    }}
+                  />
+                }
+              >
+                <Meta title={TeamName(item.description)} />
+              </Card>
+            </div>
+          ))}
+        </Slider> */}
 
         <Row>
           {videos.map((item: any) => (
