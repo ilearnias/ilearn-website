@@ -311,7 +311,7 @@ const Testimonials = () => {
   return (
     <div className="media-page">
       <div className="media-header">
-        <h1>Media Management</h1>
+        <h1>Testimonials</h1>
         <p>Manage your video content and testimonials</p>
       </div>
 
@@ -439,10 +439,16 @@ const Testimonials = () => {
 
             <Form.Item
               name="isTestimonial"
-              label="Is Testimonial"
+              label=""
               valuePropName="checked"
+              initialValue={true}
             >
-              <Switch checkedChildren="Yes" unCheckedChildren="No" />
+              {/* <Switch
+                defaultChecked={true}
+                // disabled
+                checkedChildren="Yes"
+                unCheckedChildren="No"
+              /> */}
             </Form.Item>
           </Form>
         </Spin>

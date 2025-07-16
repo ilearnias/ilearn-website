@@ -440,10 +440,11 @@ const Media = () => {
 
             <Form.Item
               name="isTestimonial"
-              label="Is Testimonial"
+              label=""
               valuePropName="checked"
+              initialValue={false}
             >
-              <Switch checkedChildren="Yes" unCheckedChildren="No" />
+              {/* <Switch disabled checkedChildren="Yes" unCheckedChildren="No" /> */}
             </Form.Item>
           </Form>
         </Spin>
