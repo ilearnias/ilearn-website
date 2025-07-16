@@ -1,33 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { EmblaOptionsType } from 'embla-carousel'
-import useEmblaCarousel from 'embla-carousel-react'
-import { Thumb } from './EmblaCarouselThumbsButton'
-import { journeyService, IJourney } from '@/services/journey.service'
-import Image from 'next/image'
+import React, { useState, useEffect, useCallback } from "react";
+import { EmblaOptionsType } from "embla-carousel";
+import useEmblaCarousel from "embla-carousel-react";
+import { Thumb } from "./EmblaCarouselThumbsButton";
+import { journeyService, IJourney } from "@/services/journey.service";
+import Image from "next/image";
 
 type PropType = {
-  options?: EmblaOptionsType
-}
+  options?: EmblaOptionsType;
+};
 
 const EmblaCarousel: React.FC<PropType> = (props) => {
-  const { options } = props
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [journeyData, setJourneyData] = useState<IJourney[]>([])
-  const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options)
+  const { options } = props;
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [journeyData, setJourneyData] = useState<IJourney[]>([]);
+  const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
   const [emblaThumbsRef, emblaThumbsApi] = useEmblaCarousel({
-    containScroll: 'keepSnaps',
-    dragFree: true
-  })
+    containScroll: "keepSnaps",
+    dragFree: true,
+  });
 
   useEffect(() => {
     const fetchJourneyData = async () => {
       try {
-        const response = await journeyService.getAllJourney();
+        const response: any = await journeyService.getAllJourney();
         if (response.status && response.data) {
           setJourneyData(response.data);
         }
       } catch (error) {
-        console.error('Error fetching journey data:', error);
+        console.error("Error fetching journey data:", error);
       }
     };
 
@@ -36,24 +36,24 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
 
   const onThumbClick = useCallback(
     (index: number) => {
-      if (!emblaMainApi || !emblaThumbsApi) return
-      emblaMainApi.scrollTo(index)
+      if (!emblaMainApi || !emblaThumbsApi) return;
+      emblaMainApi.scrollTo(index);
     },
     [emblaMainApi, emblaThumbsApi]
-  )
+  );
 
   const onSelect = useCallback(() => {
-    if (!emblaMainApi || !emblaThumbsApi) return
-    setSelectedIndex(emblaMainApi.selectedScrollSnap())
-    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap())
-  }, [emblaMainApi, emblaThumbsApi, setSelectedIndex])
+    if (!emblaMainApi || !emblaThumbsApi) return;
+    setSelectedIndex(emblaMainApi.selectedScrollSnap());
+    emblaThumbsApi.scrollTo(emblaMainApi.selectedScrollSnap());
+  }, [emblaMainApi, emblaThumbsApi, setSelectedIndex]);
 
   useEffect(() => {
-    if (!emblaMainApi) return
-    onSelect()
+    if (!emblaMainApi) return;
+    onSelect();
 
-    emblaMainApi.on('select', onSelect).on('reInit', onSelect)
-  }, [emblaMainApi, onSelect])
+    emblaMainApi.on("select", onSelect).on("reInit", onSelect);
+  }, [emblaMainApi, onSelect]);
 
   return (
     <div className="embla-journey">
@@ -61,17 +61,22 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         <div className="embla-journey__container">
           {journeyData.map((journey, index) => (
             <div className="embla-journey__slide" key={journey.id}>
-              <div className="image-container position-relative" style={{ height: 'min(400px, 50vw)' }}>
+              <div
+                className="image-container position-relative"
+                style={{ height: "min(400px, 50vw)" }}
+              >
                 <Image
                   src={journey.media}
                   alt={`Journey milestone ${journey.year}`}
                   fill
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: "cover" }}
                 />
               </div>
-              <div 
-                className="milestone-overlay position-absolute start-0 bottom-0 p-3 text-white w-100" 
-                style={{ background: 'linear-gradient(transparent, rgba(0,0,0,0.8))' }}
+              <div
+                className="milestone-overlay position-absolute start-0 bottom-0 p-3 text-white w-100"
+                style={{
+                  background: "linear-gradient(transparent, rgba(0,0,0,0.8))",
+                }}
               >
                 <div className="d-flex flex-column gap-1">
                   <div className="d-flex align-items-center gap-2">
@@ -101,7 +106,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EmblaCarousel 
+export default EmblaCarousel;
