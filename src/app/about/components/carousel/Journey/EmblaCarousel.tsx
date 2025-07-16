@@ -63,7 +63,7 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
             <div className="embla-journey__slide" key={journey.id}>
               <div
                 className="image-container position-relative"
-                style={{ height: "min(400px, 50vw)" }}
+                style={{ height: "min(540px, 50vw)" }}
               >
                 <Image
                   src={journey.media}
