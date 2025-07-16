@@ -74,7 +74,9 @@ const Journey = () => {
       );
       if (response.status) {
         setJourneyList(response.data);
-        setTotalItems(response.total || response.data.length);
+        setTotalItems(response.meta?.itemCount || response.data.length);
+        setCurrentPage(response.meta?.page || 1);
+        setPageSize(response.meta?.limit || 10);
       } else {
         message.error(response.message || "Failed to fetch journey items");
       }
@@ -258,13 +260,16 @@ const Journey = () => {
     if (size && size !== pageSize) {
       setPageSize(size);
     }
+    // fetchJourney will be called by useEffect when currentPage or pageSize changes
   };
 
-  const filteredJourney = journeyList.filter(
-    (item) =>
-      item.description.toLowerCase().includes(searchText.toLowerCase()) ||
-      item.year.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // Remove in-memory filtering for pagination
+  // const filteredJourney = journeyList.filter(
+  //   (item) =>
+  //     item.description.toLowerCase().includes(searchText.toLowerCase()) ||
+  //     item.year.toLowerCase().includes(searchText.toLowerCase())
+  // );
+  // Use journeyList directly
 
   const columns: ColumnsType<IJourney> = [
     {
@@ -383,7 +388,7 @@ const Journey = () => {
       <Table
         className="journey-table"
         columns={columns}
-        dataSource={filteredJourney}
+        dataSource={journeyList}
         rowKey="id"
         loading={loading}
         pagination={{
