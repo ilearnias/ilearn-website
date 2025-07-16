@@ -58,13 +58,9 @@ const ApplySection = () => {
                 Free Counselling
               </div>
             </div>
-            <div className="stats exact-clone-stats">
-              <div className="stat-item exact-clone-pill">
-                <span>343+ Selections</span>
-              </div>
-              <div className="stat-item exact-clone-pill">
-                <span>10+ Years Experience</span>
-              </div>
+            <div className="apply-stats-buttons">
+              <button className="apply-stat-btn">343+ Selections</button>
+              <button className="apply-stat-btn">10+ Years Experience</button>
             </div>
           </div>
         </div>
