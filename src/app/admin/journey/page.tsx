@@ -54,6 +54,12 @@ const Journey = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
+  const token = localStorage.getItem("adminToken");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   useEffect(() => {
     fetchJourney();
@@ -62,7 +68,7 @@ const Journey = () => {
   const fetchJourney = async () => {
     try {
       setLoading(true);
-      const response = await journeyService.getAllJourney(
+      const response: any = await journeyService.getAllJourney(
         currentPage,
         pageSize
       );
@@ -175,6 +181,7 @@ const Journey = () => {
       if (uploadedFile && uploadedFile.originFileObj) {
         try {
           const imageUrl = await uploadImageToApi(uploadedFile.originFileObj);
+
           values.media = imageUrl;
         } catch (error: any) {
           message.error(error.message || "Failed to upload image");
@@ -199,7 +206,7 @@ const Journey = () => {
         }
       } else {
         // Create new journey
-        const response = await journeyService.createJourney(values);
+        const response = await journeyService.createJourney(values, config);
         if (response.status) {
           message.success(
             response.message || "Journey item created successfully"
