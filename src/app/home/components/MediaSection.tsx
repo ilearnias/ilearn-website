@@ -205,7 +205,7 @@ const MediaSection = () => {
       <Container className="!w-full">
         <Fade direction="up" duration={1000}>
           <div className="_heading-box">
-            <div className="_heading-box-title1">Media Coverage</div>
+            <div className="_heading-box-title1">iLearn in Media</div>
             <div className="_heading-box-sub-title1">iLearn in the News</div>
           </div>
         </Fade>
