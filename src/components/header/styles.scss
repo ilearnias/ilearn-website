@@ -245,7 +245,7 @@
 }
 
 .Drawer-footerIcon {
-  color: #ffffff;
+  color: #20468d;
   font-size: 20px;
   transition: color 0.3s ease;
 
@@ -269,4 +269,34 @@
     color: vars.$primary1;
     transform: translateY(-1px);
   }
+}
+
+._drawer_box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0px;
+  font-family: vars.$Regular;
+  font-size: 17px;
+  color: vars.$p_blue;
+}
+
+._drawer_text {
+  font-family: vars.$SemiBold;
+  font-size: 16px;
+  color: vars.$p_blue;
+}
+
+._drawer_icon {
+}
+
+._drawer_button {
+  background: vars.$p_red !important;
+  border: none !important;
+  width: 100% !important;
+  height: 45px !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  font-family: vars.$SemiBold !important;
 }
