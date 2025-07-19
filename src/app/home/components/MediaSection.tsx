@@ -12,7 +12,10 @@ import { Meta } from "antd/es/list/Item";
 import YouTube from "react-youtube";
 import axios from "axios";
 import { mediaService } from "@/services/media.service";
+import Slider from "react-slick";
 // import Slider from "react-slick";
+import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
 
 // Types for API response
 interface MediaItem {
@@ -154,28 +157,47 @@ const MediaSection = () => {
     return result;
   };
 
-  // var settings = {
-  //   dots: true,
-  //   infinite: true,
-  //   speed: 500,
-  //   slidesToShow: 1,
-  //   slidesToScroll: 1,
-  // };
-
-  // if (isLoading) {
-  //   return (
-  //     <section className="bg-gray-50 py-16">
-  //       <Container className="!w-full">
-  //         <div className="text-center">
-  //           <div className="animate-pulse">Loading media content...</div>
-  //         </div>
-  //       </Container>
-  //     </section>
-  //   );
-  // }
-
   const TeamName = (name: any) => {
     return <div className="_team_name_txt">{name}</div>;
+  };
+
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    initialSlide: 0,
+    nextArrow: (
+      <IoIosArrowForward color="red" size={30} className="next-arrow" />
+    ),
+    prevArrow: <IoIosArrowBack color="red" size={30} className="prev-arrow" />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   if (error) {
@@ -210,40 +232,45 @@ const MediaSection = () => {
           </div>
         </Fade>
 
-        {/* <Slider {...settings}>
-          {videos.map((item: any) => (
-            <div key={item.id}>
-              <Card
-                style={{
-                  width: "100%",
-                  borderRadius: "15px",
-                  boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
-                  overflow: "hidden",
-                  transition: "transform 0.3s ease",
-                  border: "none",
-                }}
-                cover={
-                  <YouTube
-                    videoId={"zLwkn6BLJ4U"}
-                    opts={{
-                      borderTopLeftRadius: "15px",
-                      borderTopRightRadius: "15px",
-                      width: "100%",
-                      height: "250px",
-                      playerVars: {
-                        autoplay: 0,
-                      },
+        <div className="slider-container">
+          <Slider {...settings}>
+            {videos.map((item: any, index: any) => {
+              return (
+                <div key={index}>
+                  <Card
+                    style={{
+                      width: "98%",
+                      margin: "0 auto",
+                      borderRadius: "15px",
+                      overflow: "hidden",
+                      boxShadow: "0 0 10px 0 rgba(158, 158, 158, 0.1)",
+                      transition: "transform 0.3s ease",
+                      border: "none",
                     }}
-                  />
-                }
-              >
-                <Meta title={TeamName(item.description)} />
-              </Card>
-            </div>
-          ))}
-        </Slider> */}
+                    cover={
+                      <YouTube
+                        videoId={item.video}
+                        opts={{
+                          borderTopLeftRadius: "15px",
+                          borderTopRightRadius: "15px",
+                          width: "100%",
+                          height: "250px",
+                          playerVars: {
+                            autoplay: 0,
+                          },
+                        }}
+                      />
+                    }
+                  >
+                    <Meta title={TeamName(item.description)} />
+                  </Card>
+                </div>
+              );
+            })}
+          </Slider>
+        </div>
 
-        <Row>
+        {/* <Row>
           {videos.map((item: any) => (
             <Col md={4} key={item.id}>
               <Fade direction="up" duration={1000}>
@@ -274,11 +301,10 @@ const MediaSection = () => {
                   <Meta title={TeamName(item.description)} />
                 </Card>
                 <br />
-                {/* <br /> */}
               </Fade>
             </Col>
           ))}
-        </Row>
+        </Row> */}
 
         {/* <motion.div
           ref={containerRef}
