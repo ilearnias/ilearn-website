@@ -13,6 +13,11 @@ import { FaYoutube } from "react-icons/fa";
 export default function SideDrawer(props: any) {
   const router = useRouter();
 
+  const handleClick = (link: string) => {
+    router.push(link);
+    props?.close();
+  };
+
   return (
     <Drawer
       title={
@@ -59,7 +64,11 @@ export default function SideDrawer(props: any) {
       <div style={{}}>
         {menuItems.map((item: any, index: any) => {
           return (
-            <div className="_drawer_box" key={index}>
+            <div
+              onClick={() => handleClick(item.link)}
+              className="_drawer_box"
+              key={index}
+            >
               <div className="_drawer_text">{item.name}</div>
               <IoMdArrowForward color="#000000" size={18} />
             </div>

@@ -126,8 +126,8 @@ const TeamSection = () => {
                             <Image
                               alt={team?.name}
                               src={team?.image}
-                              width={300}
-                              height={250}
+                              width={900}
+                              height={1018}
                             />
                           }
                         >
