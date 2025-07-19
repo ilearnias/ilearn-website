@@ -219,7 +219,7 @@ const Media = () => {
       ellipsis: true,
     },
     {
-      title: "Video URL",
+      title: "Video ID",
       dataIndex: "video",
       key: "video",
       ellipsis: true,
@@ -383,6 +383,7 @@ const Media = () => {
             >
               <TextArea
                 rows={3}
+                allowClear
                 placeholder="Enter media description..."
                 maxLength={500}
                 showCount
@@ -391,14 +392,12 @@ const Media = () => {
 
             <Form.Item
               name="video"
-              label="Video URL"
-              rules={[
-                { required: true, message: "Please enter video URL" },
-                { type: "url", message: "Please enter a valid URL" },
-              ]}
+              label="Video ID"
+              rules={[{ required: true, message: "Please enter video ID" }]}
             >
               <Input
-                placeholder="https://example.com/video.mp4"
+                allowClear
+                placeholder="dQw4w9WgXcQ"
                 prefix={<PlayCircleOutlined />}
               />
             </Form.Item>

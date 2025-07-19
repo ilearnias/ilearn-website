@@ -258,7 +258,7 @@ const MediaSection = () => {
                   }}
                   cover={
                     <YouTube
-                      videoId={"zLwkn6BLJ4U"}
+                      videoId={item?.video}
                       opts={{
                         borderTopLeftRadius: "15px",
                         borderTopRightRadius: "15px",
