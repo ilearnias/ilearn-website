@@ -219,7 +219,7 @@ const Testimonials = () => {
       ellipsis: true,
     },
     {
-      title: "Video URL",
+      title: "Video ID",
       dataIndex: "video",
       key: "video",
       ellipsis: true,
@@ -390,14 +390,11 @@ const Testimonials = () => {
 
             <Form.Item
               name="video"
-              label="Video URL"
-              rules={[
-                { required: true, message: "Please enter video URL" },
-                { type: "url", message: "Please enter a valid URL" },
-              ]}
+              label="Video ID"
+              rules={[{ required: true, message: "Please enter video ID" }]}
             >
               <Input
-                placeholder="https://example.com/video.mp4"
+                placeholder="dQw4w9WgXcQ"
                 prefix={<PlayCircleOutlined />}
               />
             </Form.Item>
