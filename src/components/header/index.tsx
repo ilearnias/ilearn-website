@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { CgMenuRight } from "react-icons/cg";
 import SideDrawer from "./sideDrawer";
 import SubText from "../common/SubText";
+import Menu from "./menu.json";
 
 export default function Header() {
   const router = useRouter();
@@ -40,10 +41,10 @@ export default function Header() {
       <div
         className={`${
           lastScrollY ? "Header scrolled" : "Header"
-        } w-full bg-gray-900  `}
+        } w-full bg-white shadow-[0_4px_12px_-4px_rgba(0,0,0,0.10)]`}
       >
         <Container className="w-full h-full  ">
-          <div className="flex  justify-between w-full h-full">
+          <div className="flex justify-between w-full h-full">
             <div
               className="Header-LogoBox h-full flex items-center"
               onClick={() => router.push("/")}
@@ -57,10 +58,27 @@ export default function Header() {
                 className="header-logo"
               />
             </div>
-            <div className="flex-1 flex justify-center h-full">
+            <div className="_nav_bar_items">
               <div className="Header-MenuBox flex justify-center items-center gap-10 h-full">
                 <div className="!flex !items-center !justify-center !gap-7 pt-3">
-                  <div
+                  {Menu?.map((menu: any, index: any) => {
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => router.push(menu?.path)}
+                        className="header-hover"
+                      >
+                        <SubText
+                          size="small"
+                          className="!font-semibold"
+                          text={menu?.name}
+                          color="black"
+                        />
+                      </div>
+                    );
+                  })}
+
+                  {/* <div
                     onClick={() => router.push("/")}
                     className="header-hover"
                   >
@@ -68,7 +86,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Home"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -80,7 +98,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="About"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -92,7 +110,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Results"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -104,7 +122,19 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Programs"
-                      color="white"
+                      color="black"
+                    />
+                  </div>
+
+                  <div
+                    onClick={() => router.push("/programs/foundation-course")}
+                    className="header-hover"
+                  >
+                    <SubText
+                      size="small"
+                      className="!font-semibold"
+                      text="Foundation"
+                      color="black"
                     />
                   </div>
 
@@ -116,7 +146,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Blog"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -128,7 +158,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="iLearn App"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -140,7 +170,7 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Gallery"
-                      color="white"
+                      color="black"
                     />
                   </div>
 
@@ -152,9 +182,9 @@ export default function Header() {
                       size="small"
                       className="!font-semibold"
                       text="Contact Us"
-                      color="white"
+                      color="black"
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
@@ -166,10 +196,10 @@ export default function Header() {
                 Join Now
               </div>
               <div
-                className="Header-menuIcon md:hidden"
+                className="Header-menuIcon"
                 onClick={() => setDawerOpen(!dawerOpen)}
               >
-                <CgMenuRight size={25} />
+                <CgMenuRight color={"#20468d"} size={25} />
               </div>
             </div>
           </div>

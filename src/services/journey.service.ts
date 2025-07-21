@@ -1,5 +1,6 @@
-import { apiClient } from "@/config/apiClient";
-
+import { apiRequest } from "@/config/apiRequest";
+import { API_ENDPOINTS } from "@/config/api";
+import { AxiosRequestConfig } from "axios";
 /**
  * Journey Image Specifications:
  * - Optimal Resolution: 1920x1080px (16:9 aspect ratio)
@@ -7,7 +8,7 @@ import { apiClient } from "@/config/apiClient";
  * - Maximum File Size: 5MB
  * - Format: JPEG, PNG, or WebP
  * - Aspect Ratio: 16:9 recommended for consistent display
- * 
+ *
  * The images will be displayed in a responsive container with:
  * - Max width: 960px (60rem)
  * - Height: min(400px, 50vw)
@@ -47,49 +48,74 @@ interface JourneyResponse {
 
 class JourneyService {
   async getAllJourney(page = 1, limit = 10) {
-    const response = await apiClient.get<JourneyResponse>(`/journey?page=${page}&limit=${limit}`);
-    return response.data;
+    const response = await apiRequest.get<JourneyResponse>(
+      `${API_ENDPOINTS.ADMIN.JOURNEY.LIST}?page=${page}&limit=${limit}`
+    );
+    return response;
   }
 
   async getJourneyById(id: string) {
-    const response = await apiClient.get<{ status: boolean; message: string; data: IJourney }>(`/journey/${id}`);
+    const response = await apiRequest.get<{
+      status: boolean;
+      message: string;
+      data: IJourney;
+    }>(`/v1/journey/${id}`);
     return response.data;
   }
 
-  async createJourney(data: IJourneyCreate) {
-    const response = await apiClient.post<{ status: boolean; message: string; data: IJourney }>('/journey', data);
-    return response.data;
+  async createJourney(data: IJourneyCreate, config: AxiosRequestConfig) {
+    console.log(config);
+    const response = await apiRequest.post<{
+      status: boolean;
+      message: string;
+      data: IJourney;
+    }>("/v1/journey", data, config);
+    return response;
   }
 
   async updateJourney(id: string, data: IJourneyUpdate) {
-    const response = await apiClient.put<{ status: boolean; message: string; data: IJourney }>(`/journey/${id}`, data);
-    return response.data;
+    const response = await apiRequest.put<{
+      status: boolean;
+      message: string;
+      data: IJourney;
+    }>(`/v1/journey/${id}`, data);
+    return response;
   }
 
   async deleteJourney(id: string) {
-    const response = await apiClient.delete<{ status: boolean; message: string }>(`/journey/${id}`);
+    const response = await apiRequest.delete<{
+      status: boolean;
+      message: string;
+    }>(`/v1/journey/${id}`);
     return response.data;
   }
 
   async uploadSingleImage(file: File): Promise<string> {
     const formData = new FormData();
-    formData.append('file', file);
-    const response = await apiClient.post<{ status: boolean; message: string; data: string }>('/journey/upload', formData);
-    return response.data.data;
+    formData.append("file", file);
+    // Use the correct upload endpoint and apiRequest.upload for proper headers
+    const response: any = await apiRequest.upload<{
+      status: boolean;
+      message: string;
+      data: string;
+    }>("/v1/upload/image", formData);
+    return response.data;
   }
 
   validateImageFile(file: File): boolean {
     const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
     if (!allowedTypes.includes(file.type)) {
-      throw new Error('File type not supported. Please upload a JPEG, PNG, or WebP image.');
+      throw new Error(
+        "File type not supported. Please upload a JPEG, PNG, or WebP image."
+      );
     }
-    
+
     if (file.size > maxSize) {
-      throw new Error('File size too large. Maximum size is 5MB.');
+      throw new Error("File size too large. Maximum size is 5MB.");
     }
-    
+
     return true;
   }
 }

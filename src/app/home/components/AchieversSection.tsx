@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import AchieverCard from "@/components/common/AchieverCard";
 import { achieverService, IAchiever } from "@/services/achievers.service";
+import { Fade } from "react-awesome-reveal";
 
 interface AchieverCardProps {
   name: string;
@@ -70,7 +71,7 @@ const AchieversSection = () => {
   return (
     <section className="achievers-section">
       <Container className="w-full">
-        <motion.div
+        {/* <motion.div
           className="section-header"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -80,15 +81,22 @@ const AchieversSection = () => {
           <Heading
             color="red"
             text="Our Proud Achievers"
-   
             className="!text-center !text-[40px] !mb-2"
             animate={true}
           />
           <p className="section-subtitle">
             Success stories of India&apos;s future leaders
           </p>
-        </motion.div>
+        </motion.div> */}
 
+        <Fade>
+          <div className="_heading-box">
+            <div className="_heading-box-title1">Our Proud Achievers</div>
+            <div className="_heading-box-sub-title1">
+              Success stories of India&apos;s future leaders
+            </div>
+          </div>
+        </Fade>
         <div className="achievers-carousel relative">
           <div className="achievers-grid flex w-full" ref={scrollContainerRef}>
             {loading ? (

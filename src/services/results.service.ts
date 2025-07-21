@@ -89,10 +89,14 @@ class ResultService {
 
   async createResult(data: IResultCreate): Promise<ApiResponse<IResult[]>> {
     try {
-      return await apiRequest.post<IResult[]>(
+      console.log("Creating result with data:", data);
+      console.log("API endpoint:", API_ENDPOINTS.ADMIN.RESULTS.CREATE);
+      const response = await apiRequest.post<IResult[]>(
         API_ENDPOINTS.ADMIN.RESULTS.CREATE,
         data
       );
+      console.log("Create result response:", response);
+      return response;
     } catch (error) {
       console.error("Error creating result:", error);
       throw error;
@@ -104,10 +108,15 @@ class ResultService {
     data: IResultUpdate
   ): Promise<ApiResponse<IResult>> {
     try {
-      return await apiRequest.patch<IResult>(
+      console.log("Updating result with ID:", id);
+      console.log("Update data:", data);
+      console.log("API endpoint:", API_ENDPOINTS.ADMIN.RESULTS.UPDATE(id));
+      const response = await apiRequest.patch<IResult>(
         API_ENDPOINTS.ADMIN.RESULTS.UPDATE(id),
         data
       );
+      console.log("Update result response:", response);
+      return response;
     } catch (error) {
       console.error("Error updating result:", error);
       throw error;

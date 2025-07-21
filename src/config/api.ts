@@ -119,6 +119,15 @@ export const API_ENDPOINTS = {
       RECENT_ACTIVITIES: "/v1/admin/dashboard/activities",
       PERFORMANCE_METRICS: "/v1/admin/dashboard/performance",
     },
+
+    // Journey management
+    JOURNEY: {
+      LIST: "/v1/journey",
+      DETAIL: (id: string) => `/v1/journey/${id}`,
+      CREATE: "/v1/journey",
+      UPDATE: (id: string) => `/v1/journey/${id}`,
+      DELETE: (id: string) => `/v1/journey/${id}`,
+    },
   },
 
   // Public endpoints
@@ -134,5 +143,6 @@ export const API_ENDPOINTS = {
       CATEGORIES: "/v1/blog/categories",
     },
     CONTACT: "/v1/contact",
+    JOURNEY: "/v1/journey",
   },
 };

@@ -1,0 +1,113 @@
+@use "../config/variables.scss" as vars;
+
+
+
+
+.common-container{
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+._heading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // gap: 10px;
+  //   color: #ffffff;
+  //   padding: 10px 20px;
+  //   border-radius: 10px;
+  //   font-size: 20px;
+  //   font-weight: 600;
+  //   text-align: center;
+}
+
+._heading-box-title1 {
+  color: vars.$p_red;
+  font-size: 45px;
+  font-family: vars.$Bold;
+  margin-bottom: 5px;
+  @media (max-width: 768px) {
+    font-size: 30px;
+  }
+}
+._heading-box-title2 {
+  color: vars.$p_blue;
+  font-size: 35px;
+  font-family: vars.$Bold;
+  margin-bottom: -10px;
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+}
+
+._heading-box-sub-title1 {
+  color: #363636;
+  font-size: 20px;
+  margin-bottom: 35px;
+  line-height: 25px;
+  font-family: vars.$Light;
+  text-align: center;
+  max-width: 700px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+._banner-box1 {
+  background-color: rgb(219, 235, 250);
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 768px) {
+    height: 40vh;
+    padding: 20px;
+  }
+}
+
+._banner-header-txt1 {
+  margin-top: 30px;
+  font-size: 55px;
+  font-family: vars.$Bold;
+  color: vars.$p_blue;
+  @media (max-width: 768px) {
+    font-size: 35px;
+  }
+}
+
+._banner-sub-header-txt1 {
+  font-size: 18px;
+  max-width: 800px;
+  text-align: center;
+  line-height: 25px;
+  font-family: vars.$Regular;
+  color: #303030;
+  @media (max-width: 768px) {
+    font-size: 14px;
+    line-height: 18px;
+  }
+}
+
+._about-us-box1 {
+  background-color: rgb(255, 255, 255);
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+._about-us-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+._banner-box1-line1 {
+  width: 500;
+  height: 5px;
+  background-color: #303030;
+}

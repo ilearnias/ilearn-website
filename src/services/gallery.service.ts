@@ -16,17 +16,18 @@ export interface IGalleryItemCreate
 
 export const galleryService = {
   // Public method to fetch gallery items for the frontend
-  getPublicGalleryItems: async (page = 1, limit = 50, order = 'ASC') => {
+  getPublicGalleryItems: async (page = 1, limit = 50, order = "ASC") => {
     try {
-      const response = await apiRequest.get(`${API_ENDPOINTS.PUBLIC.GALLERY}?order=${order}&page=${page}&limit=${limit}`);
+      const response = await apiRequest.get(
+        `${API_ENDPOINTS.PUBLIC.GALLERY}?order=${order}&page=${page}&limit=${limit}`
+      );
       if (!response.status) {
-        throw new Error(response.message || 'Failed to fetch gallery items');
+        throw new Error(response.message || "Failed to fetch gallery items");
       }
-
       return {
         status: true,
         data: response.data,
-        message: response.message || 'Gallery items fetched successfully'
+        message: response.message || "Gallery items fetched successfully",
       };
     } catch (error) {
       throw error;

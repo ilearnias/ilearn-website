@@ -2,20 +2,20 @@
 
 .about-Container {
   .about-box1 {
-    background: #EEF2FF;
+    background: #eef2ff;
     padding: 120px 0 80px;
     position: relative;
     overflow: hidden;
     text-align: center;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-image: url('../assets/images/bg-Lines.png');
+      background-image: url("../assets/images/bg-Lines.png");
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
@@ -29,13 +29,13 @@
       margin-bottom: 20px;
       position: relative;
       z-index: 1;
-      color: #1E3A8A;
+      color: #1e3a8a;
     }
 
     .about-text2 {
       font-size: 18px;
       line-height: 1.6;
-      color: #64748B;
+      color: #64748b;
       max-width: 800px;
       margin: 0 auto;
       position: relative;
@@ -68,7 +68,7 @@
       padding: 40px 0;
 
       &:before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 50%;
@@ -114,6 +114,10 @@
       margin: 15px 0;
       border-radius: 10px;
       transition: transform 0.3s ease;
+
+      @media (max-width: 768px) {
+        padding: 10px 20px;
+      }
 
       &:hover {
         transform: translateY(-5px);
@@ -172,14 +176,13 @@
         font-weight: 600;
         border-radius: 8px;
         transition: all 0.3s ease;
-        
+
         &.primary-btn {
           background-color: #1e3a8a;
           color: white;
           border: none;
 
           &:hover {
-          
             transform: translateY(-2px);
           }
         }
@@ -243,7 +246,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
       border-radius: 16px;
       background: #fff;
       overflow: hidden;
@@ -261,7 +264,7 @@
         align-items: center;
         justify-content: center;
         background: #f5f5f5;
-        
+
         &:hover {
           .social-links {
             opacity: 1;
@@ -285,7 +288,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
         padding: 15px;
         opacity: 0;
         transition: opacity 0.3s ease;
@@ -362,7 +365,7 @@
       }
 
       .carousel-caption {
-        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
         bottom: 0;
         left: 0;
         right: 0;
@@ -372,7 +375,7 @@
         h3 {
           font-size: 1.5rem;
           margin: 0;
-          text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
       }
 
@@ -384,7 +387,7 @@
           height: 10px;
           border-radius: 50%;
           margin: 0 5px;
-          background-color: rgba(255,255,255,0.5);
+          background-color: rgba(255, 255, 255, 0.5);
 
           &.active {
             background-color: white;
@@ -396,14 +399,14 @@
       .carousel-control-next {
         width: 50px;
         height: 50px;
-        background: rgba(0,0,0,0.5);
+        background: rgba(0, 0, 0, 0.5);
         border-radius: 50%;
         top: 50%;
         transform: translateY(-50%);
         margin: 0 20px;
 
         &:hover {
-          background: rgba(0,0,0,0.7);
+          background: rgba(0, 0, 0, 0.7);
         }
       }
     }
@@ -435,7 +438,7 @@
 .about-text2 {
   color: #fff;
   text-align: center;
-  font-family: vars.$Thin;
+  font-family: vars.$Light;
   font-size: 14px;
   letter-spacing: 2px;
 }
@@ -499,3 +502,202 @@
   -webkit-box-orient: vertical;
 }
 
+// ----------------------------------------------------------------
+
+._about-us-box1-title1 {
+  font-size: 20px;
+  font-family: vars.$Regular;
+  color: #303030;
+  @media (max-width: 768px) {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+}
+
+._about_box_1 {
+  // background-color: red;
+}
+
+._about_box_2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+._about_icon_1 {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+._about_txt_1 {
+  font-size: 20px;
+  font-family: vars.$Bold;
+  color: #000000;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+}
+
+._about_txt_2 {
+  font-size: 20px;
+  color: vars.$p_blue;
+  font-family: vars.$Bold;
+  margin-bottom: 12px;
+  background-color: vars.$p_blue_light;
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-left: 10px;
+  @media (max-width: 768px) {
+    font-size: 14px;
+    background-color: #fff;
+    padding: 0px;
+    // padding: 1px 5px;
+    margin-left: 0px;
+    margin-bottom: 15px;
+  }
+}
+
+._about_box_3 {
+}
+
+._about_box_4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  @media (max-width: 768px) {
+    padding: 0px 8px;
+  }
+}
+
+._about_box_5 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  @media (max-width: 768px) {
+    margin-bottom: 15px;
+  }
+}
+
+._about_box_6 {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+._about_box_7 {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  @media (max-width: 768px) {
+    margin-left: 6px;
+  }
+}
+
+._about_box_8 {
+  @media (max-width: 768px) {
+    margin-top: 20px;
+  }
+}
+
+._about_txt_3 {
+  font-size: 20px;
+  font-family: vars.$SemiBold;
+  color: vars.$p_blue;
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+}
+
+._about_txt_4 {
+  font-size: 18px;
+  font-family: vars.$Regular;
+  color: #303030;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+}
+
+._team_section_mobile {
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+._team_section_box {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+._team_name_txt {
+  font-size: 20px;
+  color: vars.$p_blue;
+  font-family: vars.$SemiBold;
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
+}
+
+._team_desig_txt {
+  font-size: 18px;
+  color: vars.$p_red;
+  font-family: vars.$Regular;
+  margin-top: -10px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+// --------------------------------------------
+
+._core_value_card {
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  background-color: #fff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  &:hover {
+    transform: translateY(-5px);
+    transition: all 0.5s ease;
+  }
+}
+
+._core_value_icon {
+  background: linear-gradient(135deg, vars.$p_blue_light, vars.$p_red_light);
+  width: 55px;
+  height: 55px;
+  border-radius: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+._core_value_txt1 {
+  font-family: vars.$SemiBold;
+  font-size: 22px;
+  color: vars.$p_blue;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+._core_value_txt2 {
+  font-family: vars.$Light;
+  font-size: 16px;
+  color: vars.$primary;
+  text-align: justify;
+  margin-bottom: 12px;
+}

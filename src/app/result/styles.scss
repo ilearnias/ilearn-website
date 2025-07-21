@@ -23,7 +23,7 @@
 .result-text2 {
   color: #fff;
   text-align: center;
-  font-family: vars.$Thin;
+  font-family: vars.$Light;
   font-size: 14px;
   letter-spacing: 2px;
 }
@@ -58,7 +58,7 @@
   align-items: center;
   justify-content: center;
 }
-.result-img{
+.result-img {
   height: 170px !important;
   object-fit: contain;
 }
@@ -75,19 +75,19 @@
 
 .results-container {
   .results-hero-box {
-    background: #EEF2FF;
+    background: #eef2ff;
     padding: 120px 0 80px;
     position: relative;
     overflow: hidden;
 
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background-image: url('../assets/images/bg-Lines.png');
+      background-image: url("../assets/images/bg-Lines.png");
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
@@ -98,7 +98,7 @@
     .about-text1 {
       font-size: 48px;
       font-weight: 700;
-      color: #1E3A8A;
+      color: #1e3a8a;
       margin-bottom: 20px;
       position: relative;
       z-index: 1;
@@ -107,7 +107,7 @@
     .about-text2 {
       font-size: 18px;
       line-height: 1.6;
-      color: #64748B;
+      color: #64748b;
       max-width: 800px;
       margin: 0 auto;
       position: relative;
@@ -120,7 +120,8 @@
 .video-card-scroll-in {
   opacity: 0;
   transform: translateX(-40px);
-  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .video-card-scroll-in-active {
   opacity: 1;
@@ -170,6 +171,6 @@
 }
 /* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

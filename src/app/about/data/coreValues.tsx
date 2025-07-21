@@ -1,5 +1,10 @@
-import { ReactNode } from 'react';
-import { FaGraduationCap, FaUserFriends, FaChartLine, FaHeart } from "react-icons/fa";
+import { ReactNode } from "react";
+import {
+  FaGraduationCap,
+  FaUserFriends,
+  FaChartLine,
+  FaHeart,
+} from "react-icons/fa";
 
 export interface CoreValue {
   title: string;
@@ -28,4 +33,4 @@ export const coreValues: CoreValue[] = [
     description: "Nurturing environment that supports holistic growth",
     icon: <FaHeart size={48} />,
   },
-]; 
+];

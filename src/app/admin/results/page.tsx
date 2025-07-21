@@ -66,7 +66,7 @@ const Results = () => {
   const fetchResults = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await resultService.getAllResults(
+      const response: any = await resultService.getAllResults(
         pagination?.page || 1,
         pagination?.limit || 10
       );
@@ -75,21 +75,21 @@ const Results = () => {
         setError(null);
 
         // Safely handle the response data
-        const responseData = response.data;
-        if (responseData && responseData.data) {
-          setResults(responseData.data);
+        // const responseData = response.data;
+        if (response && response.data) {
+          setResults(response.data);
         } else {
           setResults([]);
         }
 
         // Safely handle pagination meta
-        if (responseData && responseData.meta) {
-          setPagination(responseData.meta);
+        if (response && response.meta) {
+          setPagination(response.meta);
         } else {
           // Fallback to current pagination state if meta is missing
           setPagination((prev) => ({
             ...prev,
-            itemCount: responseData?.data?.length || 0,
+            itemCount: response?.data?.length || 0,
             totalPages: 1,
             hasPreviousPage: false,
             hasNextPage: false,
@@ -181,11 +181,15 @@ const Results = () => {
       // Ensure isActive is boolean (Switch already does this, but for safety)
       values.isActive = Boolean(values.isActive);
 
+      console.log("Saving result with values:", values);
+
       if (editingResult && editingResult.id) {
+        console.log("Updating result with ID:", editingResult.id);
         const response = await resultService.updateResult(
           editingResult.id,
           values
         );
+        console.log("Update response:", response);
         if (response.status) {
           message.success(response.message || "Result updated successfully");
           setIsModalVisible(false);
@@ -194,7 +198,9 @@ const Results = () => {
           message.error(response.message || "Failed to update result");
         }
       } else {
+        console.log("Creating new result");
         const response = await resultService.createResult(values);
+        console.log("Create response:", response);
         if (response.status) {
           message.success(response.message || "Result created successfully");
           setIsModalVisible(false);
@@ -204,8 +210,8 @@ const Results = () => {
         }
       }
     } catch (error: any) {
-      message.error(error.message || "Failed to save result");
       console.error("Error saving result:", error);
+      message.error(error.message || "Failed to save result");
     }
   };
 
@@ -360,47 +366,6 @@ const Results = () => {
           </Button>
         </div>
       )}
-
-      {/* <Row gutter={[16, 16]} className="results-stats">
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Total Results"
-              value={results.length}
-              prefix={<FileTextOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Average Score"
-              value={calculateAverageScore()}
-              prefix={<BarChartOutlined />}
-              suffix="%"
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Pass Rate"
-              value={calculatePassRate()}
-              prefix={<TrophyOutlined />}
-              suffix="%"
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={12} md={6}>
-          <Card>
-            <Statistic
-              title="Subjects"
-              value={new Set(results.map(r => r.subject)).size}
-              prefix={<FileTextOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row> */}
 
       <div className="results-controls">
         <Space>
