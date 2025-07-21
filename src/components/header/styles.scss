@@ -211,9 +211,9 @@
   &.join-now-mobile {
     margin-top: 20px;
     background-color: transparent;
-
-    transition: all 0.3s ease;
-
+    .Drawer-itemsTxt, .Drawer-itemsIcon {
+      color: #20468d !important;
+    }
     &:hover {
       background: #f5f5f5;
       .Drawer-itemsTxt {
