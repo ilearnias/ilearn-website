@@ -222,7 +222,7 @@ $charcoal: #1f2937; // Text - Primary text
 
   .video-container {
     flex: 1;
-    max-width: 50%;
+    max-width: 40%;
     position: relative;
     z-index: 3;
 
@@ -234,7 +234,7 @@ $charcoal: #1f2937; // Text - Primary text
 
       iframe {
         border-radius: 0;
-        aspect-ratio: 16/9;
+        aspect-ratio: 1/1;
         height: auto;
       }
 
@@ -245,7 +245,7 @@ $charcoal: #1f2937; // Text - Primary text
 
     iframe {
       width: 100%;
-      aspect-ratio: 16/9;
+      aspect-ratio: 1/1;
       border-radius: 12px;
       box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
         0 2px 4px -2px rgb(0 0 0 / 0.1);

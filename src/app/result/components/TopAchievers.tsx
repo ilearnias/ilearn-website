@@ -10,6 +10,7 @@ import { motion, useInView } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import AchieverCard from "@/components/common/AchieverCard";
 import { achieverService, IAchiever } from "@/services/achievers.service";
+import { Fade } from "react-awesome-reveal";
 
 const TopAchievers = () => {
   const [achievers, setAchievers] = useState<IAchiever[]>([]);
@@ -39,12 +40,13 @@ const TopAchievers = () => {
     <section className="py-16 bg-white">
       <Container>
         <div className="achievers-content">
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <Heading
-              text="Our Top Achievers"
-              color="tricolor"
-              className="font-bold md:leading-[0.5] leading-[1.1]"
-            />
+          <div id="journey-section-title">
+            <Fade direction="up" duration={1000}>
+              <div className="_heading-box">
+                <div className="_heading-box-title1">Our Top Achievers</div>
+                <div className="_heading-box-sub-title1"></div>
+              </div>
+            </Fade>
           </div>
 
           <div className="flex flex-wrap gap-10 justify-center ">

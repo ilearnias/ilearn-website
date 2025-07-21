@@ -5,6 +5,7 @@ import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import TextLabel from "@/components/common/TextLabel";
 import Container from "@/components/common/Container";
+import { Fade } from "react-awesome-reveal";
 
 interface ResultRow {
   year: number;
@@ -130,12 +131,14 @@ const ResultSummary = () => {
   return (
     <Container className="py-12">
       <div className="bg-white rounded-lg py-6">
-        <Heading
-          text="Results Summary"
-          color="tricolor"
-          className="!text-3xl md:!text-4xl lg:!text-5xl !font-bold"
-          animate={true}
-        />
+        <div id="journey-section-title">
+          <Fade direction="up" duration={1000}>
+            <div className="_heading-box">
+              <div className="_heading-box-title1">Result Summary</div>
+              <div className="_heading-box-sub-title1"></div>
+            </div>
+          </Fade>
+        </div>
         {/* Table View */}
         <div className="mt-8 overflow-x-auto w-full">
           <table className="min-w-[600px] w-full bg-white rounded-xl shadow-md overflow-hidden text-sm md:text-base">
