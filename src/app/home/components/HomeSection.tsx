@@ -82,7 +82,15 @@ const HomeSection = () => {
           <div className={`video-container ${isVisible ? "visible" : ""}`}>
             <YouTube
               videoId="NVGwwVzTeJU"
-              opts={{ width: "100%", height: "100%" }}
+              opts={{
+                width: "100%",
+                height: "100%",
+                playerVars: {
+                  loop: 1,
+                  autoplay: 1,
+                  playlist: "NVGwwVzTeJU",
+                },
+              }}
             />
             {/* <iframe
               src="https://www.youtube.com/embed/zLwkn6BLJ4U?si=xLhAKmAGK-Ay5YQA"

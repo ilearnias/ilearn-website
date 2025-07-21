@@ -5,6 +5,7 @@ import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import TextLabel from "@/components/common/TextLabel";
 import Container from "@/components/common/Container";
+import { Fade } from "react-awesome-reveal";
 
 interface ResultRow {
   year: number;
@@ -96,7 +97,8 @@ const ResultSummary = () => {
         );
         if (!res.ok) throw new Error("Failed to fetch result summary");
         const json = await res.json();
-        if (!json.status || !Array.isArray(json.data)) throw new Error("Invalid response");
+        if (!json.status || !Array.isArray(json.data))
+          throw new Error("Invalid response");
         // Map API fields to local interface
         const mapped: ResultRow[] = json.data.map((item: any) => ({
           year: Number(item.year),
@@ -118,79 +120,73 @@ const ResultSummary = () => {
   return (
     <Container className="py-12">
       <div className="bg-white rounded-lg py-6">
-        <Heading
-          text="Results Summary"
-          color="tricolor"
-          className="!text-3xl md:!text-4xl lg:!text-5xl !font-bold"
-          animate={true}
-        />
-        {loading ? (
-          <div className="text-center py-8">Loading...</div>
-        ) : error ? (
-          <div className="text-center text-red-500 py-8">{error}</div>
-        ) : (
-          <>
-            {/* Table View */}
-            <div className="mt-8 overflow-x-auto w-full">
-              <table className="min-w-[600px] w-full bg-white rounded-xl shadow-md overflow-hidden text-sm md:text-base">
-                <thead>
-                  <tr className="bg-blue-50 text-gray-700 text-left">
-                    <th className="py-2 px-2 md:py-3 md:px-4 font-semibold rounded-tl-xl">
-                      Year
-                    </th>
-                    <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
-                      Total Selections
-                    </th>
-                    <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
-                      Top 100 Ranks
-                    </th>
-                    <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
-                      PCM & Classroom
-                    </th>
-                    <th className="py-2 px-2 md:py-3 md:px-4 font-semibold rounded-tr-xl">
-                      First Attempt
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {resultData.map((row, idx) => (
-                    <tr
-                      key={row.year + "-" + idx}
-                      className={`transition-all duration-200 ${
-                        idx % 2 === 0 ? "bg-gray-50" : "bg-white"
-                      } hover:bg-blue-100 hover:scale-[1.01] hover:shadow-sm`}
-                      style={{ borderRadius: "0.75rem" }}
-                    >
-                      <td className="py-2 px-2 md:py-3 md:px-4 font-semibold text-blue-900 rounded-l-lg">
-                        {row.year}
-                      </td>
-                      <td className="py-2 px-2 md:py-3 md:px-4">
-                        <span className="inline-block bg-green-50 text-green-600 rounded-full px-2 py-1 md:px-3 text-xs md:text-sm font-semibold">
-                          {row.totalSelections}
-                        </span>
-                      </td>
-                      <td className="py-2 px-2 md:py-3 md:px-4 text-center">
-                        {row.top100Ranks}
-                      </td>
-                      <td className="py-2 px-2 md:py-3 md:px-4 text-center">
-                        {row.pcmClassroom}
-                      </td>
-                      <td className="py-2 px-2 md:py-3 md:px-4 text-center rounded-r-lg">
-                        {row.firstAttempt}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        <div id="journey-section-title">
+          <Fade direction="up" duration={1000}>
+            <div className="_heading-box">
+              <div className="_heading-box-title1">Result Summary</div>
+              <div className="_heading-box-sub-title1"></div>
             </div>
-            <div className="mt-6">
-              <div className="bg-blue-50 rounded-lg p-4 text-gray-600 italic text-base">
-                Consistently high Prelims-cum-Mains and classroom results—especially
-                from first-attempt candidates—show our academic excellence.
-              </div>
-            </div>
-          </>
-        )}
+          </Fade>
+        </div>
+        {/* Table View */}
+        <div className="mt-8 overflow-x-auto w-full">
+          <table className="min-w-[600px] w-full bg-white rounded-xl shadow-md overflow-hidden text-sm md:text-base">
+            <thead>
+              <tr className="bg-blue-50 text-gray-700 text-left">
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold rounded-tl-xl">
+                  Year
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
+                  Total Selections
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
+                  Top 100 Ranks
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold">
+                  PCM & Classroom
+                </th>
+                <th className="py-2 px-2 md:py-3 md:px-4 font-semibold rounded-tr-xl">
+                  First Attempt
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {resultData.map((row, idx) => (
+                <tr
+                  key={row.year}
+                  className={`transition-all duration-200 ${
+                    idx % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } hover:bg-blue-100 hover:scale-[1.01] hover:shadow-sm`}
+                  style={{ borderRadius: "0.75rem" }}
+                >
+                  <td className="py-2 px-2 md:py-3 md:px-4 font-semibold text-blue-900 rounded-l-lg">
+                    {row.year}
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4">
+                    <span className="inline-block bg-green-50 text-green-600 rounded-full px-2 py-1 md:px-3 text-xs md:text-sm font-semibold">
+                      {row.totalSelections}
+                    </span>
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4 text-center">
+                    {row.top100Ranks}
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4 text-center">
+                    {row.pcmClassroom}
+                  </td>
+                  <td className="py-2 px-2 md:py-3 md:px-4 text-center rounded-r-lg">
+                    {row.firstAttempt}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-6">
+          <div className="bg-blue-50 rounded-lg p-4 text-gray-600 italic text-base">
+            Consistently high Prelims-cum-Mains and classroom results—especially
+            from first-attempt candidates—show our academic excellence.
+          </div>
+        </div>
       </div>
     </Container>
   );

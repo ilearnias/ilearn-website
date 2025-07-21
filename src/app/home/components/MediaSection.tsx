@@ -232,7 +232,7 @@ const MediaSection = () => {
           </div>
         </Fade>
 
-        <div className="slider-container">
+        <div className="slider-container ">
           <Slider {...settings}>
             {videos.map((item: any, index: any) => {
               return (
