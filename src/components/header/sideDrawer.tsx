@@ -45,6 +45,7 @@ export default function SideDrawer(props: any) {
       width={280}
       style={{
         background: "#fff",
+        background: "#fff",
         padding: 0,
       }}
       footer={
