@@ -1,70 +1,41 @@
 "use client";
 
-import React, { useState, useEffect, createContext, useContext } from "react";
-import Loader from "@/app/loader/page";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { LoadingSpinner } from "@/app/loader";
 
-export const LoadingContext = createContext<{
+interface LoadingContextType {
   isLoading: boolean;
-  setLoading: (loading: boolean) => void;
-}>({
-  isLoading: true,
-  setLoading: () => {},
-});
-
-export function useLoading() {
-  return useContext(LoadingContext);
+  setIsLoading: (loading: boolean) => void;
 }
 
-export default function LoadingProvider({
+const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
+
+export const useLoading = () => {
+  const context = useContext(LoadingContext);
+  if (!context) {
+    throw new Error("useLoading must be used within a LoadingProvider");
+  }
+  return context;
+};
+
+export const LoadingProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    // Check if the document and window are fully loaded
-    const handleLoad = () => {
-      setIsReady(true);
-    };
-
-    // Set a maximum loading time of 5 seconds as a fallback
-    const maxLoadingTimer = setTimeout(() => {
-      setIsLoading(false);
-    }, 5000);
-
     if (typeof window !== "undefined") {
-      if (document.readyState === "complete") {
-        handleLoad();
-      } else {
-        window.addEventListener("load", handleLoad);
-      }
+      setIsLoading(false);
     }
-
-    return () => {
-      clearTimeout(maxLoadingTimer);
-      if (typeof window !== "undefined") {
-        window.removeEventListener("load", handleLoad);
-      }
-    };
   }, []);
 
-  // Once the page is ready, start fading out the loader
-  useEffect(() => {
-    if (isReady) {
-      const minLoadingTimer = setTimeout(() => {
-        setIsLoading(false);
-      }, 1000); // Minimum loading time of 1 second for better UX
-
-      return () => clearTimeout(minLoadingTimer);
-    }
-  }, [isReady]);
-
   return (
-    <LoadingContext.Provider value={{ isLoading, setLoading: setIsLoading }}>
-      {isLoading && <Loader />}
+    <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
+      {isLoading && <LoadingSpinner />}
       {children}
     </LoadingContext.Provider>
   );
-}
+};
+
+// Add default export
+export default LoadingProvider;

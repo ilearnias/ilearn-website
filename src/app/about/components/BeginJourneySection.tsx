@@ -8,77 +8,67 @@ import "./styles/begin-journey.scss";
 const BeginJourneySection = () => {
   const router = useRouter();
 
-  useEffect(() => {
-    const buttons = document.querySelectorAll(".animated-btn");
+  // useEffect(() => {
+  //   const buttons = document.querySelectorAll(".animated-btn");
 
-    const handleMouseMove = (e: MouseEvent, element: Element) => {
-      const rect = (element as HTMLElement).getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+  //   const handleMouseMove = (e: MouseEvent, element: Element) => {
+  //     const rect = (element as HTMLElement).getBoundingClientRect();
+  //     const x = e.clientX - rect.left;
+  //     const y = e.clientY - rect.top;
 
-      (element as HTMLElement).style.setProperty("--mouse-x", `${x}px`);
-      (element as HTMLElement).style.setProperty("--mouse-y", `${y}px`);
-    };
+  //     (element as HTMLElement).style.setProperty("--mouse-x", `${x}px`);
+  //     (element as HTMLElement).style.setProperty("--mouse-y", `${y}px`);
+  //   };
 
-    const mouseHandlers = new Map<Element, (e: Event) => void>();
+  //   const mouseHandlers = new Map<Element, (e: Event) => void>();
 
-    const addMouseHandler = (element: Element) => {
-      const handler = (e: Event) => handleMouseMove(e as MouseEvent, element);
-      mouseHandlers.set(element, handler);
-      element.addEventListener("mousemove", handler);
-    };
+  //   const addMouseHandler = (element: Element) => {
+  //     const handler = (e: Event) => handleMouseMove(e as MouseEvent, element);
+  //     mouseHandlers.set(element, handler);
+  //     element.addEventListener("mousemove", handler);
+  //   };
 
-    buttons.forEach(addMouseHandler);
+  //   buttons.forEach(addMouseHandler);
 
-    return () => {
-      mouseHandlers.forEach((handler, element) => {
-        element.removeEventListener("mousemove", handler);
-      });
-    };
-  }, []);
+  //   return () => {
+  //     mouseHandlers.forEach((handler, element) => {
+  //       element.removeEventListener("mousemove", handler);
+  //     });
+  //   };
+  // }, []);
 
   return (
     <section className="begin-journey-section" aria-labelledby="journey-title">
       <Container>
         <div className="text-center">
           <Fade cascade damping={0.2}>
-            <div id="journey-title">
-              <Heading
-                color="tricolor"
-                text={
-                  <>
-                    Ready to Begin Your{" "}
-                    <span className="text-red">UPSC Journey</span> With Us?
-                  </>
-                }
-                className="!text-3xl !font-bold md:!text-4xl lg:!text-5xl !mb-4"
-                animate={true}
-              />
-            </div>
-            <p className="description">
-              Join the thousands of students who have transformed their dream of
-              becoming a civil servant into reality with iLearn IAS
-              Academy&apos;s guidance.
-            </p>
-            <div
-              className="button-group"
-              role="group"
-              aria-label="Journey actions"
-            >
+            <Fade direction="up" duration={1000}>
+              <div className="_heading-box">
+                <div className="_heading-box-title1">
+                  Ready to Begin Your UPSC Journey With Us?
+                </div>
+                <div className="_heading-box-sub-title1">
+                  Join the thousands of students who have transformed their
+                  dream of becoming a civil servant into reality with iLearn IAS
+                  Academy&apos;s guidance.
+                </div>
+              </div>
+            </Fade>
+
+            <div className="_button_box">
               <button
-                className="animated-btn primary-btn"
                 onClick={() => router.push("/programs")}
-                aria-label="Explore our programs"
+                className="_button_box_btn1"
               >
-                <span>Explore Programs</span>
+                <span>Explore Programs &nbsp;</span>
                 <i className="fas fa-arrow-right"></i>
               </button>
+
               <button
-                className="animated-btn secondary-btn"
                 onClick={() => router.push("/contact")}
-                aria-label="Contact our team"
+                className="_button_box_btn2"
               >
-                <span>Contact Us</span>
+                <span>Contact Us &nbsp;</span>
                 <i className="fas fa-arrow-right"></i>
               </button>
             </div>

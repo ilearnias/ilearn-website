@@ -1,10 +1,11 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
 import TextLabel from "@/components/common/TextLabel";
 import Container from "@/components/common/Container";
+import { Fade } from "react-awesome-reveal";
 
 interface ResultRow {
   year: number;
@@ -13,51 +14,6 @@ interface ResultRow {
   pcmClassroom: number;
   firstAttempt: number;
 }
-
-const resultData: ResultRow[] = [
-  {
-    year: 2025,
-    totalSelections: 46,
-    top100Ranks: 6,
-    pcmClassroom: 11,
-    firstAttempt: 1,
-  },
-  {
-    year: 2024,
-    totalSelections: 28,
-    top100Ranks: 4,
-    pcmClassroom: 12,
-    firstAttempt: 2,
-  },
-  {
-    year: 2023,
-    totalSelections: 65,
-    top100Ranks: 18,
-    pcmClassroom: 52,
-    firstAttempt: 25,
-  },
-  {
-    year: 2022,
-    totalSelections: 48,
-    top100Ranks: 12,
-    pcmClassroom: 36,
-    firstAttempt: 20,
-  },
-  {
-    year: 2021,
-    totalSelections: 35,
-    top100Ranks: 8,
-    pcmClassroom: 28,
-    firstAttempt: 15,
-  },
-  {
-    year: 2020,
-    totalSelections: 18,
-    top100Ranks: 5,
-    pcmClassroom: 14,
-    firstAttempt: 8,
-  },
-];
 
 function useCountUp(target: number, isActive: boolean, duration = 1) {
   const [count, setCount] = React.useState(0);
@@ -127,15 +83,51 @@ const ResultListRow: React.FC<{ row: ResultRow }> = ({ row }) => (
 );
 
 const ResultSummary = () => {
+  const [resultData, setResultData] = useState<ResultRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(
+          "https://ilearn-server.bairuhatech.com/v1/result-summary?page=1&limit=10"
+        );
+        if (!res.ok) throw new Error("Failed to fetch result summary");
+        const json = await res.json();
+        if (!json.status || !Array.isArray(json.data))
+          throw new Error("Invalid response");
+        // Map API fields to local interface
+        const mapped: ResultRow[] = json.data.map((item: any) => ({
+          year: Number(item.year),
+          totalSelections: item.totalSelection,
+          top100Ranks: item.topRanks,
+          pcmClassroom: item.pcmClassroom,
+          firstAttempt: item.firstAttempt,
+        }));
+        setResultData(mapped);
+      } catch (err: any) {
+        setError(err.message || "Unknown error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <Container className="py-12">
       <div className="bg-white rounded-lg py-6">
-        <Heading
-          text="Results Summary"
-          color="tricolor"
-          className="!text-3xl md:!text-4xl lg:!text-5xl !font-bold"
-          animate={true}
-        />
+        <div id="journey-section-title">
+          <Fade direction="up" duration={1000}>
+            <div className="_heading-box">
+              <div className="_heading-box-title1">Result Summary</div>
+              <div className="_heading-box-sub-title1"></div>
+            </div>
+          </Fade>
+        </div>
         {/* Table View */}
         <div className="mt-8 overflow-x-auto w-full">
           <table className="min-w-[600px] w-full bg-white rounded-xl shadow-md overflow-hidden text-sm md:text-base">

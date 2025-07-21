@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import "./styles.scss";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
+import { Fade } from "react-awesome-reveal";
 
 const ProgramsSection = () => {
   useEffect(() => {
@@ -41,19 +42,15 @@ const ProgramsSection = () => {
   return (
     <div className="programs-section">
       <Container>
-        <div className="section-header">
-          <Heading
-            color="red"
-            text="Our Programs"
-           
-            className="  !text-[40px] !text-center !mb-2"
-            animate={true}
-          />
-          <p className="description">
-            Specialized training programs designed for your success in civil
-            service examinations with proven results.
-          </p>
-        </div>
+        <Fade>
+          <div className="_heading-box">
+            <div className="_heading-box-title1">Our Programs</div>
+            <div className="_heading-box-sub-title1">
+              Specialized training programs designed for your success in civil
+              service examinations with proven results.
+            </div>
+          </div>
+        </Fade>
 
         <div className="programs-grid  p-0 md:p-4">
           <div className="program-card">

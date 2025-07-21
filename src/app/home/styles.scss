@@ -1,6 +1,6 @@
 @use "../../config/variables.scss" as vars;
 .Home-Container {
-  background: vars.$primary2;
+  // background: vars.$primary;
 }
 .section2-position {
   background-color: #1b2730;
@@ -334,8 +334,8 @@
   height: 85vh;
   overflow: hidden;
   z-index: 999;
-  @media screen and (max-width:576px) {
-  height: 79vh;
+  @media screen and (max-width: 576px) {
+    height: 79vh;
   }
 }
 

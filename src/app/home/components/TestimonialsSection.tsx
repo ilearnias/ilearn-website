@@ -8,6 +8,7 @@ import Container from "@/components/common/Container";
 import VideoCard from "@/components/common/VideoCard";
 import { useMediaQuery } from "react-responsive";
 import { getTestimonials } from "@/services/media.service";
+import { Fade } from "react-awesome-reveal";
 
 export interface TestimonialItem {
   id: string;
@@ -22,7 +23,9 @@ interface TestimonialsSectionProps {
   testimonials?: TestimonialItem[];
 }
 
-const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials: propTestimonials }) => {
+const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
+  testimonials: propTestimonials,
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right">("right");
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
@@ -70,7 +73,9 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials:
 
   // Extract video ID from YouTube URL
   const getVideoId = (url: string) => {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    const match = url.match(
+      /(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+    );
     return match ? match[1] : url;
   };
 
@@ -98,19 +103,14 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials:
   return (
     <section className="bg-gray-50 py-16">
       <Container>
-        <div className="text-center mb-12">
-          <Heading
-            text="Student Testimonials"
-            color="tricolor"
-            // size="3xl"
-            animate={true}
-            className={`!text-center !text-[40px] !mb-2 ${isMobile ? "leading-[1.1]" : ""}`}
-          />
-          <SubText
-            text="Hear success stories from our students"
-            className="!text-gray-600 !font-light !text-lg !leading-relaxed !mt-2"
-          />
-        </div>
+        <Fade>
+          <div className="_heading-box">
+            <div className="_heading-box-title1">Student Testimonials</div>
+            <div className="_heading-box-sub-title1">
+              Hear success stories from our students
+            </div>
+          </div>
+        </Fade>
 
         {isMobile ? (
           <div className="relative max-w-[600px] mx-auto space-y-4">
@@ -191,10 +191,14 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials:
                           subtitle=""
                           videoUrl={
                             activeVideo === item.video
-                              ? `https://www.youtube.com/embed/${getVideoId(item.video)}?autoplay=1&rel=0&modestbranding=1`
+                              ? `https://www.youtube.com/embed/${getVideoId(
+                                  item.video
+                                )}?autoplay=1&rel=0&modestbranding=1`
                               : item.video
                           }
-                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(item.video)}/maxresdefault.jpg`}
+                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(
+                            item.video
+                          )}/maxresdefault.jpg`}
                           isPlaying={activeVideo === item.video}
                           onVideoClick={() => {
                             handleVideoClick(item.video);
@@ -247,10 +251,14 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials:
                           subtitle=""
                           videoUrl={
                             activeVideo === item.video
-                              ? `https://www.youtube.com/embed/${getVideoId(item.video)}?autoplay=1&rel=0&modestbranding=1`
+                              ? `https://www.youtube.com/embed/${getVideoId(
+                                  item.video
+                                )}?autoplay=1&rel=0&modestbranding=1`
                               : item.video
                           }
-                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(item.video)}/maxresdefault.jpg`}
+                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(
+                            item.video
+                          )}/maxresdefault.jpg`}
                           isPlaying={activeVideo === item.video}
                           onVideoClick={() => handleVideoClick(item.video)}
                           direction={direction}

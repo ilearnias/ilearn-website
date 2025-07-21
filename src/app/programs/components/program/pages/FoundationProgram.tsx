@@ -40,7 +40,7 @@ export default function FoundationProgram() {
           <Row>
             <Col md={2} className="mb-4" />
             <Col md={4} className="mb-4">
-              <div className="program-card">
+              <div className="program-card items-center justify-center">
                 <div className="icon-wrapper mb-3"></div>
                 <Heading
                   text={"iLearn IAS Ignite"}
@@ -48,7 +48,9 @@ export default function FoundationProgram() {
                   className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl text-center"
                 />
                 <p>An Exclusive UPSC Foundation Program for College Students</p>
-                <div className="duration">{"10 months"}</div>
+                <div className="duration">
+                  {"10 months"}
+                </div>
                 <button
                   className="btn btn-primary mt-3"
                   onClick={() => router.replace("/foundation/ignite")}
@@ -58,7 +60,7 @@ export default function FoundationProgram() {
               </div>
             </Col>
             <Col md={4} className="mb-4">
-              <div className="program-card">
+              <div className="program-card items-center justify-center">
                 <div className="icon-wrapper mb-3"></div>
                 <Heading
                   text={"iLearn IAS Junior"}

@@ -10,6 +10,7 @@ import {
   successStoryService,
   ISuccessStory,
 } from "@/services/success-stories.service";
+import { Fade } from "react-awesome-reveal";
 
 interface SuccessStory {
   name: string;
@@ -149,7 +150,7 @@ const SuccessStoriesSection = () => {
               color="tricolor"
               text={
                 <>
-                  <span >Success</span>
+                  <span>Success</span>
                   <span> Stories</span>
                 </>
               }
@@ -173,7 +174,7 @@ const SuccessStoriesSection = () => {
   return (
     <div className="success-stories-section ">
       <Container noPadding className="mx-0 md:mx-4 ">
-        <div className="section-header">
+        {/* <div className="section-header">
           <Heading
             color="tricolor"
             text="Success Stories"
@@ -185,7 +186,17 @@ const SuccessStoriesSection = () => {
             See how our students achieved remarkable results in the civil
             services examination
           </p>
-        </div>
+        </div> */}
+
+        <Fade>
+          <div className="_heading-box">
+            <div className="_heading-box-title1">Success Stories</div>
+            <div className="_heading-box-sub-title1">
+              See how our students achieved remarkable results in the civil
+              services examination
+            </div>
+          </div>
+        </Fade>
 
         {successStories.length === 0 ? (
           <div className="flex justify-center items-center py-8">

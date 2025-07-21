@@ -13,6 +13,7 @@ import { Drawer } from "antd";
 import { FiFilter } from "react-icons/fi";
 import Heading from "@/components/common/Heading";
 import { blogService, IBlogPost, IBlogCategory } from "@/services/blog.service";
+import { FiArrowRight } from "react-icons/fi";
 
 // Real data state
 type BlogPostWithCategory = Omit<IBlogPost, "tags"> & {
@@ -29,12 +30,14 @@ function BlogCard({
   image,
   tags,
   selectedTag,
+  link,  // Add link parameter
 }: {
   title: string;
   description: string;
   image: string;
   tags?: string | string[];
   selectedTag?: string | null;
+  link?: string;  // Add link type
 }) {
   // Fallback if image is not a valid path or URL
   const isValidImage =
@@ -93,6 +96,11 @@ function BlogCard({
               </span>
             ))}
           </div>
+        )}
+        {link && (
+          <Link href={link} className="blog-card-button">
+            View More <FiArrowRight className="ml-2" />
+          </Link>
         )}
       </div>
     </motion.div>
@@ -381,6 +389,7 @@ export default function BlogPage() {
                       image={post.image}
                       tags={post.tags}
                       selectedTag={selectedTag}
+                      link={post.link}  // Add the link prop
                     />
                   ))
                 )}

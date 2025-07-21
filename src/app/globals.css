@@ -33,3 +33,58 @@ html, body {
 .origin-top {
   transform-origin: top;
 }
+
+
+
+@font-face {
+  font-family: "Montserrat-Bold";
+  src: url("../app/assets/fonts/Montserrat-Bold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat-Medium";
+  src: url("../app/assets/fonts/Montserrat-Bold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat-Regular";
+  src: url("../app/assets/fonts/Montserrat-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat-SemiBold";
+  src: url("../app/assets/fonts/Montserrat-Bold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Montserrat-Light";
+  src: url("../app/assets/fonts/Montserrat-Light.ttf") format("truetype");
+  font-display: swap;
+}
+
+body {
+  font-family: "DMSans-Regular";
+}
+
+/* Custom Scroll Bar */
+/* ::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #1b2730;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f04c24;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f04c24;
+  cursor: pointer;
+} */

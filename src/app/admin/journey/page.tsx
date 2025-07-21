@@ -54,6 +54,12 @@ const Journey = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
+  const token = localStorage.getItem("adminToken");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
   useEffect(() => {
     fetchJourney();
@@ -62,13 +68,15 @@ const Journey = () => {
   const fetchJourney = async () => {
     try {
       setLoading(true);
-      const response = await journeyService.getAllJourney(
+      const response: any = await journeyService.getAllJourney(
         currentPage,
         pageSize
       );
       if (response.status) {
         setJourneyList(response.data);
-        setTotalItems(response.total || response.data.length);
+        setTotalItems(response.meta?.itemCount || response.data.length);
+        setCurrentPage(response.meta?.page || 1);
+        setPageSize(response.meta?.limit || 10);
       } else {
         message.error(response.message || "Failed to fetch journey items");
       }
@@ -175,6 +183,7 @@ const Journey = () => {
       if (uploadedFile && uploadedFile.originFileObj) {
         try {
           const imageUrl = await uploadImageToApi(uploadedFile.originFileObj);
+
           values.media = imageUrl;
         } catch (error: any) {
           message.error(error.message || "Failed to upload image");
@@ -199,7 +208,7 @@ const Journey = () => {
         }
       } else {
         // Create new journey
-        const response = await journeyService.createJourney(values);
+        const response = await journeyService.createJourney(values, config);
         if (response.status) {
           message.success(
             response.message || "Journey item created successfully"
@@ -251,13 +260,16 @@ const Journey = () => {
     if (size && size !== pageSize) {
       setPageSize(size);
     }
+    // fetchJourney will be called by useEffect when currentPage or pageSize changes
   };
 
-  const filteredJourney = journeyList.filter(
-    (item) =>
-      item.description.toLowerCase().includes(searchText.toLowerCase()) ||
-      item.year.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // Remove in-memory filtering for pagination
+  // const filteredJourney = journeyList.filter(
+  //   (item) =>
+  //     item.description.toLowerCase().includes(searchText.toLowerCase()) ||
+  //     item.year.toLowerCase().includes(searchText.toLowerCase())
+  // );
+  // Use journeyList directly
 
   const columns: ColumnsType<IJourney> = [
     {
@@ -376,7 +388,7 @@ const Journey = () => {
       <Table
         className="journey-table"
         columns={columns}
-        dataSource={filteredJourney}
+        dataSource={journeyList}
         rowKey="id"
         loading={loading}
         pagination={{
