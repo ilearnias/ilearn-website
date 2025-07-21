@@ -115,7 +115,7 @@ const ProgramsSection = () => {
                   color="tricolor"
                   className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl text-center"
                 />
-                <p>{program.description}</p>
+                <div className="mb-3 md:mb-0  text-center">{program.description}</div>
                 <div className="duration">{program?.status}</div>
                 <button
                   className="btn btn-primary mt-3"
