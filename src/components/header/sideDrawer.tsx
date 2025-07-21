@@ -1,3 +1,4 @@
+"use client";
 import "./styles.scss";
 import Image from "next/image";
 import { Button, Drawer } from "antd";
