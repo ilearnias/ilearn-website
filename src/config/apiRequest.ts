@@ -7,6 +7,7 @@ import axios, {
   AxiosProgressEvent,
 } from "axios";
 import { API_CONFIG } from "./api";
+import { login, logout } from "@/redux/slices/authSlice";
 
 // Types for API response
 export interface ApiResponse<T = any> {
@@ -47,10 +48,23 @@ export const setStore = (storeInstance: any) => {
 
 // Function to get token from Redux store
 const getTokenFromStore = (): string | null => {
-  if (!store) return null;
+  if (!store) {
+    console.log("getTokenFromStore: No store available");
+    return null;
+  }
 
   const state = store.getState();
-  return state.auth?.user?.token || state.auth?.token || null;
+  const token = state.auth?.token || state.auth?.user?.token || null;
+
+  console.log("getTokenFromStore: Token check", {
+    hasStore: !!store,
+    authState: !!state.auth,
+    tokenFromAuth: !!state.auth?.token,
+    tokenFromUser: !!state.auth?.user?.token,
+    finalToken: !!token,
+  });
+
+  return token;
 };
 
 // Create axios instance with default config
@@ -68,6 +82,14 @@ axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Get token from Redux store
     const token = getTokenFromStore();
+
+    console.log("API Request - Token check:", {
+      hasToken: !!token,
+      tokenLength: token?.length,
+      url: config.url,
+      method: config.method,
+      headers: config.headers,
+    });
 
     // Add authorization header if token exists
     if (token && config.headers) {
@@ -95,39 +117,42 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
-        // Get refresh token from Redux store or localStorage as fallback
-        const state = store?.getState();
-        const refreshToken =
-          state?.auth?.user?.refreshToken ||
-          state?.auth?.refreshToken ||
-          (typeof window !== "undefined"
-            ? localStorage.getItem("refreshToken")
-            : null);
+      // Get refresh token from localStorage
+      const refreshToken =
+        typeof window !== "undefined"
+          ? localStorage.getItem("refreshToken")
+          : null;
 
-        if (!refreshToken) {
-          throw new Error("No refresh token available");
+      // If no refresh token, redirect to login immediately
+      if (!refreshToken) {
+        if (store) {
+          store.dispatch(logout());
         }
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("refreshToken");
+        window.location.href = "/adminlogin";
+        return Promise.reject(new Error("No refresh token available"));
+      }
 
+      try {
         // Try to refresh token
-        const response = await axiosInstance.post("/auth/refresh-token", {
+        const response = await axiosInstance.post("/v1/auth/refresh-token", {
           refreshToken,
         });
 
         if (response.data.accessToken) {
           // Update Redux store with new tokens
           if (store) {
-            store.dispatch({
-              type: "auth/updateTokens", // Adjust this action type based on your Redux setup
-              payload: {
+            store.dispatch(
+              login({
+                user: store.getState().auth.user, // Keep existing user
                 token: response.data.accessToken,
-                refreshToken: response.data.refreshToken,
-              },
-            });
+              })
+            );
           }
 
           // Also save to localStorage as fallback
-          localStorage.setItem("accessToken", response.data.accessToken);
+          localStorage.setItem("adminToken", response.data.accessToken);
           if (response.data.refreshToken) {
             localStorage.setItem("refreshToken", response.data.refreshToken);
           }
@@ -143,14 +168,23 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         // Handle refresh token failure
         if (store) {
-          store.dispatch({ type: "auth/logout" }); // Adjust this action type based on your Redux setup
+          store.dispatch(logout());
         }
-        localStorage.removeItem("accessToken");
+        localStorage.removeItem("adminToken");
         localStorage.removeItem("refreshToken");
         window.location.href = "/adminlogin";
         return Promise.reject(refreshError);
       }
     }
+
+    // Log the error details for debugging
+    console.log("API Error Response:", {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      url: error.config?.url,
+      method: error.config?.method,
+    });
 
     // Format error response
     const errorResponse: ApiError = {

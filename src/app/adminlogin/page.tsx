@@ -52,6 +52,11 @@ const AdminLogin = () => {
         localStorage.setItem("adminToken", data.data.accessToken);
         localStorage.setItem("adminUser", JSON.stringify(data.data.user));
 
+        // Store refresh token if provided
+        if (data.data.refreshToken) {
+          localStorage.setItem("refreshToken", data.data.refreshToken);
+        }
+
         // Dispatch Redux action to update state
         dispatch(
           login({

@@ -44,20 +44,20 @@ const ResultsSection = () => {
   const results = [
     {
       icon: FaTrophy,
-      title: "Top 100 Ranks",
+      title: "Highest selection in Top 100 Ranks",
       description:
         "Five of our students secured positions in the top 100 ranks nationwide",
     },
     {
       icon: FaChalkboardTeacher,
-      title: "Classroom Success",
+      title: "Consistent Classroom results",
       description: "Selections from our Prelims-cum-Mains & Classroom Program",
     },
-    {
-      icon: FaUserGraduate,
-      title: "Total Selections",
-      description: "Overall selections from our institute in CSE 2024",
-    },
+    // {
+    //   icon: FaUserGraduate,
+    //   title: "Total Selections ",
+    //   description: "Overall selections from our institute in CSE 2024",
+    // },
   ];
 
   return (
@@ -72,7 +72,6 @@ const ResultsSection = () => {
               <span>Result Highlights</span>
             </>
           }
-      
           className="!text-center !text-[40px] leading-[1.1] !mb-4"
           animate={true}
         />

@@ -37,32 +37,32 @@ html, body {
 
 
 @font-face {
-  font-family: "DMSans-Bold";
-  src: url("../app/assets/fonts/DMSans-Bold.ttf") format("truetype");
+  font-family: "Montserrat-Bold";
+  src: url("../app/assets/fonts/Montserrat-Bold.ttf") format("truetype");
   font-display: swap;
 }
 
 @font-face {
-  font-family: "DMSans-Medium";
-  src: url("../app/assets/fonts/DMSans-Bold.ttf") format("truetype");
+  font-family: "Montserrat-Medium";
+  src: url("../app/assets/fonts/Montserrat-Bold.ttf") format("truetype");
   font-display: swap;
 }
 
 @font-face {
-  font-family: "DMSans-Regular";
-  src: url("../app/assets/fonts/DMSans-Regular.ttf") format("truetype");
+  font-family: "Montserrat-Regular";
+  src: url("../app/assets/fonts/Montserrat-Regular.ttf") format("truetype");
   font-display: swap;
 }
 
 @font-face {
-  font-family: "DMSans-SemiBold";
-  src: url("../app/assets/fonts/DMSans-Bold.ttf") format("truetype");
+  font-family: "Montserrat-SemiBold";
+  src: url("../app/assets/fonts/Montserrat-Bold.ttf") format("truetype");
   font-display: swap;
 }
 
 @font-face {
-  font-family: "DMSans-Light";
-  src: url("../app/assets/fonts/DMSans-Light.ttf") format("truetype");
+  font-family: "Montserrat-Light";
+  src: url("../app/assets/fonts/Montserrat-Light.ttf") format("truetype");
   font-display: swap;
 }
 
