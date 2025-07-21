@@ -39,19 +39,19 @@ export default function SideDrawer(props: any) {
       key="headerdrwer"
       width={280}
       style={{
-        background: "linear-gradient(to right,#1b2730, #1b2730)",
+        background: "#fff",
         padding: 0,
       }}
       footer={
         <div className="Drawer-footer">
           <a target="_blank" href="">
-            <FaFacebookF className="Drawer-footerIcon" />
+            <FaFacebookF className="Drawer-footerIcon" color="#20468d" />
           </a>
           <a target="_blank" href="">
-            <RiInstagramFill className="Drawer-footerIcon" />
+            <RiInstagramFill className="Drawer-footerIcon" color="#20468d" />
           </a>
           <a target="_blank" href="">
-            <FaXTwitter className="Drawer-footerIcon" />
+            <FaXTwitter className="Drawer-footerIcon" color="#20468d" />
           </a>
         </div>
       }
@@ -68,9 +68,9 @@ export default function SideDrawer(props: any) {
               }}
             >
               <div className="Drawer-itemsTxt">
-                <SubText text={item.name} color="white" />
+                <SubText text={item.name} color="#1b2730" />
               </div>
-              <IoMdArrowForward className="Drawer-itemsIcon" />
+              <IoMdArrowForward className="Drawer-itemsIcon" color="#20468d" />
             </div>
           );
         })}
@@ -82,9 +82,9 @@ export default function SideDrawer(props: any) {
           }}
         >
           <div className="Drawer-itemsTxt">
-            <SubText text="Join Now" color="white" />
+            <SubText text="Join Now" color="#1b2730" />
           </div>
-          <IoMdArrowForward className="Drawer-itemsIcon" />
+          <IoMdArrowForward className="Drawer-itemsIcon" color="#20468d" />
         </div>
       </div>
     </Drawer>
