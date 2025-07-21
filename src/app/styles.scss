@@ -1,5 +1,13 @@
 @use "../config/variables.scss" as vars;
 
+
+
+
+.common-container{
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 ._heading-box {
   display: flex;
   flex-direction: column;
