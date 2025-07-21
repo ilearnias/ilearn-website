@@ -1,8 +1,6 @@
 "use client";
-import { useEffect, useState, useRef, useMemo } from "react";
-import "./styles.scss";
 
-// Import section components
+import "./styles.scss";
 import HomeSection from "./components/HomeSection";
 import ResultsSection from "./components/ResultsSection";
 import AchieversSection from "./components/AchieversSection";
@@ -13,33 +11,6 @@ import TestimonialsSection, {
 import SuccessStoriesSection from "./components/SuccessStoriesSection";
 import ProgramsSection from "./components/ProgramsSection";
 import ApplySection from "./components/ApplySection";
-
-const testimonialData: TestimonialItem[] = [
-  {
-    id: "1",
-    description: "Preparation Strategy - Learn from our top students",
-    video: "wMTD8maO6U4",
-    isActive: true,
-    isTestimonial: true,
-    order: 1,
-  },
-  {
-    id: "2",
-    description: "Malavika G Nair - AIR 45 Success Story",
-    video: "wMTD8maO6U4",
-    isActive: true,
-    isTestimonial: true,
-    order: 2,
-  },
-  {
-    id: "3",
-    description: "Success Journey - Path to achievement",
-    video: "wMTD8maO6U4",
-    isActive: true,
-    isTestimonial: true,
-    order: 3,
-  },
-];
 
 export default function PageContainer() {
   return (

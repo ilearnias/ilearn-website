@@ -5,6 +5,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import store from "@/redux/store";
 import { ReactNode, useEffect, useState } from "react";
 import { initializeAuth } from "@/redux/slices/authSlice";
+import { setStore } from "@/config/apiRequest";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -14,6 +15,9 @@ const Providers = ({ children }: ProvidersProps) => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
+    // Set the store reference for API requests
+    setStore(store);
+
     // Initialize auth state from localStorage
     const token = localStorage.getItem("adminToken");
     const userData = localStorage.getItem("adminUser");

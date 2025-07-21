@@ -17,6 +17,9 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import ClientLayout from "./ClientLayout";
 import "./styles.scss";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
 const merriweather = Merriweather({
   weight: ["300", "400", "700", "900"],
   subsets: ["latin"],
