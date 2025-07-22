@@ -1,7 +1,7 @@
-import React from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
+import React from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
 // Create a client-side only motion component
 const MotionDiv = dynamic(() => Promise.resolve(motion.div), {
@@ -9,7 +9,7 @@ const MotionDiv = dynamic(() => Promise.resolve(motion.div), {
 });
 
 interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'text' | 'icon';
+  variant?: "primary" | "secondary" | "text" | "icon";
   href?: string;
   onClick?: (e: React.MouseEvent) => void;
   children: React.ReactNode;
@@ -19,42 +19,50 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
+  variant = "primary",
   href,
   onClick,
   children,
-  className = '',
+  className = "",
   icon,
   isActive = false,
 }) => {
   const baseStyles = {
-    primary: 'bg-white text-green-700 hover:bg-white/90 shadow-lg',
-    secondary: 'bg-white/10 backdrop-blur text-white hover:bg-white/20 border border-white/20',
-    text: 'transition-colors text-left hover:text-gray-600',
-    icon: 'rounded-full flex items-center justify-center border-2 transition-all duration-700'
+    primary: "bg-white text-green-700 hover:bg-white/90 shadow-lg",
+    secondary:
+      "bg-white/10 backdrop-blur text-white hover:bg-white/20 border border-white/20",
+    text: "transition-colors text-left hover:text-gray-600",
+    icon: "rounded-full flex items-center justify-center border-2 transition-all duration-700",
   };
 
-  const commonStyles = 'px-5 py-3 sm:px-8 sm:py-4 rounded-lg font-light tracking-wide uppercase text-sm inline-flex items-center gap-2 transition-colors';
+  const commonStyles =
+    "px-5 py-3 sm:px-8 sm:py-4 rounded-lg font-light tracking-wide uppercase text-sm inline-flex items-center gap-2 transition-colors";
 
   const buttonContent = (
     <MotionDiv
       className={`
         ${baseStyles[variant]} 
-        ${variant !== 'text' ? commonStyles : ''} 
+        ${variant !== "text" ? commonStyles : ""} 
         ${className}
-        ${isActive && variant === 'text' ? 'text-black' : variant === 'text' ? 'text-gray-400' : ''}
+        ${
+          isActive && variant === "text"
+            ? "text-black"
+            : variant === "text"
+            ? "text-gray-400"
+            : ""
+        }
       `}
       whileHover={
-        variant === 'icon' 
+        variant === "icon"
           ? { scale: 1.1 }
-          : variant === 'text'
+          : variant === "text"
           ? { x: 5 }
           : { y: -2 }
       }
       transition={{
         type: "spring",
         stiffness: 300,
-        damping: 20
+        damping: 20,
       }}
     >
       {children}
@@ -63,11 +71,7 @@ const Button: React.FC<ButtonProps> = ({
   );
 
   if (href) {
-    return (
-      <Link href={href}>
-        {buttonContent}
-      </Link>
-    );
+    return <Link href={href}>{buttonContent}</Link>;
   }
 
   return (
@@ -77,4 +81,4 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-export default Button; 
+export default Button;
