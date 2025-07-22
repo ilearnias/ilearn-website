@@ -30,7 +30,7 @@ const PageContainer = () => {
         </Fade>
 
         <Fade direction="up" duration={1000}>
-          <div className="_banner-sub-header-txt1">
+          <div className=" _banner-sub-header-txt1">
             {`Discover the story behind iLearn's journey in shaping civil service
           aspirants. We're committed to excellence, innovation, and your success
           in the UPSC examination.`}

@@ -14,6 +14,7 @@ import { FiFilter } from "react-icons/fi";
 import Heading from "@/components/common/Heading";
 import { blogService, IBlogPost, IBlogCategory } from "@/services/blog.service";
 import { FiArrowRight } from "react-icons/fi";
+import { Pagination } from "antd";
 
 // Real data state
 type BlogPostWithCategory = Omit<IBlogPost, "tags"> & {
@@ -30,14 +31,14 @@ function BlogCard({
   image,
   tags,
   selectedTag,
-  link,  // Add link parameter
+  link, // Add link parameter
 }: {
   title: string;
   description: string;
   image: string;
   tags?: string | string[];
   selectedTag?: string | null;
-  link?: string;  // Add link type
+  link?: string; // Add link type
 }) {
   // Fallback if image is not a valid path or URL
   const isValidImage =
@@ -114,8 +115,11 @@ export default function BlogPage() {
   const [categories, setCategories] = useState<string[]>([DEFAULT_CATEGORY]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  // Tag filter state
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const POSTS_PER_PAGE = 9;
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -144,25 +148,33 @@ export default function BlogPage() {
 
   // Fetch blog posts and categories
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-    Promise.all([blogService.getAllPosts(), blogService.getAllCategories()])
-      .then(([postsRes, catsRes]) => {
-        // postsRes.data is array of posts, each with .category
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      const params: any = { page: currentPage, limit: POSTS_PER_PAGE };
+      try {
+        const [postsRes, catsRes] = await Promise.all([
+          blogService.getAllPosts(params),
+          blogService.getAllCategories(),
+        ]);
         setBlogPosts(postsRes.data || []);
+        setTotalPages(postsRes.meta?.totalPages || 1);
+        setTotalItems(postsRes.meta?.itemCount || 0);
         const catTitles =
-          catsRes.data?.map((cat: IBlogCategory) => cat.name) || [];
+          catsRes.data?.map((cat: IBlogCategory) => cat.title) || [];
         setCategories([DEFAULT_CATEGORY, ...catTitles]);
-      })
-      .catch((err) => {
+      } catch (err: any) {
         setError(
           typeof err === "string"
             ? err
             : err?.message || "Failed to load blog data."
         );
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [currentPage]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -205,11 +217,17 @@ export default function BlogPage() {
     };
   }, [isMobile]);
 
-  // Filter posts by category and tag
+  // Reset to page 1 if filters change (category, tag)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedTag]);
+
+  // Filter posts by category, tag, and isActive (client-side, after API fetch)
   const filteredPosts = blogPosts.filter((post) => {
+    if (post.isActive === false) return false;
     const inCategory =
       selectedCategory === DEFAULT_CATEGORY ||
-      post.category?.name === selectedCategory;
+      post.category?.title === selectedCategory;
     if (!selectedTag) return inCategory;
     const tagList = !post.tags
       ? []
@@ -226,13 +244,19 @@ export default function BlogPage() {
 
   return (
     <div>
-      <HeroSection
-     
+      <div className="_banner-box1">
+        <div className="_banner-header-txt1">Our blog</div>
+        <div className="_banner-sub-header-txt1">
+          Stay informed and inspired with our latest articles, success stories,
+          and expert insights on civil service examination preparation.
+        </div>
+      </div>
+      {/* <HeroSection
         titleClassName="font-bold mb-2"
         title="Our Blog"
         pageName="Blog"
         description="Stay informed and inspired with our latest articles, success stories, and expert insights on civil service examination preparation."
-      />
+      /> */}
       <Container>
         <div className="blog-container">
           {/* Main Content */}
@@ -389,11 +413,24 @@ export default function BlogPage() {
                       image={post.image}
                       tags={post.tags}
                       selectedTag={selectedTag}
-                      link={post.link}  // Add the link prop
+                      link={post.link}
                     />
                   ))
                 )}
               </div>
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="page-box" style={{ margin: "32px 0" }}>
+                  <Pagination
+                    current={currentPage}
+                    pageSize={POSTS_PER_PAGE}
+                    total={totalItems}
+                    onChange={setCurrentPage}
+                    showSizeChanger={false}
+                    responsive
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

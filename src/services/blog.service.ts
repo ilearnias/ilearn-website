@@ -30,9 +30,8 @@ export interface IBlogPost {
 }
 
 export interface IBlogCategory {
-  title: ReactNode;
+  title: string;
   id: string;
-  name: string;
   slug: string;
   description: string;
   metaTitle?: string;
@@ -52,10 +51,14 @@ export interface IBlogCategoryUpdate extends Partial<IBlogCategoryCreate> {}
 
 class BlogService {
   // Blog Posts
-  async getAllPosts(): Promise<ApiResponse<IBlogPost[]>> {
+  async getAllPosts(params?: {
+    page?: number;
+    limit?: number;
+  }): Promise<ApiResponse<IBlogPost[]>> {
     try {
       return await apiRequest.get<IBlogPost[]>(
-        API_ENDPOINTS.ADMIN.BLOG.POSTS.LIST
+        API_ENDPOINTS.ADMIN.BLOG.POSTS.LIST,
+        params ? { params } : undefined
       );
     } catch (error) {
       console.error("Error fetching blog posts:", error);
