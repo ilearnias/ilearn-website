@@ -1,15 +1,17 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import { AnimatePresence, useInView, motion } from "framer-motion";
-import "./styles.scss";
-import Heading from "@/components/common/Heading";
-import SubText from "@/components/common/SubText";
+import React, { useState, useEffect } from "react";
+import Slider from "react-slick";
+import Card from "antd/es/card";
+import Meta from "antd/es/card/Meta";
+import YouTube from "react-youtube";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "antd/dist/reset.css";
 import Container from "@/components/common/Container";
-import VideoCard from "@/components/common/VideoCard";
-import { useMediaQuery } from "react-responsive";
 import { getTestimonials } from "@/services/media.service";
 import { Fade } from "react-awesome-reveal";
 
+// Types
 export interface TestimonialItem {
   id: string;
   description: string;
@@ -18,22 +20,22 @@ export interface TestimonialItem {
   isTestimonial: boolean;
   order: number;
 }
-
 interface TestimonialsSectionProps {
   testimonials?: TestimonialItem[];
 }
 
+// Utility to extract YouTube videoId from a URL or take directly if provided
+const getVideoId = (url: string) => {
+  const match = url.match(
+    /(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+  );
+  return match ? match[1] : url;
+};
+
 const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
   testimonials: propTestimonials,
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState<"left" | "right">("right");
-  const [activeVideo, setActiveVideo] = useState<string | null>(null);
-  const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [testimonials, setTestimonials] = useState<TestimonialItem[]>([]);
-  const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: false });
-  const isMobile = useMediaQuery({ maxWidth: 768 });
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -47,57 +49,56 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     fetchTestimonials();
   }, [propTestimonials]);
 
-  const handleVideoClick = (videoId: string) => {
-    setActiveVideo(activeVideo === videoId ? null : videoId);
-  };
-
-  const nextSlide = () => {
-    setDirection("right");
-    setActiveVideo(null);
-    setCurrentIndex((prevIndex) =>
-      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const prevSlide = () => {
-    setDirection("left");
-    setActiveVideo(null);
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
-    );
-  };
-
-  const toggleDropdown = (id: string) => {
-    setOpenDropdownId(openDropdownId === id ? null : id);
-  };
-
-  // Extract video ID from YouTube URL
-  const getVideoId = (url: string) => {
-    const match = url.match(
-      /(?:youtu\.be\/|youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
-    );
-    return match ? match[1] : url;
-  };
-
-  const dropdownVariants = {
-    open: {
-      height: "auto",
-      opacity: 1,
-      transition: {
-        type: "spring" as const,
-        stiffness: 300,
-        damping: 24,
-      },
-    },
-    closed: {
-      height: 0,
-      opacity: 0,
-      transition: {
-        type: "spring" as const,
-        stiffness: 300,
-        damping: 24,
-      },
-    },
+  // Slick slider settings
+  const sliderSettings = {
+    dots: true,
+    arrows: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 2,
+    slidesToScroll: 2,
+    responsive: [
+      { breakpoint: 768, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+    ],
+    nextArrow: (
+      <button
+        type="button"
+        className="slick-arrow slick-next !right-2 !md:right-4 !z-10 !top-1/2 !-translate-y-1/2 w-10 h-10 md:w-14 md:h-14 bg-white rounded-full shadow hover:bg-gray-100 flex items-center justify-center"
+        aria-label="Next"
+      >
+        <svg
+          className="w-4 h-4 md:w-7 md:h-7 text-[#dc2626]"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    ),
+    prevArrow: (
+      <button
+        type="button"
+        className="slick-arrow slick-prev !left-2 !md:left-4 !z-10 !top-1/2 !-translate-y-1/2 w-10 h-10 md:w-14 md:h-14 bg-white rounded-full shadow hover:bg-gray-100 flex items-center justify-center"
+        aria-label="Previous"
+      >
+        <svg
+          className="w-4 h-4 md:w-7 md:h-7 text-[#dc2626]"
+          viewBox="0 0 24 24"
+          fill="none"
+        >
+          <path
+            d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    ),
+    appendDots: (dots: React.ReactNode) => (
+      <div className="mt-6 flex justify-center">{dots}</div>
+    ),
   };
 
   return (
@@ -112,196 +113,35 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           </div>
         </Fade>
 
-        {isMobile ? (
-          <div className="relative max-w-[600px] mx-auto space-y-4">
-            {testimonials.map((item) => (
-              <div key={item.id} className="relative mb-4">
-                <motion.button
-                  className="w-full p-4 bg-white rounded-t-lg shadow-md flex items-center justify-between"
-                  onClick={() => toggleDropdown(item.id)}
-                  animate={{
-                    backgroundColor:
-                      openDropdownId === item.id ? "#F3F4F6" : "#FFFFFF",
-                  }}
-                >
-                  <span className="font-medium text-gray-800">
-                    {item.description}
-                  </span>
-                  <motion.svg
-                    className="w-6 h-6 text-gray-600"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    animate={{ rotate: openDropdownId === item.id ? 180 : 0 }}
+        <div className="relative max-w-[1700px] mx-auto px-2 sm:px-4 md:px-16">
+          <Slider {...sliderSettings}>
+            {testimonials.map((item, index) => (
+              <div key={index} className="px-2">
+                <div className="w-full max-w-xl mx-auto rounded-xl overflow-hidden shadow aspect-video bg-white flex flex-col">
+                  <div
+                    className="relative w-full h-0"
+                    style={{ paddingBottom: "56.25%" }}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
+                    <YouTube
+                      videoId={getVideoId(item.video)}
+                      className="absolute top-0 left-0 w-full h-full"
+                      opts={{
+                        width: "100%",
+                        height: "100%",
+                        playerVars: { autoplay: 0 },
+                      }}
                     />
-                  </motion.svg>
-                </motion.button>
-
-                <AnimatePresence>
-                  {openDropdownId === item.id && (
-                    <motion.div
-                      className="w-full bg-white rounded-b-lg shadow-lg overflow-hidden"
-                      initial={{
-                        height: 0,
-                        opacity: 0,
-                      }}
-                      animate={{
-                        height: "auto",
-                        opacity: 1,
-                        transition: {
-                          height: {
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 24,
-                          },
-                          opacity: {
-                            duration: 0.2,
-                          },
-                        },
-                      }}
-                      exit={{
-                        height: 0,
-                        opacity: 0,
-                        transition: {
-                          height: {
-                            type: "spring",
-                            stiffness: 300,
-                            damping: 24,
-                          },
-                          opacity: {
-                            duration: 0.2,
-                          },
-                        },
-                      }}
-                    >
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                      >
-                        <VideoCard
-                          id={item.id}
-                          title={item.description}
-                          subtitle=""
-                          videoUrl={
-                            activeVideo === item.video
-                              ? `https://www.youtube.com/embed/${getVideoId(
-                                  item.video
-                                )}?autoplay=1&rel=0&modestbranding=1`
-                              : item.video
-                          }
-                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(
-                            item.video
-                          )}/maxresdefault.jpg`}
-                          isPlaying={activeVideo === item.video}
-                          onVideoClick={() => {
-                            handleVideoClick(item.video);
-                            toggleDropdown(item.id);
-                          }}
-                          direction={direction}
-                        />
-                      </motion.div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  </div>
+                  <div className="p-4">
+                    <div className="text-lg font-semibold">
+                      {item.description || "Testimonial"}
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
-          </div>
-        ) : (
-          <motion.div
-            ref={containerRef}
-            className="relative max-w-[1100px] mx-auto"
-            initial={{ x: -300, opacity: 0 }}
-            animate={{
-              x: isInView ? 0 : -300,
-              opacity: isInView ? 1 : 0,
-            }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
-            <div className="relative px-16 md:px-24">
-              <button
-                className="absolute -left-4 md:left-2 top-[45%] -translate-y-1/2 w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-lg hover:bg-gray-50 transition-all z-10"
-                onClick={prevSlide}
-                aria-label="Previous testimonial"
-              >
-                <svg
-                  className="w-7 h-7 text-indigo-600"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                </svg>
-              </button>
-
-              <div className="overflow-hidden">
-                <AnimatePresence mode="wait">
-                  {testimonials.map(
-                    (item, index) =>
-                      index === currentIndex && (
-                        <VideoCard
-                          key={item.id}
-                          id={item.id}
-                          title={item.description}
-                          subtitle=""
-                          videoUrl={
-                            activeVideo === item.video
-                              ? `https://www.youtube.com/embed/${getVideoId(
-                                  item.video
-                                )}?autoplay=1&rel=0&modestbranding=1`
-                              : item.video
-                          }
-                          thumbnailUrl={`https://img.youtube.com/vi/${getVideoId(
-                            item.video
-                          )}/maxresdefault.jpg`}
-                          isPlaying={activeVideo === item.video}
-                          onVideoClick={() => handleVideoClick(item.video)}
-                          direction={direction}
-                        />
-                      )
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <button
-                className="absolute -right-4 md:right-2 top-[45%] -translate-y-1/2 w-14 h-14 flex items-center justify-center bg-white rounded-full shadow-lg hover:bg-gray-50 transition-all z-10"
-                onClick={nextSlide}
-                aria-label="Next testimonial"
-              >
-                <svg
-                  className="w-7 h-7 text-indigo-600"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="flex justify-center gap-3 mt-10">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-2.5 h-2.5 rounded-full transition-all ${
-                    index === currentIndex
-                      ? "bg-indigo-600 scale-125"
-                      : "bg-gray-300 hover:bg-gray-400"
-                  }`}
-                  onClick={() => {
-                    setDirection(index > currentIndex ? "right" : "left");
-                    setCurrentIndex(index);
-                  }}
-                  aria-label={`Go to testimonial ${index + 1}`}
-                />
-              ))}
-            </div>
-          </motion.div>
-        )}
+          </Slider>
+        </div>
       </Container>
     </section>
   );

@@ -420,12 +420,12 @@ $charcoal: #1f2937; // Text - Primary text
     display: flex;
     width: 100%;
     height: auto;
-    padding: 10px 0;
+    padding: 30px 10px;
     position: relative;
 
     .achievers-grid {
       display: flex;
-      gap: 62px;
+      gap: 50px;
       overflow-x: auto;
       overflow-y: hidden;
       min-width: 100%;
@@ -445,7 +445,7 @@ $charcoal: #1f2937; // Text - Primary text
         flex-wrap: nowrap;
         align-items: center;
         gap: 2rem;
-        padding: 0 1rem;
+        padding: 1rem 1rem;
         overflow-x: auto;
         scroll-snap-align: start;
 
@@ -476,7 +476,6 @@ $charcoal: #1f2937; // Text - Primary text
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
     scroll-snap-align: start;
     cursor: pointer;
@@ -1139,41 +1138,41 @@ $charcoal: #1f2937; // Text - Primary text
       pointer-events: none;
     }
 
-    &:hover {
-      transform: translateY(-5px);
+    // &:hover {
+    //   transform: translateY(-5px);
 
-      &::before {
-        width: 1000px;
-        height: 1000px;
-      }
+    //   &::before {
+    //     width: 1000px;
+    //     height: 1000px;
+    //   }
 
-      .content {
-        color: white;
-        position: relative;
-        z-index: 2;
-      }
+    //   .content {
+    //     color: white;
+    //     position: relative;
+    //     z-index: 2;
+    //   }
 
-      .icon {
-        color: white;
-        position: relative;
-        z-index: 2;
-      }
+    //   .icon {
+    //     color: white;
+    //     position: relative;
+    //     z-index: 2;
+    //   }
 
-      .program-details {
-        color: white;
-        position: relative;
-        z-index: 2;
+    //   .program-details {
+    //     color: white;
+    //     position: relative;
+    //     z-index: 2;
 
-        .duration {
-          color: white;
-        }
+    //     .duration {
+    //       color: white;
+    //     }
 
-        .view-details {
-          color: white;
-          border-color: white;
-        }
-      }
-    }
+    //     .view-details {
+    //       color: white;
+    //       border-color: white;
+    //     }
+    //   }
+    // }
   }
 
   .icon {

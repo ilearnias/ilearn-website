@@ -52,7 +52,7 @@ const ProgramsSection = () => {
           </div>
         </Fade>
 
-        <div className="programs-grid  p-0 md:p-4">
+        <div className="programs-grid p-0 md:p-4">
           <div className="program-card">
             <div className="icon">
               <i className="fas fa-university"></i>
@@ -66,7 +66,7 @@ const ProgramsSection = () => {
                   </>
                 }
                 size="sm"
-                className="!leading-normal"
+                className="!leading-normal !text-4xl !sm:text-lg !md:text-xl"
               />
               <p>
                 Comprehensive classroom program covering both preliminary and
@@ -96,7 +96,7 @@ const ProgramsSection = () => {
                   </>
                 }
                 size="sm"
-                className="!leading-normal"
+                className="!leading-normal !text-4xl !sm:text-lg !md:text-xl"
               />
               <p>
                 Stay updated with the latest current affairs and develop
