@@ -56,7 +56,7 @@ const BlogPosts = () => {
   const fetchPosts = async (page = 1, limit = 10) => {
     try {
       setLoading(true);
-      const response = await blogService.getAllPosts({ page, limit });
+      const response: any = await blogService.getAllPosts({ page, limit });
       if (response.status) {
         setPosts(response.data);
         setTotal(
