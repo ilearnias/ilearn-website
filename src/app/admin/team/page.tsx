@@ -6,21 +6,14 @@ import {
   Table,
   Input,
   Button,
-  Card,
-  Statistic,
   Row,
   Col,
-  Space,
   Tag,
-  Avatar,
-  Dropdown,
-  Menu,
   Modal,
   Form,
   message,
   Select,
   InputNumber,
-  Switch,
   Upload,
   UploadProps,
   Image,
@@ -28,20 +21,14 @@ import {
 import {
   SearchOutlined,
   PlusOutlined,
-  UserOutlined,
   EditOutlined,
   DeleteOutlined,
-  MoreOutlined,
-  TeamOutlined,
-  CheckCircleOutlined,
-  CrownOutlined,
-  UploadOutlined,
   InboxOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { teamService, ITeamMember } from "@/services/team.service";
-import { API_CONFIG, API_ENDPOINTS } from "@/config/api";
+import { API_ENDPOINTS } from "@/config/api";
 import { apiRequest } from "@/config/apiRequest";
 import "./styles.scss";
 
@@ -50,7 +37,6 @@ const { TextArea } = Input;
 const { Dragger } = Upload;
 
 const Team = () => {
-  const { user } = useSelector((state: any) => state.auth);
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [teamMembers, setTeamMembers] = useState<ITeamMember[]>([]);
@@ -60,13 +46,34 @@ const Team = () => {
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
   const [form] = Form.useForm();
 
+  // Pagination state
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    showSizeChanger: true,
+    showQuickJumper: true,
+    showTotal: (total: number, range: [number, number]) =>
+      `${range[0]}-${range[1]} of ${total} items`,
+  });
+
   // Fetch team members on component mount
-  const fetchTeamMembers = useCallback(async () => {
+  const fetchTeamMembers = useCallback(async (page = 1, pageSize = 10) => {
     try {
       setLoading(true);
-      const response = await teamService.getAllTeamMembers();
+      const response: any = await teamService.getAllTeamMembers(page, pageSize);
       if (response.status) {
         setTeamMembers(response.data);
+
+        // Update pagination state with metadata from response
+        if (response.meta) {
+          setPagination((prev) => ({
+            ...prev,
+            current: response.meta.page,
+            total: response.meta.itemCount,
+            pageSize: response.meta.limit,
+          }));
+        }
       } else {
         message.error(response.message || "Failed to fetch team members");
       }
@@ -79,14 +86,14 @@ const Team = () => {
   }, []);
 
   useEffect(() => {
-    fetchTeamMembers();
+    fetchTeamMembers(1, 10);
   }, [fetchTeamMembers]);
 
   const handleAdd = () => {
     setEditingMember(null);
     setUploadedImageUrl("");
     form.resetFields();
-    form.setFieldsValue({ status: "active" });
+    form.setFieldsValue({ isActive: true });
     setIsModalVisible(true);
   };
 
@@ -114,7 +121,7 @@ const Team = () => {
             message.success(
               response.message || "Team member deleted successfully"
             );
-            await fetchTeamMembers();
+            await fetchTeamMembers(pagination.current, pagination.pageSize);
           } else {
             message.error(response.message || "Failed to delete team member");
           }
@@ -180,7 +187,7 @@ const Team = () => {
     try {
       const values = await form.validateFields();
       values.order = Number(values.order);
-      values.status = values.status === true ? "active" : "inactive";
+      values.isActive = values.isActive === true ? true : false;
 
       // Use uploaded image URL if available, otherwise use the existing image URL
       values.image = uploadedImageUrl || editingMember?.image || "";
@@ -200,7 +207,7 @@ const Team = () => {
             response.message || "Team member updated successfully"
           );
           setIsModalVisible(false);
-          await fetchTeamMembers();
+          await fetchTeamMembers(pagination.current, pagination.pageSize);
         } else {
           message.error(response.message || "Failed to update team member");
         }
@@ -211,7 +218,7 @@ const Team = () => {
             response.message || "Team member created successfully"
           );
           setIsModalVisible(false);
-          await fetchTeamMembers();
+          await fetchTeamMembers(pagination.current, pagination.pageSize);
         } else {
           message.error(response.message || "Failed to create team member");
         }
@@ -233,18 +240,29 @@ const Team = () => {
     message.info("Image removed");
   };
 
+  // Handle pagination changes
+  const handleTableChange = (paginationInfo: any) => {
+    const { current, pageSize } = paginationInfo;
+    setPagination((prev) => ({
+      ...prev,
+      current,
+      pageSize,
+    }));
+    fetchTeamMembers(current, pageSize);
+  };
+
+  // For now, we'll keep client-side filtering since the API doesn't support search
+  // In a real implementation, you'd want to add search parameters to the API call
   const filteredMembers = useMemo(() => {
+    if (!searchText) return teamMembers;
+
     return teamMembers.filter(
       (member) =>
         member.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        member.position.toLowerCase().includes(searchText.toLowerCase()) ||
-        member.department.toLowerCase().includes(searchText.toLowerCase())
+        (member.designation &&
+          member.designation.toLowerCase().includes(searchText.toLowerCase()))
     );
   }, [teamMembers, searchText]);
-
-  const getStatusColor = (status: string) => {
-    return status === "active" ? "green" : "red";
-  };
 
   const columns: ColumnsType<any> = [
     {
@@ -274,63 +292,11 @@ const Team = () => {
       key: "name",
     },
     {
-      title: "Position",
-      dataIndex: "position",
-      key: "position",
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
     },
-    {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
-    },
-    {
-      title: "Bio",
-      dataIndex: "bio",
-      key: "bio",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-    },
-    {
-      title: "LinkedIn",
-      dataIndex: ["socialLinks", "linkedin"],
-      key: "linkedin",
-      render: (url) =>
-        url ? (
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            LinkedIn
-          </a>
-        ) : null,
-    },
-    {
-      title: "Twitter",
-      dataIndex: ["socialLinks", "twitter"],
-      key: "twitter",
-      render: (url) =>
-        url ? (
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            Twitter
-          </a>
-        ) : null,
-    },
-    {
-      title: "Facebook",
-      dataIndex: ["socialLinks", "facebook"],
-      key: "facebook",
-      render: (url) =>
-        url ? (
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            Facebook
-          </a>
-        ) : null,
-    },
+
     {
       title: "Order",
       dataIndex: "order",
@@ -338,11 +304,11 @@ const Team = () => {
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => (
-        <Tag color={status === "active" ? "green" : "red"}>
-          {status === "active" ? "Active" : "Inactive"}
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive) => (
+        <Tag color={isActive === true ? "green" : "red"}>
+          {isActive === true ? "Active" : "Inactive"}
         </Tag>
       ),
     },
@@ -350,30 +316,42 @@ const Team = () => {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item
-                key="edit"
-                icon={<EditOutlined />}
-                onClick={() => handleEdit(record)}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined />}
-                danger
-                onClick={() => handleDelete(record)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
+        <div>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          />
+          <Button
+            type="text"
+            icon={<DeleteOutlined color="red" />}
+            onClick={() => handleDelete(record)}
+          />
+        </div>
+        // <Dropdown
+        //   overlay={
+        //     <Menu>
+        //       <Menu.Item
+        //         key="edit"
+        //         icon={<EditOutlined />}
+        //         onClick={() => handleEdit(record)}
+        //       >
+        //         Edit
+        //       </Menu.Item>
+        //       <Menu.Item
+        //         key="delete"
+        //         icon={<DeleteOutlined />}
+        //         danger
+        //         onClick={() => handleDelete(record)}
+        //       >
+        //         Delete
+        //       </Menu.Item>
+        //     </Menu>
+        //   }
+        //   trigger={["click"]}
+        // >
+        //   <Button type="text" icon={<MoreOutlined />} />
+        // </Dropdown>
       ),
     },
   ];
@@ -404,6 +382,8 @@ const Team = () => {
         dataSource={filteredMembers}
         rowKey="id"
         loading={loading}
+        pagination={pagination}
+        onChange={handleTableChange}
       />
 
       <Modal
@@ -415,11 +395,7 @@ const Team = () => {
         okText={editingMember ? "Update" : "Create"}
         cancelText="Cancel"
       >
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{ status: "active" }}
-        >
+        <Form form={form} layout="vertical" initialValues={{ isActive: true }}>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -432,20 +408,18 @@ const Team = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name="position"
-                label="Position"
-                rules={[{ required: true, message: "Please enter position" }]}
+                name="designation"
+                label="Designation"
+                rules={[
+                  { required: true, message: "Please enter designation" },
+                ]}
               >
-                <Input placeholder="Enter position" />
+                <Input placeholder="Enter designation" />
               </Form.Item>
             </Col>
           </Row>
 
-          <Form.Item
-            name="bio"
-            label="Bio"
-            rules={[{ required: true, message: "Please enter bio" }]}
-          >
+          <Form.Item hidden name="bio" label="Bio">
             <TextArea
               rows={4}
               placeholder="Enter team member bio"
@@ -525,12 +499,12 @@ const Team = () => {
 
           <Row gutter={16}>
             <Col span={12}>
-              <Form.Item name="email" label="Email">
+              <Form.Item hidden name="email" label="Email">
                 <Input placeholder="Enter email address" type="email" />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="phone" label="Phone">
+              <Form.Item hidden name="phone" label="Phone">
                 <Input placeholder="Enter phone number" />
               </Form.Item>
             </Col>
@@ -551,7 +525,15 @@ const Team = () => {
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="department" label="Department">
+              <Form.Item name="isActive" label="Status">
+                <Select>
+                  <Select.Option value={true}>Active</Select.Option>
+                  <Select.Option value={false}>Inactive</Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item hidden name="department" label="Department">
                 <Input placeholder="Enter department" />
               </Form.Item>
             </Col>
@@ -560,7 +542,8 @@ const Team = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name={["socialLinks", "linkedin"]}
+                hidden
+                name="linkedin"
                 label="LinkedIn"
                 rules={[
                   { type: "url", message: "LinkedIn must be a URL address" },
@@ -574,7 +557,8 @@ const Team = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                name={["socialLinks", "twitter"]}
+                hidden
+                name="twitter"
                 label="Twitter"
                 rules={[
                   { type: "url", message: "Twitter must be a URL address" },
@@ -588,7 +572,8 @@ const Team = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name={["socialLinks", "facebook"]}
+                hidden
+                name="facebook"
                 label="Facebook"
                 rules={[
                   { type: "url", message: "Facebook must be a URL address" },
@@ -597,14 +582,22 @@ const Team = () => {
                 <Input placeholder="https://facebook.com/username" type="url" />
               </Form.Item>
             </Col>
+            <Col span={12}>
+              <Form.Item
+                hidden
+                name="instagram"
+                label="Instagram"
+                rules={[
+                  { type: "url", message: "Instagram must be a URL address" },
+                ]}
+              >
+                <Input
+                  placeholder="https://instagram.com/username"
+                  type="url"
+                />
+              </Form.Item>
+            </Col>
           </Row>
-
-          <Form.Item name="status" label="Status" initialValue="active">
-            <Select>
-              <Select.Option value="active">Active</Select.Option>
-              <Select.Option value="inactive">Inactive</Select.Option>
-            </Select>
-          </Form.Item>
         </Form>
       </Modal>
     </div>

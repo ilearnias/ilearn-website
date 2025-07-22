@@ -26,14 +26,11 @@ const PageContainer = () => {
 
       <div className="_banner-box1">
         <Fade direction="up" duration={900}>
-          <div className="_banner-header-txt1">
-            {/* <span style={{ color: "#dc2626" }}>About</span> Us */}
-            About Us
-          </div>
+          <div className="_banner-header-txt1">About Us</div>
         </Fade>
 
         <Fade direction="up" duration={1000}>
-          <div className="_banner-sub-header-txt1">
+          <div className=" _banner-sub-header-txt1">
             {`Discover the story behind iLearn's journey in shaping civil service
           aspirants. We're committed to excellence, innovation, and your success
           in the UPSC examination.`}

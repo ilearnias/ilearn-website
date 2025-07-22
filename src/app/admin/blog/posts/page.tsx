@@ -17,6 +17,8 @@ import {
   Switch,
   InputNumber,
   Select,
+  Upload,
+  UploadFile,
 } from "antd";
 import {
   SearchOutlined,
@@ -27,6 +29,7 @@ import {
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { blogService, IBlogPost, IBlogCategory } from "@/services/blog.service";
+import { galleryService } from "@/services/gallery.service";
 import "./styles.scss";
 
 const { confirm } = Modal;
@@ -40,18 +43,28 @@ const BlogPosts = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingPost, setEditingPost] = useState<IBlogPost | null>(null);
   const [form] = Form.useForm();
+  const [uploadedImage, setUploadedImage] = useState<UploadFile[]>([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(page, pageSize);
     fetchCategories();
-  }, []);
+  }, [page, pageSize]);
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (page = 1, limit = 10) => {
     try {
       setLoading(true);
-      const response = await blogService.getAllPosts();
+      const response = await blogService.getAllPosts({ page, limit });
       if (response.status) {
         setPosts(response.data);
+        setTotal(
+          response.meta?.itemCount ||
+            response.meta?.totalItems ||
+            response.total ||
+            0
+        );
       } else {
         message.error(response.message || "Failed to fetch blog posts");
       }
@@ -80,12 +93,25 @@ const BlogPosts = () => {
   const handleAdd = () => {
     setEditingPost(null);
     form.resetFields();
+    setUploadedImage([]);
     setIsModalVisible(true);
   };
 
   const handleEdit = (record: IBlogPost) => {
     setEditingPost(record);
     form.setFieldsValue(record);
+    setUploadedImage(
+      record.image
+        ? [
+            {
+              uid: "-1",
+              name: record.image.split("/").pop() || "image",
+              status: "done",
+              url: record.image,
+            },
+          ]
+        : []
+    );
     setIsModalVisible(true);
   };
 
@@ -113,12 +139,63 @@ const BlogPosts = () => {
     });
   };
 
+  const handleImageUploadChange = ({
+    fileList,
+  }: {
+    fileList: UploadFile[];
+  }) => {
+    // Only allow one image
+    setUploadedImage(fileList.slice(-1));
+  };
+
+  const uploadImageToApi = async (file: File): Promise<string> => {
+    return await galleryService.uploadSingleImage(file);
+  };
+
+  const uploadProps = {
+    beforeUpload: (file: File) => {
+      const acceptedFormats = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
+      const isAcceptedFormat = acceptedFormats.includes(file.type);
+      if (!isAcceptedFormat) {
+        message.error("You can only upload JPG, PNG, GIF or WebP files!");
+        return false;
+      }
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        message.error("Image must be smaller than 5MB!");
+        return false;
+      }
+      return false; // Manual upload
+    },
+    fileList: uploadedImage,
+    onChange: handleImageUploadChange,
+    multiple: false,
+    listType: "picture-card" as const,
+    accept: ".jpg,.jpeg,.png,.gif,.webp",
+    maxCount: 1,
+  };
+
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-
+      let imageUrl = values.image;
+      // If a new file is uploaded, upload it and get the URL
+      const newFile = uploadedImage.find((file) => file.originFileObj);
+      if (newFile && newFile.originFileObj) {
+        imageUrl = await uploadImageToApi(newFile.originFileObj as File);
+      } else if (uploadedImage.length > 0 && uploadedImage[0].url) {
+        imageUrl = uploadedImage[0].url as string;
+      } else {
+        imageUrl = "";
+      }
+      const postData = { ...values, image: imageUrl };
       if (editingPost) {
-        const response = await blogService.updatePost(editingPost.id, values);
+        const response = await blogService.updatePost(editingPost.id, postData);
         if (response.status) {
           message.success(response.message || "Post updated successfully");
           setIsModalVisible(false);
@@ -127,7 +204,7 @@ const BlogPosts = () => {
           message.error(response.message || "Failed to update post");
         }
       } else {
-        const response = await blogService.createPost(values);
+        const response = await blogService.createPost(postData);
         if (response.status) {
           message.success(response.message || "Post created successfully");
           setIsModalVisible(false);
@@ -147,12 +224,6 @@ const BlogPosts = () => {
     form.resetFields();
   };
 
-  const filteredPosts = posts.filter(
-    (post) =>
-      post.title.toLowerCase().includes(searchText.toLowerCase()) ||
-      post.description.toLowerCase().includes(searchText.toLowerCase())
-  );
-
   const columns: ColumnsType<IBlogPost> = [
     {
       title: "Title",
@@ -166,7 +237,7 @@ const BlogPosts = () => {
       key: "category",
       render: (categoryId) => {
         const category = categories.find((c) => c.id === categoryId);
-        return category ? category.name : "-";
+        return category ? category.title : "";
       },
     },
     {
@@ -246,9 +317,22 @@ const BlogPosts = () => {
       <Table
         className="blog-posts-table"
         columns={columns}
-        dataSource={filteredPosts}
+        dataSource={posts}
         rowKey="id"
         loading={loading}
+        pagination={{
+          current: page,
+          pageSize: pageSize,
+          total: total,
+          showSizeChanger: true,
+          pageSizeOptions: ["10", "20", "50", "100"],
+          position: ["bottomCenter"],
+          responsive: true,
+        }}
+        onChange={(pagination) => {
+          setPage(pagination.current || 1);
+          setPageSize(pagination.pageSize || 10);
+        }}
       />
 
       <Modal
@@ -282,7 +366,7 @@ const BlogPosts = () => {
                 <Select>
                   {categories.map((category) => (
                     <Select.Option key={category.id} value={category.id}>
-                      {category.name}
+                      {category.title}
                     </Select.Option>
                   ))}
                 </Select>
@@ -309,11 +393,18 @@ const BlogPosts = () => {
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                name="image"
-                label="Image URL"
-                rules={[{ required: true, message: "Please enter image URL" }]}
+                label="Image"
+                required
+                help="Upload a blog post image. Maximum size: 5MB."
               >
-                <Input />
+                <Upload {...uploadProps}>
+                  {uploadedImage.length >= 1 ? null : (
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  )}
+                </Upload>
               </Form.Item>
             </Col>
             <Col span={12}>

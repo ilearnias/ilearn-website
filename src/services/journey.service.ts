@@ -47,10 +47,12 @@ interface JourneyResponse {
 }
 
 class JourneyService {
-  async getAllJourney(page = 1, limit = 10) {
-    const response = await apiRequest.get<JourneyResponse>(
-      `${API_ENDPOINTS.ADMIN.JOURNEY.LIST}?page=${page}&limit=${limit}`
-    );
+  async getAllJourney(page = 1, limit = 10, isActive: boolean) {
+    let url = `${API_ENDPOINTS.ADMIN.JOURNEY.LIST}?page=${page}&limit=${limit}`;
+    if (isActive) {
+      url += `&isActive=${isActive}`;
+    }
+    const response = await apiRequest.get<JourneyResponse>(url);
     return response;
   }
 
@@ -60,7 +62,7 @@ class JourneyService {
       message: string;
       data: IJourney;
     }>(`/v1/journey/${id}`);
-    return response.data;
+    return response;
   }
 
   async createJourney(data: IJourneyCreate, config: AxiosRequestConfig) {
@@ -74,7 +76,7 @@ class JourneyService {
   }
 
   async updateJourney(id: string, data: IJourneyUpdate) {
-    const response = await apiRequest.put<{
+    const response = await apiRequest.patch<{
       status: boolean;
       message: string;
       data: IJourney;
@@ -99,7 +101,7 @@ class JourneyService {
       message: string;
       data: string;
     }>("/v1/upload/image", formData);
-    return response.data;
+    return response;
   }
 
   validateImageFile(file: File): boolean {

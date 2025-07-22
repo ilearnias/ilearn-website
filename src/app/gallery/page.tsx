@@ -102,13 +102,17 @@ const GalleryPage = () => {
     <div className="gallery-page">
       <Header />
 
-      <HeroSection
-        titleClassName="font-bold mb-2"
-        title="Gallery"
-        pageName="Gallery"
-        description="Experience the vibrant life at iLearn through our collection of memorable moments, celebrations, and academic milestones."
-      
-      />
+      <div className="_banner-box1">
+        <Fade direction="up" duration={900}>
+          <div className="_banner-header-txt1">Gallery</div>
+        </Fade>
+
+        <Fade direction="up" duration={1000}>
+          <div className=" _banner-sub-header-txt1">
+            {`Experience the vibrant life at iLearn through our collection of memorable moments, celebrations, and academic milestones.`}
+          </div>
+        </Fade>
+      </div>
 
       <div className="gallery-content">
         {Object.keys(gallerySections).length > 0 ? (

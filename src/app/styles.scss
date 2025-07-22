@@ -1,9 +1,6 @@
 @use "../config/variables.scss" as vars;
 
-
-
-
-.common-container{
+.common-container {
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -62,7 +59,7 @@
   align-items: center;
   justify-content: center;
   @media (max-width: 768px) {
-    height: 40vh;
+    height: 30vh;
     padding: 20px;
   }
 }
@@ -73,7 +70,8 @@
   font-family: vars.$Bold;
   color: vars.$p_blue;
   @media (max-width: 768px) {
-    font-size: 35px;
+    font-size: 30px;
+    margin-top: 60px;
   }
 }
 
@@ -85,7 +83,7 @@
   font-family: vars.$Regular;
   color: #303030;
   @media (max-width: 768px) {
-    font-size: 14px;
+    font-size: 12px;
     line-height: 18px;
   }
 }
