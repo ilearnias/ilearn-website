@@ -88,7 +88,7 @@ const HomeSection = () => {
                 playerVars: {
                   loop: 1,
                   autoplay: 1,
-                  playlist: "NVGwwVzTeJU",
+                  playlist: "NVGwwVzTeJU,zLwkn6BLJ4U",
                 },
               }}
             />

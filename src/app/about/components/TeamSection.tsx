@@ -48,7 +48,7 @@ const TeamSection = () => {
     setLoading(true);
     setError(null);
     teamService
-      .getAllTeamMembers({ order: "ASC", page: 1, limit: 10 })
+      .getAllTeamMembers(1, 10)
       .then((res) => {
         if (res.status && Array.isArray(res.data)) {
           setTeamMembers(res.data);

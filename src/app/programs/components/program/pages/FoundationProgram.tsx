@@ -8,6 +8,8 @@ import { Container, Row, Col } from "react-bootstrap";
 import Heading from "@/components/common/Heading";
 import "./styles.scss";
 import { useRouter } from "next/navigation";
+import { BsAwardFill } from "react-icons/bs";
+import { RiGraduationCapFill } from "react-icons/ri";
 
 export default function FoundationProgram() {
   const buttons = (
@@ -41,16 +43,16 @@ export default function FoundationProgram() {
             <Col md={2} className="mb-4" />
             <Col md={4} className="mb-4">
               <div className="program-card items-center justify-center">
-                <div className="icon-wrapper mb-3"></div>
+                <div className="icon-wrapper mb-3">
+                  <BsAwardFill size={40} color="#20468d" />
+                </div>
                 <Heading
                   text={"iLearn IAS Ignite"}
                   color="tricolor"
                   className="font-bold md:leading-[0.5] leading-[1.1] !text-2xl text-center"
                 />
                 <p>An Exclusive UPSC Foundation Program for College Students</p>
-                <div className="duration">
-                  {"10 months"}
-                </div>
+                <div className="duration">{"10 months"}</div>
                 <button
                   className="btn btn-primary mt-3"
                   onClick={() => router.replace("/foundation/ignite")}
@@ -61,7 +63,9 @@ export default function FoundationProgram() {
             </Col>
             <Col md={4} className="mb-4">
               <div className="program-card items-center justify-center">
-                <div className="icon-wrapper mb-3"></div>
+                <div className="icon-wrapper mb-3">
+                  <RiGraduationCapFill size={40} color="#20468d" />
+                </div>
                 <Heading
                   text={"iLearn IAS Junior"}
                   color="tricolor"
