@@ -70,7 +70,8 @@ const Journey = () => {
       setLoading(true);
       const response: any = await journeyService.getAllJourney(
         currentPage,
-        pageSize
+        pageSize,
+        false
       );
       if (response.status) {
         setJourneyList(response.data);
@@ -103,7 +104,7 @@ const Journey = () => {
     try {
       setModalLoading(true);
       // Preload data for editing
-      const response = await journeyService.getJourneyById(record.id);
+      const response: any = await journeyService.getJourneyById(record.id);
       if (response.status) {
         setEditingJourney(response.data);
 
@@ -128,10 +129,10 @@ const Journey = () => {
         });
         setIsModalVisible(true);
       } else {
-        message.error(response.message || "Failed to load journey data");
+        message.error(response.message || "Failed to load journey data 1");
       }
     } catch (error: any) {
-      message.error(error.message || "Failed to load journey data");
+      message.error(error.message || "Failed to load journey data 2");
       console.error("Error loading journey data:", error);
     } finally {
       setModalLoading(false);
@@ -182,9 +183,11 @@ const Journey = () => {
       // Handle image upload if a new file is selected
       if (uploadedFile && uploadedFile.originFileObj) {
         try {
-          const imageUrl = await uploadImageToApi(uploadedFile.originFileObj);
+          const imageUrl: any = await uploadImageToApi(
+            uploadedFile.originFileObj
+          );
 
-          values.media = imageUrl;
+          values.media = imageUrl?.data;
         } catch (error: any) {
           message.error(error.message || "Failed to upload image");
           return;
@@ -289,7 +292,7 @@ const Journey = () => {
       title: "Media",
       dataIndex: "media",
       key: "media",
-      width: 120,
+      // width: 120,
       render: (media) => (
         <Image
           src={media || "/placeholder-image.png"}
@@ -305,13 +308,13 @@ const Journey = () => {
       title: "Order",
       dataIndex: "order",
       key: "order",
-      width: 80,
+      // width: 80,
       sorter: (a, b) => a.order - b.order,
     },
     {
       title: "Status",
       key: "status",
-      width: 100,
+      // width: 100,
       render: (_, record) => (
         <Tag color={record.isActive ? "green" : "red"}>
           {record.isActive ? "Active" : "Inactive"}
@@ -329,37 +332,49 @@ const Journey = () => {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item
-                key="edit"
-                icon={<EditOutlined />}
-                onClick={() => handleEdit(record)}
-              >
-                Edit
-              </Menu.Item>
-              <Menu.Item
-                key="preview"
-                icon={<EyeOutlined />}
-                onClick={() => window.open(record.media, "_blank")}
-              >
-                Preview
-              </Menu.Item>
-              <Menu.Item
-                key="delete"
-                icon={<DeleteOutlined />}
-                danger
-                onClick={() => handleDelete(record)}
-              >
-                Delete
-              </Menu.Item>
-            </Menu>
-          }
-          trigger={["click"]}
-        >
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
+        <div>
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+          />
+          <Button
+            type="text"
+            icon={<DeleteOutlined color="red" />}
+            onClick={() => handleDelete(record)}
+          />
+        </div>
+        // <Dropdown
+        //   overlay={
+        //     <Menu>
+        //       <Menu.Item
+        //         key="edit"
+        //         icon={<EditOutlined />}
+        //         onClick={() => handleEdit(record)}
+        //       >
+        //         Edit
+        //       </Menu.Item>
+        //       <Menu.Item
+        //         key="preview"
+        //         icon={<EyeOutlined />}
+        //         onClick={() => window.open(record.media, "_blank")}
+        //       >
+        //         Preview
+        //       </Menu.Item>
+        //       <Menu.Item
+        //         key="delete"
+        //         icon={<DeleteOutlined />}
+        //         danger
+        //         onClick={() => handleDelete(record)}
+        //       >
+        //         Delete
+        //       </Menu.Item>
+        //     </Menu>
+        //   }
+        //   trigger={["click"]}
+        // >
+        //   <Button type="text" icon={<MoreOutlined />} />
+        // </Dropdown>
       ),
     },
   ];

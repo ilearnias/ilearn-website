@@ -26,10 +26,7 @@ const PageContainer = () => {
 
       <div className="_banner-box1">
         <Fade direction="up" duration={900}>
-          <div className="_banner-header-txt1">
-            {/* <span style={{ color: "#dc2626" }}>About</span> Us */}
-            About Us
-          </div>
+          <div className="_banner-header-txt1">About Us</div>
         </Fade>
 
         <Fade direction="up" duration={1000}>
