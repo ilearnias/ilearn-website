@@ -27,6 +27,7 @@ import {
   UploadOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
+
 import type { ColumnsType } from "antd/es/table";
 import type { UploadFile } from "antd/es/upload/interface";
 import { galleryService, IGalleryItem } from "@/services/gallery.service";
@@ -55,10 +56,10 @@ const GalleryPage = () => {
       if (response.status) {
         setItems(response.data);
       } else {
-        message.error(response.message || 'Failed to fetch gallery items');
+        message.error(response.message || "Failed to fetch gallery items");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch gallery items');
+      message.error(error.message || "Failed to fetch gallery items");
     } finally {
       setLoading(false);
     }
@@ -79,13 +80,13 @@ const GalleryPage = () => {
     setEditingItem(record);
     form.setFieldsValue({
       ...record,
-      images: undefined // Clear images field as we'll show existing images separately
+      images: undefined, // Clear images field as we'll show existing images separately
     });
     setUploadedFiles(
       record.images.map((url, index) => ({
         uid: `-${index}`,
-        name: url.split('/').pop() || 'image',
-        status: 'done',
+        name: url.split("/").pop() || "image",
+        status: "done",
         url: url,
       }))
     );
@@ -94,32 +95,37 @@ const GalleryPage = () => {
 
   const handleDelete = (record: IGalleryItem) => {
     confirm({
-      title: 'Are you sure you want to delete this gallery item?',
-      content: 'This action cannot be undone.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      title: "Are you sure you want to delete this gallery item?",
+      content: "This action cannot be undone.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: async () => {
         try {
           setLoading(true);
           const response = await galleryService.deleteItem(record.id);
           if (response.status) {
-            message.success('Gallery item deleted successfully');
+            message.success("Gallery item deleted successfully");
             // Update the local state to remove the item
-            setItems(prev => prev.filter(item => item.id !== record.id));
+            setItems((prev) => prev.filter((item) => item.id !== record.id));
           } else {
-            throw new Error(response.message || 'Failed to delete gallery item');
+            throw new Error(
+              response.message || "Failed to delete gallery item"
+            );
           }
         } catch (error: any) {
           // If the item is not found (404), consider it a successful deletion
           if (error.status === 404 || error.statusCode === 404) {
-            message.success('Gallery item removed successfully');
+            message.success("Gallery item removed successfully");
             // Update the local state to remove the item
-            setItems(prev => prev.filter(item => item.id !== record.id));
+            setItems((prev) => prev.filter((item) => item.id !== record.id));
           } else {
             // For other errors, show detailed error message
-            console.error('Delete error:', error);
-            message.error(error.message || 'Failed to delete gallery item. Please try again.');
+            console.error("Delete error:", error);
+            message.error(
+              error.message ||
+                "Failed to delete gallery item. Please try again."
+            );
           }
         } finally {
           setLoading(false);
@@ -131,7 +137,7 @@ const GalleryPage = () => {
   // Helper to upload a single image and return its URL
   const uploadImageToApi = async (file: File): Promise<string> => {
     const formData = new FormData();
-    formData.append('file', file); // field name must be 'file'
+    formData.append("file", file); // field name must be 'file'
     const response = await galleryService.uploadSingleImage(file);
     // If backend returns { url: ... } or { Location: ... }
     return response;
@@ -140,15 +146,19 @@ const GalleryPage = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
-      // Validate that at least one image is selected for new items
-      const newFiles = uploadedFiles.filter(file => file.originFileObj);
-      const existingImages = uploadedFiles
-        .filter(file => !file.originFileObj)
-        .map(file => file.url as string);
 
-      if (!editingItem && newFiles.length === 0 && existingImages.length === 0) {
-        message.error('Please select at least one image');
+      // Validate that at least one image is selected for new items
+      const newFiles = uploadedFiles.filter((file) => file.originFileObj);
+      const existingImages = uploadedFiles
+        .filter((file) => !file.originFileObj)
+        .map((file) => file.url as string);
+
+      if (
+        !editingItem &&
+        newFiles.length === 0 &&
+        existingImages.length === 0
+      ) {
+        message.error("Please select at least one image");
         return;
       }
 
@@ -156,11 +166,11 @@ const GalleryPage = () => {
       let uploadedImageUrls: string[] = [];
       if (newFiles.length > 0) {
         const filesToUpload = newFiles
-          .map(file => file.originFileObj as File)
+          .map((file) => file.originFileObj as File)
           .filter(Boolean); // Remove any undefined/null values
 
         if (filesToUpload.length !== newFiles.length) {
-          throw new Error('Some files are not properly loaded');
+          throw new Error("Some files are not properly loaded");
         }
 
         // Upload each file and collect URLs
@@ -178,7 +188,7 @@ const GalleryPage = () => {
         title: values.title,
         order: values.order,
         isActive: values.isActive,
-        images: allImages // Only URLs
+        images: allImages, // Only URLs
       };
 
       let galleryItemId: string;
@@ -188,19 +198,25 @@ const GalleryPage = () => {
       } else {
         const createResponse = await galleryService.createItem(initialData);
         if (!createResponse.status) {
-          throw new Error(createResponse.message || 'Failed to create gallery item');
+          throw new Error(
+            createResponse.message || "Failed to create gallery item"
+          );
         }
         galleryItemId = createResponse.data.id;
       }
 
-      message.success(editingItem ? 'Gallery item updated successfully' : 'Gallery item created successfully');
+      message.success(
+        editingItem
+          ? "Gallery item updated successfully"
+          : "Gallery item created successfully"
+      );
       setIsModalVisible(false);
       form.resetFields();
       setUploadedFiles([]);
       fetchItems();
     } catch (error: any) {
-      console.error('Error in handleModalOk:', error);
-      message.error(error.message || 'Failed to save gallery item');
+      console.error("Error in handleModalOk:", error);
+      message.error(error.message || "Failed to save gallery item");
     }
   };
 
@@ -212,7 +228,7 @@ const GalleryPage = () => {
 
   const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
     // Filter out invalid files
-    const validFiles = fileList.filter(file => {
+    const validFiles = fileList.filter((file) => {
       // Check file size
       if (file.size && file.size > 5 * 1024 * 1024) {
         message.error(`${file.name} is larger than 5MB`);
@@ -221,8 +237,13 @@ const GalleryPage = () => {
 
       // Check file type if it's a new upload
       if (file.originFileObj) {
-        const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        if (!acceptedFormats.includes(file.type || '')) {
+        const acceptedFormats = [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+        ];
+        if (!acceptedFormats.includes(file.type || "")) {
           message.error(`${file.name} is not a valid image format`);
           return false;
         }
@@ -237,16 +258,21 @@ const GalleryPage = () => {
   const uploadProps = {
     beforeUpload: (file: File) => {
       // Check if file is an accepted image format
-      const acceptedFormats = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      const acceptedFormats = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
       const isAcceptedFormat = acceptedFormats.includes(file.type);
       if (!isAcceptedFormat) {
-        message.error('You can only upload JPG, PNG, GIF or WebP files!');
+        message.error("You can only upload JPG, PNG, GIF or WebP files!");
         return false;
       }
 
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        message.error('Image must be smaller than 5MB!');
+        message.error("Image must be smaller than 5MB!");
         return false;
       }
 
@@ -256,7 +282,7 @@ const GalleryPage = () => {
     onChange: handleUploadChange,
     multiple: true,
     listType: "picture-card" as const,
-    accept: '.jpg,.jpeg,.png,.gif,.webp', // Specify accepted file extensions
+    accept: ".jpg,.jpeg,.png,.gif,.webp", // Specify accepted file extensions
     maxCount: 10, // Maximum number of files
   };
 
@@ -269,28 +295,34 @@ const GalleryPage = () => {
       title: "Title",
       dataIndex: "title",
       key: "title",
-      render: (text) => (
-        <div style={{ fontWeight: 500 }}>{text}</div>
-      ),
+      render: (text) => <div style={{ fontWeight: 500 }}>{text}</div>,
     },
     {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
         <Space>
-          <Button 
-            type="primary" 
-            icon={<EyeOutlined />} 
+          <Button
+            type="primary"
+            icon={<EyeOutlined />}
             onClick={() => handleView(record)}
           >
             View
           </Button>
-          <Button 
-            type="default" 
-            icon={<EditOutlined />} 
+          <Button
+            type="default"
+            icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
             Edit
+          </Button>
+
+          <Button
+            type="default"
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record)}
+          >
+            Delete
           </Button>
         </Space>
       ),
@@ -305,7 +337,7 @@ const GalleryPage = () => {
       </div>
 
       <Card className="gallery-controls">
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        <Space style={{ width: "100%", justifyContent: "space-between" }}>
           <Input
             placeholder="Search by title..."
             prefix={<SearchOutlined />}
@@ -339,7 +371,7 @@ const GalleryPage = () => {
           <Form.Item
             name="title"
             label="Title"
-            rules={[{ required: true, message: 'Please input the title!' }]}
+            rules={[{ required: true, message: "Please input the title!" }]}
           >
             <Input />
           </Form.Item>
@@ -360,9 +392,9 @@ const GalleryPage = () => {
           <Form.Item
             name="order"
             label="Order"
-            rules={[{ required: true, message: 'Please input the order!' }]}
+            rules={[{ required: true, message: "Please input the order!" }]}
           >
-            <InputNumber min={1} style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: "100%" }} />
           </Form.Item>
 
           <Form.Item
@@ -375,8 +407,6 @@ const GalleryPage = () => {
           </Form.Item>
         </Form>
       </Modal>
-
-
     </div>
   );
 };

@@ -81,18 +81,18 @@
   }
 }
 
-.header-hover {
-  cursor: pointer;
-  transition: all 0.3s ease;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  &:hover {
-    p {
-      color: red !important;
-    }
-  }
-}
+// .header-hover {
+//   cursor: pointer;
+//   transition: all 0.3s ease;
+//   height: 100%;
+//   display: flex;
+//   align-items: center;
+//   &:hover {
+//     p {
+//       color: red !important;
+//     }
+//   }
+// }
 
 .Header-Button2 {
   padding: 8px 24px;
@@ -211,7 +211,8 @@
   &.join-now-mobile {
     margin-top: 20px;
     background-color: transparent;
-    .Drawer-itemsTxt, .Drawer-itemsIcon {
+    .Drawer-itemsTxt,
+    .Drawer-itemsIcon {
       color: #20468d !important;
     }
     &:hover {
@@ -306,4 +307,26 @@
   border-radius: 10px !important;
   font-size: 16px !important;
   font-family: vars.$SemiBold !important;
+}
+
+._header_menu_text {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  color: #000000;
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin: 0 2px;
+  &:hover {
+    background-color: #f0f0f0;
+    color: vars.$p_blue;
+    transform: scale(1.03);
+    transition: all 0.3s ease;
+  }
+  &.selected {
+    background-color: #f0f0f0;
+    color: vars.$p_blue;
+    transform: scale(1.03);
+    transition: all 0.3s ease;
+  }
 }

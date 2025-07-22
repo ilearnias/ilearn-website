@@ -38,7 +38,7 @@ const HeroSection = () => {
               <Heading
                 color="tricolor"
                 text="Learn Anytime, Anywhere"
-                className="!text-4xl !leading-snug md:!text-5xl md:!leading-tight lg:!text-[4.5rem] !font-bold !mb-4"
+                className="!text-4xl !leading-snug md:!text-5xl md:!leading-tight lg:!text-[4.5rem] !font-bold !mb-3"
                 animate={true}
               />
               <p>

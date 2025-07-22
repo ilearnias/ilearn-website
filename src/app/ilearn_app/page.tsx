@@ -16,6 +16,7 @@ import ReviewsSection from "./components/ReviewsSection";
 import DownloadSection from "./components/DownloadSection";
 import FAQSection from "./components/FAQSection";
 import ScreenshotsSection from "./components/ScreenshotsSection";
+import { Fade } from "react-awesome-reveal";
 
 const AppFeatures = [
   {
@@ -88,14 +89,21 @@ const ILearnAppPage = () => {
   return (
     <>
       <Header />
-      <HeroSection
-    
-        titleClassName="font-bold mb-2"
-        title="iLearn App"
-        pageName="iLearn App"
-        description="Your complete UPSC preparation companion. Access study materials, take tests, track progress, and learn on the go with our feature-rich mobile application."
-      />
-      <div className="app-landing-container">
+   
+
+      <div className="_banner-box1">
+        <Fade direction="up" duration={900}>
+          <div className="_banner-header-txt1">iLearn App</div>
+        </Fade>
+
+        <Fade direction="up" duration={1000}>
+          <div className="_banner-sub-header-txt1">
+            {`Your complete UPSC preparation companion. Access study materials, take tests, track progress, and learn on the go with our feature-rich mobile application.`}
+          </div>
+        </Fade>
+      </div>
+
+      <div className="app-landing-container mb-3">
         <AppHeroSection />
         <FeaturesSection features={AppFeatures} />
         <ScreenshotsSection></ScreenshotsSection>

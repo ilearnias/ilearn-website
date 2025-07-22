@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 interface HeadingProps {
   text: string | React.ReactNode;
-  color?: "white" | "black" | "gradient" | "tricolor" | "red"|"blue";
+  color?: "white" | "black" | "gradient" | "tricolor" | "red" | "blue";
   className?: string;
   animate?: boolean;
   delay?: number;
@@ -23,7 +23,8 @@ const Heading: React.FC<HeadingProps> = ({
     white: "text-white",
     black: "text-black",
     red: "text-red-600",
-    gradient: "bg-gradient-to-r from-green-50 to-white bg-clip-text text-transparent",
+    gradient:
+      "bg-gradient-to-r from-green-50 to-white bg-clip-text text-transparent",
     tricolor: "text-red-600",
     blue: "text-blue-900",
   };
@@ -46,11 +47,7 @@ const Heading: React.FC<HeadingProps> = ({
     className
   );
 
-  const content = (
-    <h2 className={baseStyles}>
-      {text}
-    </h2>
-  );
+  const content = <h2 className={baseStyles}>{text}</h2>;
 
   if (animate) {
     return (

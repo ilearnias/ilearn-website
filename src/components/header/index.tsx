@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import "./styles.scss";
 import Container from "@/components/common/Container";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { CgMenuRight } from "react-icons/cg";
 import SideDrawer from "./sideDrawer";
 import SubText from "../common/SubText";
@@ -11,8 +11,33 @@ import Menu from "./menu.json";
 
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const [lastScrollY, setLastScrollY] = useState<any>(0);
   const [dawerOpen, setDawerOpen] = useState<any>(false);
+
+  // Function to get the current active menu based on pathname
+  const getCurrentActiveMenu = () => {
+    // Handle root path
+    if (pathname === "/") {
+      return "Home";
+    }
+
+    // Check for exact matches first
+    const exactMatch = Menu.find((menu: any) => menu.path === pathname);
+    if (exactMatch) {
+      return exactMatch.name;
+    }
+
+    // Check for partial matches (for nested routes)
+    const partialMatch = Menu.find(
+      (menu: any) => menu.path !== "/" && pathname.startsWith(menu.path)
+    );
+    if (partialMatch) {
+      return partialMatch.name;
+    }
+
+    return "Home"; // Default fallback
+  };
 
   const handleNavigation = useCallback(
     (e: any) => {
@@ -60,131 +85,28 @@ export default function Header() {
             </div>
             <div className="_nav_bar_items">
               <div className="Header-MenuBox flex justify-center items-center gap-10 h-full">
-                <div className="!flex !items-center !justify-center !gap-7 pt-3">
+                <div className="!flex !items-center !justify-center  pt-3">
                   {Menu?.map((menu: any, index: any) => {
+                    const isActive = getCurrentActiveMenu() === menu?.name;
                     return (
                       <div
                         key={index}
-                        onClick={() => router.push(menu?.path)}
-                        className="header-hover"
+                        onClick={() => {
+                          setTimeout(() => {
+                            router.push(menu?.path);
+                          }, 100);
+                        }}
                       >
-                        <SubText
-                          size="small"
-                          className="!font-semibold"
-                          text={menu?.name}
-                          color="black"
-                        />
+                        <div
+                          className={`_header_menu_text ${
+                            isActive ? "selected" : ""
+                          }`}
+                        >
+                          {menu?.name}
+                        </div>
                       </div>
                     );
                   })}
-
-                  {/* <div
-                    onClick={() => router.push("/")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="Home"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/about")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="About"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/result")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="Results"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/programs")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="Programs"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/programs/foundation-course")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="Foundation"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/blogs")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="Blog"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/ilearn_app")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="iLearn App"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/gallery")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="Gallery"
-                      color="black"
-                    />
-                  </div>
-
-                  <div
-                    onClick={() => router.push("/contact")}
-                    className="header-hover"
-                  >
-                    <SubText
-                      size="small"
-                      className="!font-semibold"
-                      text="Contact Us"
-                      color="black"
-                    />
-                  </div> */}
                 </div>
               </div>
             </div>

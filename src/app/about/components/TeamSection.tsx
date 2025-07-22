@@ -1,7 +1,4 @@
-// Recommended team member image resolution: 300x250px (6:5 aspect ratio, optimized for web)
-// For retina screens, 600x500px is ideal.
-import { useEffect, useState } from "react";
-import { Row, Col } from "react-bootstrap";
+import { useEffect, useState, useRef } from "react";
 import Container from "@/components/common/Container";
 import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
@@ -9,30 +6,49 @@ import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import { FaLinkedin, FaEnvelope } from "react-icons/fa";
 import { teamService } from "@/services/team.service";
-import { Card, Carousel } from "antd";
+import { Card } from "antd";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+
 const TeamSection = () => {
   const { t } = useTranslation();
   const [imgError, setImgError] = useState<{ [key: string]: boolean }>({});
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [slidesToShow, setSlidesToShow] = useState(4);
+
+  const sliderRef = useRef<any>(null);
 
   const { Meta } = Card;
 
-  const contentStyle: React.CSSProperties = {
-    margin: 0,
-    height: "160px",
-    color: "#fff",
-    lineHeight: "160px",
-    textAlign: "center",
-    background: "#364d79",
-  };
+  // Responsive slidesToShow based on window width
+  useEffect(() => {
+    const calcSlidesToShow = () => {
+      if (window.innerWidth < 480) {
+        setSlidesToShow(1);
+      } else if (window.innerWidth < 600) {
+        setSlidesToShow(2);
+      } else if (window.innerWidth < 1024) {
+        setSlidesToShow(3);
+      } else {
+        setSlidesToShow(4);
+      }
+    };
+    calcSlidesToShow();
+    window.addEventListener("resize", calcSlidesToShow);
+    return () => window.removeEventListener("resize", calcSlidesToShow);
+  }, []);
 
+  // Fetch team members
   useEffect(() => {
     setLoading(true);
     setError(null);
     teamService
-      .getAllTeamMembers({ order: "ASC", page: 1, limit: 10 })
+      .getAllTeamMembers(1, 10)
       .then((res) => {
         if (res.status && Array.isArray(res.data)) {
           setTeamMembers(res.data);
@@ -50,31 +66,48 @@ const TeamSection = () => {
     setImgError((prev) => ({ ...prev, [memberName]: true }));
   };
 
-  const TeamName = (name: any) => {
-    return <div className="_team_name_txt">{name}</div>;
+  const TeamName = (name: any) => <div className="_team_name_txt">{name}</div>;
+
+  const TeamDesig = (name: any) => (
+    <div className="_team_desig_txt">{name}</div>
+  );
+
+  const sliderSettings = {
+    dots: false,
+    arrows: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow,
+    slidesToScroll: slidesToShow,
+    initialSlide: 0,
+    afterChange: (current: number) => setCurrentSlide(current),
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: { slidesToShow: 3, slidesToScroll: 3 },
+      },
+      {
+        breakpoint: 600,
+        settings: { slidesToShow: 2, slidesToScroll: 2 },
+      },
+      {
+        breakpoint: 480,
+        settings: { slidesToShow: 1, slidesToScroll: 1 },
+      },
+    ],
   };
 
-  const TeamDesig = (name: any) => {
-    return <div className="_team_desig_txt">{name}</div>;
-  };
+  // For infinite slider, arrows never disable
+  // Calculate total dot groups and active dot index
+  const totalSlides = teamMembers.length;
+  const numDots = Math.ceil(totalSlides / slidesToShow);
+  const activeDotIndex = Math.floor(currentSlide / slidesToShow) % numDots;
+
+  const slideStyle = { paddingLeft: "18px", paddingRight: "18px" };
 
   return (
     <section className="team-section" aria-labelledby="team-section-title">
       <Container>
-        {/* <Fade>
-          <div id="team-section-title">
-            <Heading
-              color="tricolor"
-              text="Our Leadership Team"
-              className="!text-center md:leading-[0.5] leading-[1.1] !font-bold !mb-4"
-              animate={true}
-            />
-          </div>
-          <p className="section-subtitle text-center mb-5">
-            Meet the experts who guide aspirants towards their UPSC dreams
-          </p>
-        </Fade> */}
-
         <Fade>
           <div className="_heading-box">
             <div className="_heading-box-title1">Our Leadership Team</div>
@@ -84,142 +117,157 @@ const TeamSection = () => {
           </div>
         </Fade>
 
-        <div className="_team_section_mobile">
-          <Carousel arrows infinite={false}>
-            {teamMembers &&
-              teamMembers?.map((team: any) => {
-                return (
-                  <div style={contentStyle} key={team?.id}>
-                    <Card
-                      style={{ width: "100%" }}
-                      cover={
-                        <Image
-                          alt={team?.name}
-                          src={team?.image}
-                          width={300}
-                          height={250}
-                        />
-                      }
-                    >
-                      <Meta
-                        title={TeamName(team?.name)}
-                        description={TeamDesig(team?.designation)}
-                      />
-                    </Card>
-                  </div>
-                );
-              })}
-          </Carousel>
-        </div>
-
-        <div className="_team_section_box">
-          <Row>
-            {teamMembers &&
-              teamMembers?.map((team: any, ind: any) => {
-                return (
-                  <>
-                    <Col style={{ marginBottom: "20px" }} md={3} key={team?.id}>
-                      <Fade direction="up" duration={900}>
-                        <Card
-                          style={{ width: "100%" }}
-                          cover={
-                            <Image
-                              alt={team?.name}
-                              src={team?.image}
-                              width={900}
-                              height={1018}
-                            />
-                          }
-                        >
-                          <Meta
-                            title={TeamName(team?.name)}
-                            description={TeamDesig(team?.designation)}
-                          />
-                        </Card>
-                      </Fade>
-                    </Col>
-                  </>
-                );
-              })}
-          </Row>
-        </div>
-
-        {/* {loading ? (
+        {loading ? (
           <div className="text-center my-5">Loading...</div>
         ) : error ? (
           <div className="text-center text-red-500 my-5">{error}</div>
         ) : (
-          <Row>
-            {teamMembers.map((member, index) => (
-              <Col md={6} lg={3} key={member.id || index}>
-                <Fade direction="up" delay={index * 100}>
-                  <div
-                    className="team-member-card"
-                    role="article"
-                    aria-labelledby={`member-name-${index}`}
-                  >
-                    <div className="member-image-container">
-                      {!imgError[member.name] &&
-                      member.image &&
-                      /^https?:\/\//.test(member.image) ? (
+          <>
+            <Slider ref={sliderRef} {...sliderSettings}>
+              {teamMembers.map((team, index) => (
+                <div key={team.id} style={slideStyle}>
+                  <Card
+                    style={{ width: "95%" }}
+                    cover={
+                      !imgError[team.name] && team.image ? (
                         <Image
-                          src={member.image}
-                          alt={`${member.name} - ${
-                            member.designation || member.role
-                          }`}
-                          width={250}
-                          height={250}
-                          className="member-image"
-                          loading="lazy"
-                          onError={() => handleImageError(member.name)}
+                          alt={team.name}
+                          src={team.image}
+                          width={300}
+                          height={400}
+                          onError={() => handleImageError(team.name)}
+                          style={{
+                            objectFit: "cover",
+                            width: "100%",
+                            height: "400px",
+                          }}
                         />
-                      ) : null}
-                      <div
-                        className="social-links"
-                        role="group"
-                        aria-label={`${member.name}'s social links`}
-                      >
-                        {member.linkedin && (
-                          <a
-                            href={member.linkedin}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            aria-label={`Visit ${member.name}'s LinkedIn profile`}
-                          >
-                            <FaLinkedin size={20} aria-hidden="true" />
-                          </a>
-                        )}
-                        {member.email && (
-                          <a
-                            href={`mailto:${member.email}`}
-                            aria-label={`Email ${member.name}`}
-                          >
-                            <FaEnvelope size={20} aria-hidden="true" />
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                    <div className="member-info">
-                      <div id={`member-name-${index}`}>
-                        <Heading
-                          text={member.name}
-                          className="!text-lg !font-semibold !leading-normal"
-                          animate={false}
+                      ) : (
+                        <div
+                          style={{
+                            width: "300px",
+                            height: "400px",
+                            backgroundColor: "#f0f0f0",
+                          }}
                         />
-                      </div>
-                      <div className="member-role">
-                        {member.designation || member.role}
-                      </div>
-                      <p className="member-description">
-                        {member.description || member.bio}
-                      </p>
+                      )
+                    }
+                  >
+                    <Meta
+                      title={TeamName(team.name)}
+                      description={TeamDesig(team.designation)}
+                    />
+                    <div className="social-links" style={{ marginTop: "10px" }}>
+                      {team.linkedin && (
+                        <a
+                          href={team.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Visit ${team.name}'s LinkedIn profile`}
+                          style={{ marginRight: "10px" }}
+                        >
+                          <FaLinkedin size={20} aria-hidden="true" />
+                        </a>
+                      )}
+                      {team.email && (
+                        <a
+                          href={`mailto:${team.email}`}
+                          aria-label={`Email ${team.name}`}
+                        >
+                          <FaEnvelope size={20} aria-hidden="true" />
+                        </a>
+                      )}
                     </div>
-                  </div>
-                </Fade>
-              </Col>
-            ))}
-          </Row>
-        )} */}
+                  </Card>
+                </div>
+              ))}
+            </Slider>
+            {teamMembers.length > 0 && (
+              <>
+                <style jsx>{`
+                  .carousel-arrow {
+                    background-color: #dc2626;
+                    color: white;
+                    border-radius: 50%;
+                    width: 36px;
+                    height: 36px;
+                    border: none;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 24px;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+                    transition: background-color 0.3s ease;
+                    cursor: pointer;
+                    margin: 0 8px;
+                    user-select: none;
+                  }
+                  .carousel-arrow:hover {
+                    background-color: #b91c1c;
+                  }
+                  .carousel-dots {
+                    display: flex;
+                    align-items: center;
+                    list-style: none;
+                    margin: 0 18px;
+                    padding: 0;
+                    user-select: none;
+                  }
+                  .carousel-dots li {
+                    background: #dc2626;
+                    border: 2px solid white;
+                    width: 14px;
+                    height: 14px;
+                    margin: 0 6px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    transition: background-color 0.3s, border-color 0.3s;
+                  }
+                  .carousel-dots li.active {
+                    background: #dc2626;
+                    border-color: #6d6d6c00;
+                  }
+                `}</style>
+
+                <div
+                  className="carousel-controls"
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: "24px",
+                  }}
+                >
+                  <button
+                    onClick={() => sliderRef.current.slickPrev()}
+                    className="carousel-arrow left"
+                    aria-label="Previous"
+                  >
+                    <IoIosArrowBack size={25} aria-hidden="true" />
+                  </button>
+                  <ul className="carousel-dots">
+                    {Array.from({ length: numDots }).map((_, idx) => (
+                      <li
+                        key={idx}
+                        className={idx === activeDotIndex ? "active" : ""}
+                        onClick={() =>
+                          sliderRef.current.slickGoTo(idx * slidesToShow)
+                        }
+                      />
+                    ))}
+                  </ul>
+                  <button
+                    onClick={() => sliderRef.current.slickNext()}
+                    className="carousel-arrow right"
+                    aria-label="Next"
+                  >
+                    <IoIosArrowForward size={25} aria-hidden="true" />
+                  </button>
+                </div>
+              </>
+            )}
+          </>
+        )}
       </Container>
     </section>
   );

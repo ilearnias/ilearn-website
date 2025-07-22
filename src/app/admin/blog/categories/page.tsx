@@ -39,7 +39,9 @@ const BlogCategories = () => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<IBlogCategory[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<IBlogCategory | null>(null);
+  const [editingCategory, setEditingCategory] = useState<IBlogCategory | null>(
+    null
+  );
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -53,11 +55,11 @@ const BlogCategories = () => {
       if (response.status) {
         setCategories(response.data);
       } else {
-        message.error(response.message || 'Failed to fetch categories');
+        message.error(response.message || "Failed to fetch categories");
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to fetch categories');
-      console.error('Error fetching categories:', error);
+      message.error(error.message || "Failed to fetch categories");
+      console.error("Error fetching categories:", error);
     } finally {
       setLoading(false);
     }
@@ -77,23 +79,26 @@ const BlogCategories = () => {
 
   const handleDelete = (record: IBlogCategory) => {
     confirm({
-      title: 'Are you sure you want to delete this category?',
-      content: 'This action cannot be undone. All posts in this category will be uncategorized.',
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      title: "Are you sure you want to delete this category?",
+      content:
+        "This action cannot be undone. All posts in this category will be uncategorized.",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
       onOk: async () => {
         try {
           const response = await blogService.deleteCategory(record.id);
           if (response.status) {
-            message.success(response.message || 'Category deleted successfully');
+            message.success(
+              response.message || "Category deleted successfully"
+            );
             fetchCategories();
           } else {
-            message.error(response.message || 'Failed to delete category');
+            message.error(response.message || "Failed to delete category");
           }
         } catch (error: any) {
-          message.error(error.message || 'Failed to delete category');
-          console.error('Error deleting category:', error);
+          message.error(error.message || "Failed to delete category");
+          console.error("Error deleting category:", error);
         }
       },
     });
@@ -102,29 +107,32 @@ const BlogCategories = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (editingCategory) {
-        const response = await blogService.updateCategory(editingCategory.id, values);
+        const response = await blogService.updateCategory(
+          editingCategory.id,
+          values
+        );
         if (response.status) {
-          message.success(response.message || 'Category updated successfully');
+          message.success(response.message || "Category updated successfully");
           setIsModalVisible(false);
           fetchCategories();
         } else {
-          message.error(response.message || 'Failed to update category');
+          message.error(response.message || "Failed to update category");
         }
       } else {
         const response = await blogService.createCategory(values);
         if (response.status) {
-          message.success(response.message || 'Category created successfully');
+          message.success(response.message || "Category created successfully");
           setIsModalVisible(false);
           fetchCategories();
         } else {
-          message.error(response.message || 'Failed to create category');
+          message.error(response.message || "Failed to create category");
         }
       }
     } catch (error: any) {
-      message.error(error.message || 'Failed to save category');
-      console.error('Error saving category:', error);
+      message.error(error.message || "Failed to save category");
+      console.error("Error saving category:", error);
     }
   };
 
@@ -135,19 +143,23 @@ const BlogCategories = () => {
 
   const filteredCategories = categories.filter(
     (category) =>
-      (category.name?.toLowerCase() || '').includes(searchText.toLowerCase()) ||
-      (category.description?.toLowerCase() || '').includes(searchText.toLowerCase())
+      (category.title?.toLowerCase() || "").includes(
+        searchText.toLowerCase()
+      ) ||
+      (category.description?.toLowerCase() || "").includes(
+        searchText.toLowerCase()
+      )
   );
 
   const columns: ColumnsType<IBlogCategory> = [
     {
-      title: "Name",
-      key: "name",
+      title: "Title",
+      key: "title",
       render: (_, record) => (
         <Space>
-          <FolderOutlined style={{ color: '#1890ff' }} />
+          <FolderOutlined style={{ color: "#1890ff" }} />
           <div>
-            <div style={{ fontWeight: 500 }}>{record.name}</div>
+            <div style={{ fontWeight: 500 }}>{record.title}</div>
             <div style={{ fontSize: "12px", color: "#666" }}>
               {record.description}
             </div>
@@ -155,36 +167,34 @@ const BlogCategories = () => {
         </Space>
       ),
     },
-    {
-      title: "Slug",
-      dataIndex: "slug",
-      key: "slug",
-      render: (slug) => (
-        <Tag>{slug}</Tag>
-      ),
-    },
-    {
-      title: "Posts",
-      key: "postCount",
-      render: (_, record) => (
-        <Space>
-          <FileTextOutlined />
-          {record.postCount || 0}
-        </Space>
-      ),
-      sorter: (a, b) => (a.postCount || 0) - (b.postCount || 0),
-    },
-    {
-      title: "Views",
-      key: "views",
-      render: (_, record) => (
-        <Space>
-          <EyeOutlined />
-          {record.views || 0}
-        </Space>
-      ),
-      sorter: (a, b) => (a.views || 0) - (b.views || 0),
-    },
+    // {
+    //   title: "Slug",
+    //   dataIndex: "slug",
+    //   key: "slug",
+    //   render: (slug) => <Tag>{slug}</Tag>,
+    // },
+    // {
+    //   title: "Posts",
+    //   key: "postCount",
+    //   render: (_, record) => (
+    //     <Space>
+    //       <FileTextOutlined />
+    //       {record.postCount || 0}
+    //     </Space>
+    //   ),
+    //   sorter: (a, b) => (a.postCount || 0) - (b.postCount || 0),
+    // },
+    // {
+    //   title: "Views",
+    //   key: "views",
+    //   render: (_, record) => (
+    //     <Space>
+    //       <EyeOutlined />
+    //       {record.views || 0}
+    //     </Space>
+    //   ),
+    //   sorter: (a, b) => (a.views || 0) - (b.views || 0),
+    // },
     {
       title: "Actions",
       key: "actions",
@@ -224,7 +234,7 @@ const BlogCategories = () => {
         <p>Manage your blog categories and organization</p>
       </div>
 
-      <Row gutter={[16, 16]} className="blog-categories-stats">
+      {/* <Row gutter={[16, 16]} className="blog-categories-stats">
         <Col xs={24} sm={12} md={8}>
           <Card>
             <Statistic
@@ -252,7 +262,7 @@ const BlogCategories = () => {
             />
           </Card>
         </Col>
-      </Row>
+      </Row> */}
 
       <div className="blog-categories-controls">
         <Input
@@ -282,22 +292,19 @@ const BlogCategories = () => {
         onCancel={handleModalCancel}
         width={600}
       >
-        <Form
-          form={form}
-          layout="vertical"
-        >
+        <Form form={form} layout="vertical">
           <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: "Please enter category name" }]}
+            name="title"
+            label="Title"
+            rules={[{ required: true, message: "Please enter category title" }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name="slug"
             label="Slug"
-            rules={[{ required: true, message: "Please enter category slug" }]}
+            rules={[{ required: false, message: "Please enter category slug" }]}
           >
             <Input />
           </Form.Item>
@@ -305,28 +312,24 @@ const BlogCategories = () => {
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true, message: "Please enter category description" }]}
+            rules={[
+              { required: false, message: "Please enter category description" },
+            ]}
           >
             <TextArea rows={4} />
           </Form.Item>
 
-          <Form.Item
-            name="metaTitle"
-            label="Meta Title"
-          >
+          <Form.Item name="metaTitle" label="Meta Title">
             <Input />
           </Form.Item>
 
-          <Form.Item
-            name="metaDescription"
-            label="Meta Description"
-          >
+          <Form.Item name="metaDescription" label="Meta Description">
             <TextArea rows={3} />
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Modal>
     </div>
   );
 };
 
-export default BlogCategories; 
+export default BlogCategories;
