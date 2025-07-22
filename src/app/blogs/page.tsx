@@ -153,7 +153,7 @@ export default function BlogPage() {
       setError(null);
       const params: any = { page: currentPage, limit: POSTS_PER_PAGE };
       try {
-        const [postsRes, catsRes] = await Promise.all([
+        const [postsRes, catsRes]: any = await Promise.all([
           blogService.getAllPosts(params),
           blogService.getAllCategories(),
         ]);
