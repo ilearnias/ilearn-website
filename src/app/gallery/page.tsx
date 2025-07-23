@@ -10,6 +10,7 @@ import GalleryComponent from "./components/GalleryComponent";
 import { galleryService, IGalleryItem } from "@/services/gallery.service";
 import "./styles.scss";
 import { useTranslation } from "react-i18next";
+import { Pagination } from "antd";
 
 const GalleryPage = () => {
   const { t } = useTranslation();
@@ -18,6 +19,9 @@ const GalleryPage = () => {
   }>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5;
 
   useEffect(() => {
     const fetchGalleryData = async () => {
@@ -64,6 +68,15 @@ const GalleryPage = () => {
 
     fetchGalleryData();
   }, []);
+
+  // Pagination logic
+  const sectionTitles = Object.keys(gallerySections);
+  const totalRows = sectionTitles.length;
+  const totalPages = Math.ceil(totalRows / rowsPerPage);
+  const paginatedTitles = sectionTitles.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
   if (loading) {
     return (
@@ -115,11 +128,11 @@ const GalleryPage = () => {
       </div>
 
       <div className="gallery-content">
-        {Object.keys(gallerySections).length > 0 ? (
-          Object.entries(gallerySections).map(([title, images]) => (
+        {paginatedTitles.length > 0 ? (
+          paginatedTitles.map((title) => (
             <section key={title}>
               <GalleryComponent
-                images={images}
+                images={gallerySections[title]}
                 title={title}
                 color="tricolor"
                 headingClassName="font-bold"
@@ -134,6 +147,19 @@ const GalleryPage = () => {
                 Please check back later for updates.
               </p>
             </div>
+          </div>
+        )}
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="page-box" style={{ margin: "32px 0" }}>
+            <Pagination
+              current={currentPage}
+              pageSize={rowsPerPage}
+              total={totalRows}
+              onChange={setCurrentPage}
+              showSizeChanger={false}
+              responsive
+            />
           </div>
         )}
       </div>
