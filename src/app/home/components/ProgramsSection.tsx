@@ -65,8 +65,8 @@ const ProgramsSection = () => {
                     Prelims Cum Mains <span>(PCM Program)</span>
                   </>
                 }
-                size="sm"
-                className="!leading-normal !text-4xl !sm:text-lg !md:text-xl"
+                
+                className="!leading-normal !text-2xl !sm:text-lg !md:text-xl"
               />
               <p>
                 Comprehensive classroom program covering both preliminary and
@@ -88,15 +88,15 @@ const ProgramsSection = () => {
               <i className="fas fa-newspaper"></i>
             </div>
             <div className="content">
-              <Heading
+              <Heading 
                 color="tricolor"
                 text={
                   <>
                     Current Affairs and News Analysis <span>(CANA)</span>
                   </>
                 }
-                size="sm"
-                className="!leading-normal !text-4xl !sm:text-lg !md:text-xl"
+           
+                className="!leading-normal !text-2xl !sm:text-lg !md:text-xl"
               />
               <p>
                 Stay updated with the latest current affairs and develop

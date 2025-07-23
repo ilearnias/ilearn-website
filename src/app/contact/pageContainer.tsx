@@ -94,7 +94,7 @@ const PageContainer = () => {
               {/* WhatsApp */}
               <div className="bg-white rounded-xl shadow-sm p-6 flex gap-4 items-start">
                 <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
-                  <FaWhatsapp className="text-white w-6 h-6" />
+                  <FaWhatsapp className="text-white w-60 h-6" />
                 </div>
                 <div className="flex-1">
                   <div className="font-semibold text-lg">WhatsApp</div>

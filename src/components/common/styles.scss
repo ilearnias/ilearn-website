@@ -1,6 +1,6 @@
 .common-hero {
   position: relative;
-  height: 60vh;
+  height: 50vh;
   // background: rgb(167, 181, 255);
   background: #e0f2ff;
   overflow: hidden;
@@ -35,27 +35,26 @@
       padding-top: 100px; // More padding for desktop
       // More padding for desktop
 
-      h1 {
-        font-size: 4.5rem;
-        font-weight: 700;
-        // margin-bottom: 20px;
-        text-transform: uppercase;
-        letter-spacing: 2px;
+      // h1 {
+      //   font-size: 4.5rem;
+      //   font-weight: 700;
+      //   // margin-bottom: 20px;
+      //   text-transform: uppercase;
+      //   letter-spacing: 2px;
 
-        @media (max-width: 768px) {
-          font-size: 2.5rem;
-        }
-      }
+      //   @media (max-width: 768px) {
+      //     font-size: 2.5rem;
+      //   }
+      // }
 
       .hero-description {
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-        opacity: 0.9;
-        font-size: 17px;
-        color: black;
+        // font-size: 1.2rem;
+        // margin-bottom: 2rem;
+        // margin-left: auto;
+        // margin-right: auto;
+        // opacity: 0.9;
+        // font-size: 17px;
+        // color: black;
         @media (max-width: 768px) {
           font-size: 14px;
         }
@@ -208,3 +207,51 @@
     font-size: 1rem;
   }
 }
+
+
+._banner-header-txt1 {
+  margin-top: 30px;
+  font-size: 55px;
+  font-family: "Montserrat-Bold";
+  color: #20468d;
+}
+@media (max-width: 768px) {
+  ._banner-header-txt1 {
+    font-size: 35px;
+  }
+}
+
+._banner-sub-header-txt1 {
+  font-size: 18px;
+  text-align: center;
+  line-height: 25px;
+  font-family: "Montserrat-Regular";
+  color: #303030;
+}
+@media (max-width: 768px) {
+  ._banner-sub-header-txt1 {
+    font-size: 14px;
+    line-height: 18px;
+  }
+}
+.btn {
+  width: 90%;
+  padding: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: none;
+
+  @media (max-width: 768px) {
+    padding: 1rem 0;
+    font-size: 18px;
+         font-size: 14px;
+      }
+
+    
+    }
+  
+
+ 

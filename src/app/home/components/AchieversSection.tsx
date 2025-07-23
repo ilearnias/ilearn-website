@@ -106,7 +106,7 @@ const AchieversSection = () => {
           {/* Navigation Buttons - Only visible on mobile */}
           <button
             onClick={scrollToPreviousCard}
-            className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg z-10"
+            className="md:hidden absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full  z-10"
             aria-label="Previous card"
           >
             <svg
@@ -127,7 +127,7 @@ const AchieversSection = () => {
 
           <button
             onClick={scrollToNextCard}
-            className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg z-10"
+            className="md:hidden absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full  z-10"
             aria-label="Next card"
           >
             <svg
