@@ -55,8 +55,8 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     arrows: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 2,
-    slidesToScroll: 2,
+    slidesToShow: 3,
+    slidesToScroll: 3,
     responsive: [
       { breakpoint: 768, settings: { slidesToShow: 1, slidesToScroll: 1 } },
     ],
@@ -101,6 +101,10 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
     ),
   };
 
+  const TeamName = (name: string) => {
+    return <div className="_team_name_txt">{name}</div>;
+  };
+
   return (
     <section className="bg-gray-50 py-16">
       <Container>
@@ -113,33 +117,43 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           </div>
         </Fade>
 
-        <div className="relative justify-center max-w-[1700px] mx-auto px-2 sm:px-4 md:px-16 ">
+       
+        <div className="slider-container ">
           <Slider {...sliderSettings} className="!w-full !p-0 !m-0">
-            {testimonials.map((item, index) => (
-              <div key={index} className=" px-2">
-                <div className="w-full  rounded-xl overflow-hidden shadow aspect-video bg-white flex flex-col">
-                  <div
-                    className="relative w-full h-0"
-                    style={{ paddingBottom: "56.25%" }}
+            {testimonials.map((item: any, index: any) => {
+              return (
+                <div  key={index}>
+                  <Card
+                  className="!border-2 !border-red-500"
+                    style={{
+                      width: "98%",
+                      margin: "0 auto",
+                      borderRadius: "15px",
+                      overflow: "hidden",
+                      boxShadow: "0 0 10px 0 rgba(158, 158, 158, 0.1)",
+                      transition: "transform 0.3s ease",
+                      border: "none",
+                    }}
+                    cover={
+                      <YouTube
+                        videoId={item.video}
+                        opts={{
+                          borderTopLeftRadius: "15px",
+                          borderTopRightRadius: "15px",
+                          width: "100%",
+                          height: window.innerWidth < 768 ? "200px" : "250px",
+                          playerVars: {
+                            autoplay: 0,
+                          },
+                        }}
+                      />
+                    }
                   >
-                    <YouTube
-                      videoId={getVideoId(item.video)}
-                      className="absolute top-0 left-0 w-full h-full"
-                      opts={{
-                        width: "100%",
-                        height: "100%",
-                        playerVars: { autoplay: 0 },
-                      }}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <div className="text-lg font-semibold">
-                      {item.description || "Testimonial"}
-                    </div>
-                  </div>
+                    <Meta title={TeamName(item.description)} />
+                  </Card>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </Slider>
         </div>
       </Container>

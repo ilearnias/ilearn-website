@@ -174,19 +174,7 @@ const SuccessStoriesSection = () => {
   return (
     <div className="success-stories-section ">
       <Container noPadding className="mx-0 md:mx-4 ">
-        {/* <div className="section-header">
-          <Heading
-            color="tricolor"
-            text="Success Stories"
-           
-            className="!text-center !text-[40px] !mb-2"
-            animate={true}
-          />
-          <p className="subtitle">
-            See how our students achieved remarkable results in the civil
-            services examination
-          </p>
-        </div> */}
+     
 
         <Fade>
           <div className="_heading-box">
@@ -206,32 +194,36 @@ const SuccessStoriesSection = () => {
           <div className="stories-carousel p-0 ">
             {isClient && (
               <>
+           
+                
                 <button
-                  className="nav-button prev md:hidden"
+                  className=" nav-button bg-white prev md:hidden"
                   onClick={scrollToPrev}
                   aria-label="Previous story"
                   style={{ display: currentIndex === 0 ? "none" : "flex" }}
-                >
-                  <span>‹</span>
+                  >
+                  <span >‹</span>
                 </button>
                 <button
-                  className="nav-button next md:hidden"
+                  className="nav-button bg-white next z-10  md:hidden"
                   onClick={scrollToNext}
                   aria-label="Next story"
                   style={{
                     display:
-                      currentIndex === successStories.length - 1
-                        ? "none"
-                        : "flex",
+                    currentIndex === successStories.length - 1
+                    ? "none"
+                    : "flex",
                   }}
-                >
+                  >
                   <span>›</span>
                 </button>
+                    
               </>
             )}
             <div
-              className="flex px-10 md:pl-0  gap-[77px] md overflow-x-auto scroll-smooth scrollbar-none"
+              className="flex px-10 md:pl-0 gap-[30px] md:gap-[77px] overflow-x-auto scroll-smooth scrollbar-hide no-scrollbar"
               ref={carouselRef}
+              style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
               {successStories.map((story: SuccessStory, index: number) => (
                 <div key={`${story.name}-${pathname}`} className="story-card ">

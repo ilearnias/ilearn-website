@@ -233,11 +233,12 @@ const MediaSection = () => {
         </Fade>
 
         <div className="slider-container ">
-          <Slider {...settings}>
+          <Slider {...settings} className="  !w-full !p-0 !m-0">
             {videos.map((item: any, index: any) => {
               return (
-                <div key={index}>
+                <div  key={index}>
                   <Card
+                  className="!border-2 !border-red-500"
                     style={{
                       width: "98%",
                       margin: "0 auto",
@@ -254,7 +255,7 @@ const MediaSection = () => {
                           borderTopLeftRadius: "15px",
                           borderTopRightRadius: "15px",
                           width: "100%",
-                          height: "250px",
+                          height: window.innerWidth < 768 ? "200px" : "250px",
                           playerVars: {
                             autoplay: 0,
                           },
