@@ -88,8 +88,23 @@ const HomeSection = () => {
                 playerVars: {
                   loop: 1,
                   autoplay: 1,
-                  playlist: "NVGwwVzTeJU,zLwkn6BLJ4U",
+                  playlist: "NVGwwVzTeJU",
+                  controls: 0,
+                  mute: 1,
+                  rel: 0,
+                  showinfo: 0,
+                  modestbranding: 1,
                 },
+              }}
+              onEnd={() => {
+                // This ensures the video restarts when it ends
+                const iframe = document.querySelector('iframe[src*="youtube"]');
+                if (iframe) {
+                  const src = iframe.getAttribute("src");
+                  if (src) {
+                    iframe.setAttribute("src", src);
+                  }
+                }
               }}
             />
             {/* <iframe

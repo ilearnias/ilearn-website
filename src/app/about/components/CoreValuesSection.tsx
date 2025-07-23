@@ -53,7 +53,7 @@ const CoreValuesSection = () => {
             <Col md={6}>
               <div className="_core_value_card">
                 <div className="_core_value_icon">
-                  <FiAward size={25} color="black" />
+                  <FiAward className="_core_value_icon_size" color="black" />
                 </div>
                 <div className="_core_value_txt1">Pursuit of Excellence</div>
                 <div className="_core_value_txt2">
@@ -68,7 +68,10 @@ const CoreValuesSection = () => {
             <Col md={6}>
               <div className="_core_value_card">
                 <div className="_core_value_icon">
-                  <BiHomeHeart size={25} color="black" />
+                  <BiHomeHeart
+                    className="_core_value_icon_size"
+                    color="black"
+                  />
                 </div>
                 <div className="_core_value_txt1">Hospitality</div>
                 <div className="_core_value_txt2">
