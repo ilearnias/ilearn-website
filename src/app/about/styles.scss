@@ -672,6 +672,7 @@
   &:hover {
     transform: translateY(-5px);
     transition: all 0.5s ease;
+    padding: 20px;
   }
 }
 
@@ -684,6 +685,17 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+._core_value_icon_size {
+  font-size: 25px;
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
 }
 
 ._core_value_txt1 {
@@ -692,6 +704,9 @@
   color: vars.$p_blue;
   margin-top: 10px;
   margin-bottom: 10px;
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
 }
 
 ._core_value_txt2 {
@@ -700,4 +715,7 @@
   color: vars.$primary;
   text-align: justify;
   margin-bottom: 12px;
+  @media (max-width: 768px) {
+    font-size: 15px;
+  }
 }

@@ -92,6 +92,11 @@
   }
 }
 
+.page-box {
+  display: flex;
+  justify-content: center;
+}
+
 // Responsive styles
 @media (max-width: 768px) {
   .gallery-page {

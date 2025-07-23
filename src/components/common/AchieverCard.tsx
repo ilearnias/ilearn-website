@@ -26,7 +26,7 @@ const AchieverCard: React.FC<AchieverCardProps> = ({
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true, amount: 0.2 }}
     transition={{ duration: 0.5, ease: "easeOut" }}
-    whileHover={{ scale: 1.05, boxShadow: "0 8px 32px rgba(0,0,0,0.15)" }}
+    whileHover={{ scale: 1.005, boxShadow: "0 4px 10px rgba(0,0,0,0.15)" }}
   >
     {/*
       Recommended image resolution for achiever images:

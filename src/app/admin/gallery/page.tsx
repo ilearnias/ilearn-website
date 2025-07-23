@@ -44,11 +44,15 @@ const GalleryPage = () => {
   const [editingItem, setEditingItem] = useState<IGalleryItem | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<UploadFile[]>([]);
   const [form] = Form.useForm();
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     fetchItems();
   }, []);
 
+  // Only client-side pagination is supported
   const fetchItems = async () => {
     try {
       setLoading(true);
@@ -290,6 +294,13 @@ const GalleryPage = () => {
     item.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
+  // For client-side pagination only
+  const paginatedItems = filteredItems.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+  const total = filteredItems.length;
+
   const columns: ColumnsType<IGalleryItem> = [
     {
       title: "Title",
@@ -352,10 +363,23 @@ const GalleryPage = () => {
 
         <Table
           columns={columns}
-          dataSource={filteredItems}
+          dataSource={paginatedItems}
           loading={loading}
           rowKey="id"
           style={{ marginTop: 16 }}
+          pagination={{
+            current: page,
+            pageSize: pageSize,
+            total: total,
+            showSizeChanger: true,
+            pageSizeOptions: ["10", "20", "50", "100"],
+            position: ["bottomCenter"],
+            responsive: true,
+          }}
+          onChange={(pagination) => {
+            setPage(pagination.current || 1);
+            setPageSize(pagination.pageSize || 10);
+          }}
         />
       </Card>
 

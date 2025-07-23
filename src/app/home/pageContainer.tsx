@@ -20,9 +20,9 @@ export default function PageContainer() {
         <HomeSection />
       </section>
       {/* 2. Result Highlights Section */}
-      <section id="results">
+      {/* <section id="results">
         <ResultsSection />
-      </section>
+      </section> */}
       {/* 3. Achievers Section */}
       <section id="achievers">
         <AchieversSection />
