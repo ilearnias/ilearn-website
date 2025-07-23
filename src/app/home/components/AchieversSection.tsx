@@ -71,24 +71,6 @@ const AchieversSection = () => {
   return (
     <section className="achievers-section">
       <Container className="w-full">
-        {/* <motion.div
-          className="section-header"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.5 }}
-        >
-          <Heading
-            color="red"
-            text="Our Proud Achievers"
-            className="!text-center !text-[40px] !mb-2"
-            animate={true}
-          />
-          <p className="section-subtitle">
-            Success stories of India&apos;s future leaders
-          </p>
-        </motion.div> */}
-
         <Fade>
           <div className="_heading-box">
             <div className="_heading-box-title1">Our Proud Achievers</div>

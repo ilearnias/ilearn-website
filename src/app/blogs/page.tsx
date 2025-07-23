@@ -15,6 +15,7 @@ import Heading from "@/components/common/Heading";
 import { blogService, IBlogPost, IBlogCategory } from "@/services/blog.service";
 import { FiArrowRight } from "react-icons/fi";
 import { Pagination } from "antd";
+import { Spin } from "antd";
 
 // Real data state
 type BlogPostWithCategory = Omit<IBlogPost, "tags"> & {
@@ -388,9 +389,13 @@ export default function BlogPage() {
             {/* Main Blog Content */}
             <div className="blog-main">
               <div className="blog-cards-list" ref={cardsSectionRef}>
-                {loading ? (
+                {/* {loading ? (
                   <div className="no-posts">
                     <h2>Loading...</h2>
+                  </div> */}
+                {loading ? (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+                    <Spin size="large" tip="Loading blog posts..." />
                   </div>
                 ) : error ? (
                   <div className="no-posts">

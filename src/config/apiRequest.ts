@@ -11,6 +11,7 @@ import { login, logout } from "@/redux/slices/authSlice";
 
 // Types for API response
 export interface ApiResponse<T = any> {
+  meta: any;
   status: boolean;
   data: T;
   message?: string;

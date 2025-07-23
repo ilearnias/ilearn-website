@@ -113,11 +113,11 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           </div>
         </Fade>
 
-        <div className="relative max-w-[1700px] mx-auto px-2 sm:px-4 md:px-16">
-          <Slider {...sliderSettings}>
+        <div className="relative justify-center max-w-[1700px] mx-auto px-2 sm:px-4 md:px-16 ">
+          <Slider {...sliderSettings} className="!w-full !p-0 !m-0">
             {testimonials.map((item, index) => (
-              <div key={index} className="px-2">
-                <div className="w-full max-w-xl mx-auto rounded-xl overflow-hidden shadow aspect-video bg-white flex flex-col">
+              <div key={index} className=" px-2">
+                <div className="w-full  rounded-xl overflow-hidden shadow aspect-video bg-white flex flex-col">
                   <div
                     className="relative w-full h-0"
                     style={{ paddingBottom: "56.25%" }}

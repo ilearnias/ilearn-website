@@ -5,7 +5,6 @@ import { Button, Drawer } from "antd";
 import menuItems from "./menu.json";
 import { FaFacebookF } from "react-icons/fa";
 import { RiInstagramFill } from "react-icons/ri";
-import { FaXTwitter } from "react-icons/fa6";
 import { IoMdArrowForward } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { IoClose } from "react-icons/io5";
@@ -66,7 +65,10 @@ export default function SideDrawer(props: any) {
         {menuItems.map((item: any, index: any) => {
           return (
             <div
-              onClick={() => handleClick(item.link)}
+              onClick={() => {
+                router.push(item.path);
+                props?.close();
+              }}
               className="_drawer_box"
               key={index}
             >
