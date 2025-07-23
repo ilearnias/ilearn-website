@@ -27,8 +27,7 @@ export default function FoundationProgram() {
     <div className="program-page">
       <Header />
       <HeroSection
-        className="font-bold"
-        titleClassName="font-bold"
+       
         title="Foundation Course"
         description="Build a strong foundation for your UPSC preparation journey"
         buttons={buttons}
