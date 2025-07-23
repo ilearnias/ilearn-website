@@ -6,6 +6,7 @@ import SubHeading from "@/components/common/SubHeading";
 import SubText from "@/components/common/SubText";
 import Container from "@/components/common/Container";
 import YouTube from "react-youtube";
+import { useRouter } from "next/navigation";
 
 const HomeSection = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -14,8 +15,18 @@ const HomeSection = () => {
     setIsVisible(true);
   }, []);
 
+  const router = useRouter();
+
+  const handleExploreClick = () => {
+    router.push("./programs");
+  };
+
+  const handleAboutClick = () => {
+    router.push("./about");
+  };
+
   return (
-    <div className="home-section !flex !flex-col !items-center !justify-center w-full">
+    <div className="home-section !mt-0 ! pt-0 !flex !flex-col !items-center !justify-center w-full">
       <Container className="w-full">
         <div className="content-wrapper w-full flex ">
           <div className="text-content ">
@@ -71,10 +82,16 @@ const HomeSection = () => {
               className="!text-[#1F2937] !font-light !text-[16px] !m-0 !p-0"
             />
             <div className="buttons !m-0 !pt-2">
-              <button className="secondary-btn !text-white !bg-blue-600">
+              <button
+                onClick={handleExploreClick}
+                className="secondary-btn !text-white !bg-blue-600"
+              >
                 Explore Programs
               </button>
-              <button className="!border-2 !border-blue-600 secondary-btn bg-transparent">
+              <button
+                onClick={handleAboutClick}
+                className="!border-2 !border-blue-600 secondary-btn bg-transparent"
+              >
                 About Us
               </button>
             </div>
@@ -95,6 +112,16 @@ const HomeSection = () => {
                   showinfo: 0,
                   modestbranding: 1,
                 },
+              }}
+              onEnd={() => {
+                // This ensures the video restarts when it ends
+                const iframe = document.querySelector('iframe[src*="youtube"]');
+                if (iframe) {
+                  const src = iframe.getAttribute("src");
+                  if (src) {
+                    iframe.setAttribute("src", src);
+                  }
+                }
               }}
               onEnd={() => {
                 // This ensures the video restarts when it ends
