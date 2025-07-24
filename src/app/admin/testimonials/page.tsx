@@ -17,6 +17,8 @@ import {
   Row,
   Col,
   Spin,
+  Upload,
+  Image,
 } from "antd";
 import {
   SearchOutlined,
@@ -39,6 +41,7 @@ import {
   IMediaCreate,
   IMediaUpdate,
 } from "@/services/media.service";
+import type { UploadFile } from "antd/es/upload/interface";
 import "./styles.scss";
 
 const { confirm } = Modal;
@@ -55,6 +58,7 @@ const Testimonials = () => {
   const [editingMedia, setEditingMedia] = useState<IMedia | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [form] = Form.useForm();
+  const [thumbnailFile, setThumbnailFile] = useState<UploadFile[]>([]);
 
   useEffect(() => {
     fetchMedia();
@@ -87,9 +91,10 @@ const Testimonials = () => {
     form.resetFields();
     form.setFieldsValue({
       isActive: true,
-      isTestimonial: false,
+      isTestimonial: true,
       order: 1,
     });
+    setThumbnailFile([]);
     setIsModalVisible(true);
   };
 
@@ -107,6 +112,18 @@ const Testimonials = () => {
           isActive: response.data.isActive,
           isTestimonial: response.data.isTestimonial,
         });
+        setThumbnailFile(
+          response.data.thumbnail
+            ? [
+                {
+                  uid: "-1",
+                  name: "thumbnail.jpg",
+                  status: "done",
+                  url: response.data.thumbnail,
+                },
+              ]
+            : []
+        );
         setIsModalVisible(true);
       } else {
         message.error(response.message || "Failed to load testimonials data");
@@ -151,6 +168,20 @@ const Testimonials = () => {
       const values = await form.validateFields();
       setModalLoading(true);
 
+      // Handle thumbnail upload
+      let thumbnailUrl = values.thumbnail;
+      const newFile = thumbnailFile.find((file) => file.originFileObj);
+      if (newFile && newFile.originFileObj) {
+        thumbnailUrl = await mediaService.uploadSingleImage(
+          newFile.originFileObj as File
+        );
+      } else if (thumbnailFile.length > 0 && thumbnailFile[0].url) {
+        thumbnailUrl = thumbnailFile[0].url;
+      } else {
+        thumbnailUrl = undefined;
+      }
+      values.thumbnail = thumbnailUrl;
+
       if (editingMedia) {
         // Update existing testimonials
         const response = await mediaService.updateMedia(
@@ -191,6 +222,7 @@ const Testimonials = () => {
     setIsModalVisible(false);
     setEditingMedia(null);
     form.resetFields();
+    setThumbnailFile([]);
   };
 
   const handlePageChange = (page: number, size?: number) => {
@@ -198,6 +230,37 @@ const Testimonials = () => {
     if (size && size !== pageSize) {
       setPageSize(size);
     }
+  };
+
+  const handleThumbnailChange = ({ fileList }: { fileList: UploadFile[] }) => {
+    setThumbnailFile(fileList.slice(-1)); // Only keep the latest file
+  };
+  const uploadProps = {
+    beforeUpload: (file: File) => {
+      const acceptedFormats = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
+      const isAcceptedFormat = acceptedFormats.includes(file.type);
+      if (!isAcceptedFormat) {
+        message.error("You can only upload JPG, PNG, GIF or WebP files!");
+        return false;
+      }
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        message.error("Image must be smaller than 5MB!");
+        return false;
+      }
+      return false; // Manual upload
+    },
+    fileList: thumbnailFile,
+    onChange: handleThumbnailChange,
+    multiple: false,
+    listType: "picture-card" as const,
+    accept: ".jpg,.jpeg,.png,.gif,.webp",
+    maxCount: 1,
   };
 
   const filteredMedia = mediaList.filter((item) =>
@@ -219,7 +282,7 @@ const Testimonials = () => {
       ellipsis: true,
     },
     {
-      title: "Video ID",
+      title: "Video URL",
       dataIndex: "video",
       key: "video",
       ellipsis: true,
@@ -228,6 +291,14 @@ const Testimonials = () => {
           {url.length > 50 ? `${url.substring(0, 50)}...` : url}
         </a>
       ),
+    },
+    {
+      title: "Thumbnail",
+      dataIndex: "thumbnail",
+      key: "thumbnail",
+      ellipsis: true,
+      render: (url) =>
+        url ? <Image src={url} alt="thumbnail" width={50} height={50} /> : null,
     },
     {
       title: "Status",
@@ -389,9 +460,23 @@ const Testimonials = () => {
             </Form.Item>
 
             <Form.Item
+              label="Thumbnail Image"
+              help="Upload a thumbnail image (max 5MB)"
+            >
+              <Upload {...uploadProps}>
+                {thumbnailFile.length === 0 && (
+                  <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>Upload</div>
+                  </div>
+                )}
+              </Upload>
+            </Form.Item>
+
+            <Form.Item
               name="video"
-              label="Video ID"
-              rules={[{ required: true, message: "Please enter video ID" }]}
+              label="Video URL"
+              rules={[{ required: true, message: "Please enter video URL" }]}
             >
               <Input
                 placeholder="dQw4w9WgXcQ"

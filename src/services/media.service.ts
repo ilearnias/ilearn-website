@@ -185,22 +185,34 @@ export const mediaService = {
       throw error;
     }
   },
+
+  // Upload a single image and return its URL
+  uploadSingleImage: async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file); // field name must be 'file'
+    const response = await apiRequest.upload("/v1/upload/image", formData);
+    if (response.status && response.data) {
+      // If backend returns { data: { url: '...' } }
+      return response.data.url || response.data;
+    }
+    throw new Error(response.message || "Failed to upload image");
+  },
 };
 
 export const getTestimonials = async () => {
   try {
     const response = await fetch(
-      'https://ilearn-server.bairuhatech.com/v1/media?page=1&limit=10&isTestimonial=true',
+      "https://ilearn-server.bairuhatech.com/v1/media?page=1&limit=10&isTestimonial=true",
       {
         headers: {
-          accept: '*/*',
+          accept: "*/*",
         },
       }
     );
     const data = await response.json();
     return data.data;
   } catch (error) {
-    console.error('Error fetching testimonials:', error);
+    console.error("Error fetching testimonials:", error);
     return [];
   }
 };
