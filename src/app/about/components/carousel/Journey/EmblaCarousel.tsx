@@ -22,7 +22,11 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
   useEffect(() => {
     const fetchJourneyData = async () => {
       try {
-        const response: any = await journeyService.getAllJourney(1, 10, true);
+        const response: any = await journeyService.getAllJourney({
+          page: 1,
+          limit: 10,
+          isActive: true,
+        });
         if (response.status && response.data) {
           setJourneyData(response.data);
         }

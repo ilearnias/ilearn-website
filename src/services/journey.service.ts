@@ -50,9 +50,9 @@ class JourneyService {
   async getAllJourney({
     page = 1,
     limit = 10,
+    isActive,
     search = "",
     year,
-    isActive,
     isImage,
   }: {
     page?: number;
