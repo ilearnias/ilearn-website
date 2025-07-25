@@ -21,6 +21,8 @@ import {
   DatePicker,
   Switch,
   Pagination,
+  Upload,
+  Image,
 } from "antd";
 import {
   SearchOutlined,
@@ -39,6 +41,7 @@ import {
   IResult,
   IPaginationMeta,
 } from "@/services/results.service";
+import { UploadFile } from "antd/es/upload/interface";
 import dayjs from "dayjs";
 import "./styles.scss";
 
@@ -62,6 +65,7 @@ const Results = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingResult, setEditingResult] = useState<IResult | null>(null);
   const [form] = Form.useForm();
+  const [thumbnailFile, setThumbnailFile] = useState<UploadFile[]>([]);
 
   const fetchResults = useCallback(async () => {
     try {
@@ -133,15 +137,28 @@ const Results = () => {
   const handleAdd = () => {
     setEditingResult(null);
     form.resetFields();
+    setThumbnailFile([]);
     setIsModalVisible(true);
   };
 
-  const handleEdit = (record: IResult) => {
+  const handleEdit = (record: any) => {
     if (record) {
       setEditingResult(record);
       form.setFieldsValue({
         ...record,
       });
+      setThumbnailFile(
+        record.thumbnail
+          ? [
+              {
+                uid: "-1",
+                name: "thumbnail.jpg",
+                status: "done",
+                url: record.thumbnail,
+              },
+            ]
+          : []
+      );
       setIsModalVisible(true);
     }
   };
@@ -181,6 +198,20 @@ const Results = () => {
       // Ensure isActive is boolean (Switch already does this, but for safety)
       values.isActive = Boolean(values.isActive);
 
+      // Handle thumbnail upload
+      let thumbnailUrl = values.thumbnail;
+      const newFile = thumbnailFile.find((file) => file.originFileObj);
+      if (newFile && newFile.originFileObj) {
+        thumbnailUrl = await resultService.uploadSingleImage(
+          newFile.originFileObj as File
+        );
+      } else if (thumbnailFile.length > 0 && thumbnailFile[0].url) {
+        thumbnailUrl = thumbnailFile[0].url;
+      } else {
+        thumbnailUrl = undefined;
+      }
+      values.thumbnail = thumbnailUrl;
+
       console.log("Saving result with values:", values);
 
       if (editingResult && editingResult.id) {
@@ -218,6 +249,38 @@ const Results = () => {
   const handleModalCancel = () => {
     setIsModalVisible(false);
     form.resetFields();
+    setThumbnailFile([]);
+  };
+
+  const handleThumbnailChange = ({ fileList }: { fileList: UploadFile[] }) => {
+    setThumbnailFile(fileList.slice(-1)); // Only keep the latest file
+  };
+  const uploadProps = {
+    beforeUpload: (file: File) => {
+      const acceptedFormats = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
+      const isAcceptedFormat = acceptedFormats.includes(file.type);
+      if (!isAcceptedFormat) {
+        message.error("You can only upload JPG, PNG, GIF or WebP files!");
+        return false;
+      }
+      const isLt5M = file.size / 1024 / 1024 < 5;
+      if (!isLt5M) {
+        message.error("Image must be smaller than 5MB!");
+        return false;
+      }
+      return false; // Manual upload
+    },
+    fileList: thumbnailFile,
+    onChange: handleThumbnailChange,
+    multiple: false,
+    listType: "picture-card" as const,
+    accept: ".jpg,.jpeg,.png,.gif,.webp",
+    maxCount: 1,
   };
 
   const handleExportResults = async () => {
@@ -263,6 +326,13 @@ const Results = () => {
       title: "Description",
       dataIndex: "description",
       key: "description",
+    },
+    {
+      title: "Thumbnail",
+      dataIndex: "thumbnail",
+      key: "thumbnail",
+      render: (url) =>
+        url ? <Image src={url} alt="thumbnail" width={50} height={50} /> : null,
     },
     {
       title: "Order",
@@ -438,6 +508,28 @@ const Results = () => {
                 rules={[{ required: true, message: "Please enter order" }]}
               >
                 <InputNumber min={0} style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+
+            <Col span={24}>
+              <Form.Item
+                name="thumbnail"
+                label="Thumbnail Image"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please Upload A Thumbnail Image",
+                  },
+                ]}
+              >
+                <Upload {...uploadProps}>
+                  {thumbnailFile.length === 0 && (
+                    <div>
+                      <PlusOutlined />
+                      <div style={{ marginTop: 8 }}>Upload</div>
+                    </div>
+                  )}
+                </Upload>
               </Form.Item>
             </Col>
 
