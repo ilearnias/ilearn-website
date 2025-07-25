@@ -2,6 +2,7 @@ import { API_CONFIG, API_ENDPOINTS } from "../config/api";
 import { apiRequest, ApiResponse } from "../config/apiRequest";
 
 export interface IResult {
+  thumbnail: string | undefined;
   id: string;
   year: string;
   description: string;
