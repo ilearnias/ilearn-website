@@ -55,6 +55,10 @@ const Journey = () => {
   const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
   const token = localStorage.getItem("adminToken");
+  const [isImageFilter, setIsImageFilter] = useState<boolean | undefined>(
+    undefined
+  );
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -68,11 +72,12 @@ const Journey = () => {
   const fetchJourney = async () => {
     try {
       setLoading(true);
-      const response: any = await journeyService.getAllJourney(
-        currentPage,
-        pageSize,
-        false
-      );
+      const response: any = await journeyService.getAllJourney({
+        page: currentPage,
+        limit: pageSize,
+        isActive: false,
+        isImage: isImageFilter,
+      });
       if (response.status) {
         setJourneyList(response.data);
         setTotalItems(response.meta?.itemCount || response.data.length);
@@ -496,25 +501,71 @@ const Journey = () => {
               />
             </Form.Item>
 
-            <Form.Item label="Media (size: 1920x1080px)" name="media">
-              <Upload
-                listType="picture-card"
-                fileList={uploadedFile ? [uploadedFile] : []}
-                onChange={handleUploadChange}
-                beforeUpload={() => false} // Prevent auto upload
-                accept="image/*"
-                maxCount={1}
-              >
-                {!uploadedFile && (
-                  <div>
-                    <UploadOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                )}
-              </Upload>
-              <div style={{ marginTop: 8, fontSize: "12px", color: "#666" }}>
-                Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
-              </div>
+            <Form.Item
+              name="isImage"
+              label="Media Type"
+              valuePropName="checked"
+            >
+              <Switch
+                checkedChildren="Image"
+                unCheckedChildren="YouTube"
+                defaultChecked={false}
+              />
+            </Form.Item>
+
+            <Form.Item
+              shouldUpdate={(prev, curr) => prev.isImage !== curr.isImage}
+            >
+              {({ getFieldValue }) =>
+                getFieldValue("isImage") ? (
+                  <>
+                    <Form.Item label="Media (size: 1920x1080px)" name="media">
+                      <Upload
+                        listType="picture-card"
+                        fileList={uploadedFile ? [uploadedFile] : []}
+                        onChange={handleUploadChange}
+                        beforeUpload={() => false} // Prevent auto upload
+                        accept="image/*"
+                        maxCount={1}
+                      >
+                        {!uploadedFile && (
+                          <div>
+                            <UploadOutlined />
+                            <div style={{ marginTop: 8 }}>Upload</div>
+                          </div>
+                        )}
+                      </Upload>
+                      <div
+                        style={{
+                          marginTop: 8,
+                          fontSize: "12px",
+                          color: "#666",
+                        }}
+                      >
+                        Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
+                      </div>
+                    </Form.Item>
+                  </>
+                ) : (
+                  <Form.Item
+                    label="YouTube Video URL"
+                    name="media"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter a YouTube video URL",
+                      },
+                      {
+                        pattern:
+                          /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]{11}$/,
+                        message: "Enter a valid YouTube URL",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="https://www.youtube.com/watch?v=..." />
+                  </Form.Item>
+                )
+              }
             </Form.Item>
 
             <Form.Item name="isActive" label="Status" valuePropName="checked">

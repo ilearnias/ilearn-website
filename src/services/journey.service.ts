@@ -47,11 +47,33 @@ interface JourneyResponse {
 }
 
 class JourneyService {
-  async getAllJourney(page = 1, limit = 10, isActive: boolean) {
-    let url = `${API_ENDPOINTS.ADMIN.JOURNEY.LIST}?page=${page}&limit=${limit}`;
-    if (isActive) {
-      url += `&isActive=${isActive}`;
-    }
+  async getAllJourney({
+    page = 1,
+    limit = 10,
+    search = "",
+    year,
+    isActive,
+    isImage,
+  }: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    year?: string;
+    isActive?: boolean;
+    isImage?: boolean;
+  }) {
+    const params = new URLSearchParams();
+
+    params.append("page", String(page));
+    params.append("limit", String(limit));
+    if (search) params.append("search", search);
+    if (year) params.append("year", year);
+    if (typeof isActive === "boolean")
+      params.append("isActive", String(isActive));
+    if (typeof isImage === "boolean") params.append("isImage", String(isImage));
+
+    const url = `${API_ENDPOINTS.ADMIN.JOURNEY.LIST}?${params.toString()}`;
+
     const response = await apiRequest.get<JourneyResponse>(url);
     return response;
   }
