@@ -6,7 +6,7 @@ import Container from "@/components/common/Container";
 import HeroSection from "@/components/common/HeroSection";
 import Heading from "@/components/common/Heading";
 import { Fade } from "react-awesome-reveal";
-import GalleryComponent from "./components/GalleryComponent";
+import GalleryComponent from "../admin/results/summary/components/GalleryComponent";
 import { galleryService, IGalleryItem } from "@/services/gallery.service";
 import "./styles.scss";
 import { useTranslation } from "react-i18next";

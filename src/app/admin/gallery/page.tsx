@@ -30,7 +30,7 @@ import {
 
 import type { ColumnsType } from "antd/es/table";
 import type { UploadFile } from "antd/es/upload/interface";
-import { galleryService, IGalleryItem } from "@/services/gallery.service";
+import { galleryService, IGalleryItem, IGalleryImage } from "@/services/gallery.service";
 import "./styles.scss";
 
 const { confirm } = Modal;
@@ -42,23 +42,37 @@ const GalleryPage = () => {
   const [items, setItems] = useState<IGalleryItem[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingItem, setEditingItem] = useState<IGalleryItem | null>(null);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadFile[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<{
+    file: UploadFile;
+    subtitle: string;
+    description: string;
+  }[]>([]);
   const [form] = Form.useForm();
   // Pagination state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [meta, setMeta] = useState({
+    page: 1,
+    limit: 10,
+    itemCount: 0,
+    totalPages: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
 
   useEffect(() => {
-    fetchItems();
+    fetchItems(meta.page, meta.limit);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Only client-side pagination is supported
-  const fetchItems = async () => {
+  const fetchItems = async (page = 1, limit = 10) => {
     try {
       setLoading(true);
-      const response = await galleryService.getAllItems();
+      const response = await galleryService.getAllItems(page, limit);
       if (response.status) {
         setItems(response.data);
+        setMeta(response.meta || {});
       } else {
         message.error(response.message || "Failed to fetch gallery items");
       }
@@ -72,7 +86,7 @@ const GalleryPage = () => {
   const handleAdd = () => {
     setEditingItem(null);
     form.resetFields();
-    setUploadedFiles([]);
+    setUploadedImages([]);
     setIsModalVisible(true);
   };
 
@@ -84,14 +98,18 @@ const GalleryPage = () => {
     setEditingItem(record);
     form.setFieldsValue({
       ...record,
-      images: undefined, // Clear images field as we'll show existing images separately
+      images: undefined,
     });
-    setUploadedFiles(
-      record.images.map((url, index) => ({
-        uid: `-${index}`,
-        name: url.split("/").pop() || "image",
-        status: "done",
-        url: url,
+    setUploadedImages(
+      (record.images || []).map((img: IGalleryImage, index: number) => ({
+        file: {
+          uid: `-${index}`,
+          name: img.image.split("/").pop() || "image",
+          status: "done",
+          url: img.image,
+        },
+        subtitle: img.subtitle,
+        description: img.description,
       }))
     );
     setIsModalVisible(true);
@@ -110,8 +128,13 @@ const GalleryPage = () => {
           const response = await galleryService.deleteItem(record.id);
           if (response.status) {
             message.success("Gallery item deleted successfully");
-            // Update the local state to remove the item
-            setItems((prev) => prev.filter((item) => item.id !== record.id));
+            // If the current page is now empty and not the first page, go to the previous page
+            const isLastItemOnPage = items.length === 1 && meta.page > 1;
+            if (isLastItemOnPage) {
+              fetchItems(meta.page - 1, meta.limit);
+            } else {
+              fetchItems(meta.page, meta.limit);
+            }
           } else {
             throw new Error(
               response.message || "Failed to delete gallery item"
@@ -121,8 +144,12 @@ const GalleryPage = () => {
           // If the item is not found (404), consider it a successful deletion
           if (error.status === 404 || error.statusCode === 404) {
             message.success("Gallery item removed successfully");
-            // Update the local state to remove the item
-            setItems((prev) => prev.filter((item) => item.id !== record.id));
+            const isLastItemOnPage = items.length === 1 && meta.page > 1;
+            if (isLastItemOnPage) {
+              fetchItems(meta.page - 1, meta.limit);
+            } else {
+              fetchItems(meta.page, meta.limit);
+            }
           } else {
             // For other errors, show detailed error message
             console.error("Delete error:", error);
@@ -150,51 +177,38 @@ const GalleryPage = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-
-      // Validate that at least one image is selected for new items
-      const newFiles = uploadedFiles.filter((file) => file.originFileObj);
-      const existingImages = uploadedFiles
-        .filter((file) => !file.originFileObj)
-        .map((file) => file.url as string);
-
-      if (
-        !editingItem &&
-        newFiles.length === 0 &&
-        existingImages.length === 0
-      ) {
-        message.error("Please select at least one image");
+      // Validate that all images have subtitle and description
+      for (const img of uploadedImages) {
+        if (!img.subtitle || !img.description) {
+          message.error('Please provide subtitle and description for all images');
+          return;
+        }
+      }
+      if (uploadedImages.length === 0) {
+        message.error('Please select at least one image');
         return;
       }
-
-      // Upload new images and get their URLs
-      let uploadedImageUrls: string[] = [];
-      if (newFiles.length > 0) {
-        const filesToUpload = newFiles
-          .map((file) => file.originFileObj as File)
-          .filter(Boolean); // Remove any undefined/null values
-
-        if (filesToUpload.length !== newFiles.length) {
-          throw new Error("Some files are not properly loaded");
+      // Upload images and collect URLs
+      const uploadedImageObjs: IGalleryImage[] = [];
+      for (const img of uploadedImages) {
+        let imageUrl: string = img.file.url || '';
+        if (img.file.originFileObj) {
+          const uploaded = await uploadImageToApi(img.file.originFileObj as File);
+          imageUrl = uploaded || '';
         }
-
-        // Upload each file and collect URLs
-        for (const file of filesToUpload) {
-          const url = await uploadImageToApi(file);
-          uploadedImageUrls.push(url);
-        }
+        uploadedImageObjs.push({
+          subtitle: img.subtitle,
+          description: img.description,
+          image: imageUrl,
+        });
       }
-
-      // Combine existing and newly uploaded image URLs
-      const allImages = [...existingImages, ...uploadedImageUrls];
-
-      // Prepare gallery item data
       const initialData = {
         title: values.title,
+        description: values.description,
         order: values.order,
         isActive: values.isActive,
-        images: allImages, // Only URLs
+        images: uploadedImageObjs,
       };
-
       let galleryItemId: string;
       if (editingItem) {
         galleryItemId = editingItem.id;
@@ -208,7 +222,6 @@ const GalleryPage = () => {
         }
         galleryItemId = createResponse.data.id;
       }
-
       message.success(
         editingItem
           ? "Gallery item updated successfully"
@@ -216,7 +229,7 @@ const GalleryPage = () => {
       );
       setIsModalVisible(false);
       form.resetFields();
-      setUploadedFiles([]);
+      setUploadedImages([]);
       fetchItems();
     } catch (error: any) {
       console.error("Error in handleModalOk:", error);
@@ -227,36 +240,25 @@ const GalleryPage = () => {
   const handleModalCancel = () => {
     setIsModalVisible(false);
     form.resetFields();
-    setUploadedFiles([]);
+    setUploadedImages([]);
   };
 
   const handleUploadChange = ({ fileList }: { fileList: UploadFile[] }) => {
-    // Filter out invalid files
-    const validFiles = fileList.filter((file) => {
-      // Check file size
-      if (file.size && file.size > 5 * 1024 * 1024) {
-        message.error(`${file.name} is larger than 5MB`);
-        return false;
-      }
-
-      // Check file type if it's a new upload
-      if (file.originFileObj) {
-        const acceptedFormats = [
-          "image/jpeg",
-          "image/png",
-          "image/gif",
-          "image/webp",
-        ];
-        if (!acceptedFormats.includes(file.type || "")) {
-          message.error(`${file.name} is not a valid image format`);
-          return false;
-        }
-      }
-
-      return true;
+    setUploadedImages((prev) => {
+      const newFiles = fileList.map((file) => {
+        const existing = prev.find((img) => img.file.uid === file.uid);
+        return existing || { file, subtitle: '', description: '' };
+      });
+      return newFiles;
     });
+  };
 
-    setUploadedFiles(validFiles);
+  const handleImageMetaChange = (uid: string, field: 'subtitle' | 'description', value: string) => {
+    setUploadedImages((prev) =>
+      prev.map((img) =>
+        img.file.uid === uid ? { ...img, [field]: value } : img
+      )
+    );
   };
 
   const uploadProps = {
@@ -282,7 +284,7 @@ const GalleryPage = () => {
 
       return false; // Return false to handle upload manually
     },
-    fileList: uploadedFiles,
+    fileList: uploadedImages.map((img) => img.file),
     onChange: handleUploadChange,
     multiple: true,
     listType: "picture-card" as const,
@@ -309,6 +311,23 @@ const GalleryPage = () => {
       render: (text) => <div style={{ fontWeight: 500 }}>{text}</div>,
     },
     {
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+      render: (order) => <span>{order}</span>,
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (desc) => <span>{desc}</span>,
+    },
+    {
+      title: "First Image Subtitle",
+      key: "firstImageSubtitle",
+      render: (_, record) => record.images && record.images[0] ? record.images[0].subtitle : '',
+    },
+    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
@@ -327,7 +346,6 @@ const GalleryPage = () => {
           >
             Edit
           </Button>
-
           <Button
             type="default"
             icon={<DeleteOutlined />}
@@ -363,22 +381,17 @@ const GalleryPage = () => {
 
         <Table
           columns={columns}
-          dataSource={paginatedItems}
+          dataSource={items}
           loading={loading}
           rowKey="id"
           style={{ marginTop: 16 }}
           pagination={{
-            current: page,
-            pageSize: pageSize,
-            total: total,
+            current: meta.page,
+            pageSize: meta.limit,
+            total: meta.itemCount,
             showSizeChanger: true,
             pageSizeOptions: ["10", "20", "50", "100"],
-            position: ["bottomCenter"],
-            responsive: true,
-          }}
-          onChange={(pagination) => {
-            setPage(pagination.current || 1);
-            setPageSize(pagination.pageSize || 10);
+            onChange: (page, pageSize) => fetchItems(page, pageSize),
           }}
         />
       </Card>
@@ -399,20 +412,60 @@ const GalleryPage = () => {
           >
             <Input />
           </Form.Item>
-
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: "Please input the description!" }]}
+          >
+            <Input.TextArea rows={3} />
+          </Form.Item>
           <Form.Item
             label="Images"
             required
             help="Upload one or more images. Maximum size: 5MB per image."
           >
-            <Upload {...uploadProps}>
+            <Upload
+              beforeUpload={uploadProps.beforeUpload}
+              fileList={uploadedImages.map((img) => img.file)}
+              onChange={({ fileList }) => handleUploadChange({ fileList })}
+              multiple
+              listType="picture-card"
+              accept=".jpg,.jpeg,.png,.gif,.webp"
+              maxCount={10}
+            >
               <div>
                 <PlusOutlined />
                 <div style={{ marginTop: 8 }}>Upload</div>
               </div>
             </Upload>
           </Form.Item>
-
+          {uploadedImages.length > 0 && (
+            <div style={{ marginTop: 16 }}>
+              {uploadedImages.map((img, idx) => (
+                <div key={img.file.uid} style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+                  <Image
+                    src={img.file.thumbUrl || img.file.url}
+                    alt={`Preview ${idx + 1}`}
+                    style={{ width: 100, height: 100, objectFit: "cover" }}
+                  />
+                  <div style={{ flex: 1 }}>
+                    <Input
+                      placeholder="Subtitle"
+                      value={img.subtitle}
+                      onChange={(e) => handleImageMetaChange(img.file.uid, 'subtitle', e.target.value)}
+                      style={{ marginBottom: 8 }}
+                    />
+                    <Input.TextArea
+                      placeholder="Description"
+                      value={img.description}
+                      onChange={(e) => handleImageMetaChange(img.file.uid, 'description', e.target.value)}
+                      rows={2}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           <Form.Item
             name="order"
             label="Order"
@@ -420,7 +473,6 @@ const GalleryPage = () => {
           >
             <InputNumber min={1} style={{ width: "100%" }} />
           </Form.Item>
-
           <Form.Item
             name="isActive"
             label="Status"
