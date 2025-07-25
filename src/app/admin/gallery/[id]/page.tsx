@@ -25,7 +25,7 @@ import {
 } from "@ant-design/icons";
 import type { UploadFile } from "antd/es/upload/interface";
 import { useRouter, useParams } from "next/navigation";
-import { galleryService, IGalleryItem } from "@/services/gallery.service";
+import { galleryService, IGalleryItem, IGalleryImage } from "@/services/gallery.service";
 import "../styles.scss";
 
 const { Title, Text } = Typography;
@@ -80,12 +80,13 @@ const GalleryItemPage = () => {
     try {
       setLoading(true);
       // Remove the image from the gallery item
-      const updatedImages = galleryItem!.images.filter(
-        (img) => img !== imageUrl
+      const updatedImages: IGalleryImage[] = (galleryItem!.images as IGalleryImage[]).filter(
+        (img: IGalleryImage) => img.image !== imageUrl
       );
 
       const updateData = {
         title: galleryItem!.title,
+        description: galleryItem!.description,
         order: galleryItem!.order,
         isActive: galleryItem!.isActive,
         images: updatedImages,
@@ -145,7 +146,7 @@ const GalleryItemPage = () => {
       // Add new images to existing gallery item
       const updatedImages = [
         ...(galleryItem?.images || []),
-        ...uploadedImageUrls,
+        ...uploadedImageUrls.map(url => ({ image: url, subtitle: "", description: "" })),
       ];
 
       const updateData = {
@@ -318,18 +319,16 @@ const GalleryItemPage = () => {
           </div>
         ) : (
           <Row gutter={[16, 16]}>
-            {galleryItem.images.map((imageUrl, index) => (
+            {galleryItem.images.map((imgObj: IGalleryImage, index: number) => (
               <Col xs={24} sm={12} md={8} lg={6} key={index}>
                 <Card
                   hoverable
                   cover={
                     <Image
-                      src={imageUrl}
-                      alt={`Gallery ${index + 1}`}
+                      src={imgObj.image}
+                      alt={imgObj.subtitle || `Gallery ${index + 1}`}
                       style={{ height: 200, objectFit: "cover" }}
-                      preview={{
-                        src: imageUrl,
-                      }}
+                      preview={{ src: imgObj.image }}
                     />
                   }
                   actions={[
@@ -338,7 +337,7 @@ const GalleryItemPage = () => {
                       type="text"
                       danger
                       icon={<DeleteOutlined />}
-                      onClick={() => handleDeleteImage(imageUrl)}
+                      onClick={() => handleDeleteImage(imgObj.image)}
                       loading={loading}
                     >
                       Remove
@@ -346,8 +345,8 @@ const GalleryItemPage = () => {
                   ]}
                 >
                   <Card.Meta
-                    title={`Image ${index + 1}`}
-                    description={`Uploaded image ${index + 1}`}
+                    title={imgObj.subtitle || `Image ${index + 1}`}
+                    description={imgObj.description || `Uploaded image ${index + 1}`}
                   />
                 </Card>
               </Col>

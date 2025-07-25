@@ -165,6 +165,7 @@ const Testimonials = () => {
 
   const handleModalOk = async () => {
     try {
+      form.setFields([{ name: "thumbnail", touched: true }]);
       const values = await form.validateFields();
       setModalLoading(true);
 
@@ -233,7 +234,10 @@ const Testimonials = () => {
   };
 
   const handleThumbnailChange = ({ fileList }: { fileList: UploadFile[] }) => {
-    setThumbnailFile(fileList.slice(-1)); // Only keep the latest file
+    setThumbnailFile(fileList.slice(-1));
+    form.setFieldsValue({ thumbnail: fileList.length > 0 ? "uploaded" : "" });
+    form.setFields([{ name: "thumbnail", touched: true }]);
+    form.validateFields(["thumbnail"]);
   };
   const uploadProps = {
     beforeUpload: (file: File) => {
@@ -461,7 +465,29 @@ const Testimonials = () => {
 
             <Form.Item
               label="Thumbnail Image"
-              help="Upload a thumbnail image (max 5MB)"
+              required
+              name="thumbnail"
+              dependencies={["thumbnail"]}
+              rules={[
+                {
+                  validator: () => {
+                    if (thumbnailFile && thumbnailFile.length > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Please upload a thumbnail image"));
+                  },
+                },
+              ]}
+              validateStatus={
+                form.isFieldTouched("thumbnail") && form.getFieldError("thumbnail").length
+                  ? "error"
+                  : ""
+              }
+              help={
+                form.isFieldTouched("thumbnail") && form.getFieldError("thumbnail").length
+                  ? form.getFieldError("thumbnail")[0]
+                  : "Upload a thumbnail image (max 5MB)"
+              }
             >
               <Upload {...uploadProps}>
                 {thumbnailFile.length === 0 && (
@@ -482,6 +508,23 @@ const Testimonials = () => {
                 placeholder="dQw4w9WgXcQ"
                 prefix={<PlayCircleOutlined />}
               />
+            </Form.Item>
+
+            <Form.Item
+              name="thumbnail"
+              rules={[
+                {
+                  validator: () => {
+                    if (thumbnailFile && thumbnailFile.length > 0) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Please upload a thumbnail image"));
+                  },
+                },
+              ]}
+              style={{ display: "none" }}
+            >
+              <Input type="hidden" />
             </Form.Item>
 
             <Row gutter={16}>
