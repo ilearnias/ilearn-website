@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { PrevButton, NextButton, usePrevNextButtons } from './EmblaCarouselArrowButtons';
-import '../styles/embla.scss';
+// import '../styles/embla.scss';
 import Container from '@/components/common/Container';
 
 export type GalleryImage = {
