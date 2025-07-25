@@ -55,6 +55,10 @@ const Journey = () => {
   const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
   const token = localStorage.getItem("adminToken");
+  const [isImageFilter, setIsImageFilter] = useState<boolean | undefined>(
+    undefined
+  );
+
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -68,11 +72,11 @@ const Journey = () => {
   const fetchJourney = async () => {
     try {
       setLoading(true);
-      const response: any = await journeyService.getAllJourney(
-        currentPage,
-        pageSize,
-        false
-      );
+      const response: any = await journeyService.getAllJourney({
+        page: currentPage,
+        limit: pageSize,
+        isImage: isImageFilter,
+      });
       if (response.status) {
         setJourneyList(response.data);
         setTotalItems(response.meta?.itemCount || response.data.length);
@@ -120,12 +124,17 @@ const Journey = () => {
           setUploadedFile(null);
         }
 
+        // Determine if media is an image or YouTube link
+        const isImageMedia = response.data.media && !/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/.test(response.data.media);
+
         form.setFieldsValue({
           year: response.data.year,
+          title: response.data.title || '',
           description: response.data.description,
           media: response.data.media,
           order: response.data.order,
           isActive: response.data.isActive,
+          isImage: isImageMedia,
         });
         setIsModalVisible(true);
       } else {
@@ -179,6 +188,8 @@ const Journey = () => {
       const values = await form.validateFields();
       values.isActive = Boolean(values.isActive);
       values.order = Number(values.order);
+      values.isImage = Boolean(values.isImage); // Always boolean, defaults to false
+      values.title = values.title || '';
 
       // Handle image upload if a new file is selected
       if (uploadedFile && uploadedFile.originFileObj) {
@@ -276,6 +287,11 @@ const Journey = () => {
 
   const columns: ColumnsType<IJourney> = [
     {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
       title: "Year",
       dataIndex: "year",
       key: "year",
@@ -292,17 +308,28 @@ const Journey = () => {
       title: "Media",
       dataIndex: "media",
       key: "media",
-      // width: 120,
-      render: (media) => (
-        <Image
-          src={media || "/placeholder-image.png"}
-          alt="Journey Media"
-          width={80}
-          height={80}
-          style={{ objectFit: "cover", borderRadius: 4 }}
-          fallback="/placeholder-image.png"
-        />
-      ),
+      render: (media) => {
+        // If media is an image, show the image. Otherwise, show the YouTube link as a clickable URL.
+        const isYouTube = typeof media === 'string' && /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/.test(media);
+        if (!media) return null;
+        if (isYouTube) {
+          return (
+            <a href={media} target="_blank" rel="noopener noreferrer">
+              {media}
+            </a>
+          );
+        }
+        return (
+          <Image
+            src={media || "/placeholder-image.png"}
+            alt="Journey Media"
+            width={80}
+            height={80}
+            style={{ objectFit: "cover", borderRadius: 4 }}
+            fallback="/placeholder-image.png"
+          />
+        );
+      },
     },
     {
       title: "Order",
@@ -437,8 +464,17 @@ const Journey = () => {
             initialValues={{
               isActive: true,
               order: 1,
+              isImage: false,
             }}
           >
+            <Form.Item
+              name="title"
+              label="Title"
+              rules={[{ required: true, message: "Please enter a title" }]}
+            >
+              <Input placeholder="Enter journey title" />
+            </Form.Item>
+
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item
@@ -496,25 +532,84 @@ const Journey = () => {
               />
             </Form.Item>
 
-            <Form.Item label="Media (size: 1920x1080px)" name="media">
-              <Upload
-                listType="picture-card"
-                fileList={uploadedFile ? [uploadedFile] : []}
-                onChange={handleUploadChange}
-                beforeUpload={() => false} // Prevent auto upload
-                accept="image/*"
-                maxCount={1}
-              >
-                {!uploadedFile && (
-                  <div>
-                    <UploadOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
-                  </div>
-                )}
-              </Upload>
-              <div style={{ marginTop: 8, fontSize: "12px", color: "#666" }}>
-                Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
-              </div>
+            <Form.Item
+              name="isImage"
+              label="Media Type"
+              valuePropName="checked"
+            >
+              <Switch
+                checkedChildren="Image"
+                unCheckedChildren="YouTube"
+                defaultChecked={false}
+              />
+            </Form.Item>
+
+            <Form.Item
+              shouldUpdate={(prev, curr) => prev.isImage !== curr.isImage}
+            >
+              {({ getFieldValue }) =>
+                getFieldValue("isImage") ? (
+                  <>
+                    <Form.Item 
+                      label="Media (size: 1920x1080px)" 
+                      name="media"
+                      rules={[
+                        {
+                          validator: (_, value) => {
+                            if (uploadedFile && (uploadedFile.status === "done" || uploadedFile.originFileObj)) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(new Error("Please upload an image"));
+                          },
+                        },
+                      ]}
+                    >
+                      <Upload
+                        listType="picture-card"
+                        fileList={uploadedFile ? [uploadedFile] : []}
+                        onChange={handleUploadChange}
+                        beforeUpload={() => false} // Prevent auto upload
+                        accept="image/*"
+                        maxCount={1}
+                      >
+                        {!uploadedFile && (
+                          <div>
+                            <UploadOutlined />
+                            <div style={{ marginTop: 8 }}>Upload</div>
+                          </div>
+                        )}
+                      </Upload>
+                      <div
+                        style={{
+                          marginTop: 8,
+                          fontSize: "12px",
+                          color: "#666",
+                        }}
+                      >
+                        Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
+                      </div>
+                    </Form.Item>
+                  </>
+                ) : (
+                  <Form.Item
+                    label="YouTube Video URL"
+                    name="media"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter a YouTube video URL",
+                      },
+                      {
+                        pattern:
+                          /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)[\w-]{11}(\?.*)?$/,
+                        message: "Enter a valid YouTube URL",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." />
+                  </Form.Item>
+                )
+              }
             </Form.Item>
 
             <Form.Item name="isActive" label="Status" valuePropName="checked">

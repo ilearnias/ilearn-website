@@ -1,10 +1,17 @@
 import apiRequest from "@/config/apiRequest";
 import { API_ENDPOINTS } from "@/config/api";
 
+export interface IGalleryImage {
+  subtitle: string;
+  description: string;
+  image: string;
+}
+
 export interface IGalleryItem {
   id: string;
   title: string;
-  images: string[];
+  description: string;
+  images: IGalleryImage[];
   order: number;
   isActive: boolean;
   createdAt: string;
@@ -34,10 +41,10 @@ export const galleryService = {
     }
   },
 
-  getAllItems: async () => {
+  getAllItems: async (page = 1, limit = 10) => {
     try {
       const response = await apiRequest.get(
-        API_ENDPOINTS.ADMIN.GALLERY.ITEMS.LIST
+        `${API_ENDPOINTS.ADMIN.GALLERY.ITEMS.LIST}?page=${page}&limit=${limit}`
       );
       if (!response.status) {
         throw new Error(response.message || "Failed to fetch gallery items");
@@ -46,6 +53,7 @@ export const galleryService = {
       return {
         status: true,
         data: response.data,
+        meta: response.meta,
         message: "Gallery items fetched successfully",
       };
     } catch (error) {
