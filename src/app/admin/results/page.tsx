@@ -146,6 +146,8 @@ const Results = () => {
       setEditingResult(record);
       form.setFieldsValue({
         ...record,
+        title: record.title || '',
+        aspectRatio: record.aspectRatio || '',
       });
       setThumbnailFile(
         record.thumbnail
@@ -197,6 +199,8 @@ const Results = () => {
       const values = await form.validateFields();
       // Ensure isActive is boolean (Switch already does this, but for safety)
       values.isActive = Boolean(values.isActive);
+      values.title = values.title || '';
+      values.aspectRatio = values.aspectRatio || '';
 
       // Handle thumbnail upload
       let thumbnailUrl = values.thumbnail;
@@ -317,6 +321,11 @@ const Results = () => {
   );
 
   const columns: ColumnsType<IResult> = [
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
     {
       title: "Year",
       dataIndex: "year",
@@ -490,6 +499,13 @@ const Results = () => {
         width={800}
       >
         <Form form={form} layout="vertical">
+          <Form.Item
+            name="title"
+            label="Title"
+            rules={[{ required: true, message: "Please enter a title" }]}
+          >
+            <Input placeholder="Enter result title" />
+          </Form.Item>
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
@@ -511,27 +527,41 @@ const Results = () => {
               </Form.Item>
             </Col>
 
-            <Col span={24}>
-              <Form.Item
-                name="thumbnail"
-                label="Thumbnail Image"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please Upload A Thumbnail Image",
-                  },
-                ]}
-              >
-                <Upload {...uploadProps}>
-                  {thumbnailFile.length === 0 && (
-                    <div>
-                      <PlusOutlined />
-                      <div style={{ marginTop: 8 }}>Upload</div>
-                    </div>
-                  )}
-                </Upload>
-              </Form.Item>
-            </Col>
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  name="thumbnail"
+                  label="Thumbnail Image"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please Upload A Thumbnail Image",
+                    },
+                  ]}
+                >
+                  <Upload {...uploadProps}>
+                    {thumbnailFile.length === 0 && (
+                      <div>
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                      </div>
+                    )}
+                  </Upload>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  name="aspectRatio"
+                  label="Aspect Ratio"
+                  rules={[{ required: true, message: "Please select an aspect ratio" }]}
+                >
+                  <Select placeholder="Select aspect ratio">
+                    <Select.Option value="landscape">Landscape</Select.Option>
+                    <Select.Option value="portrait">Portrait</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
 
             <Col span={24}>
               <Form.Item
