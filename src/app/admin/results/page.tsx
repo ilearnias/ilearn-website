@@ -141,7 +141,7 @@ const Results = () => {
     setIsModalVisible(true);
   };
 
-  const handleEdit = (record: IResult) => {
+  const handleEdit = (record: any) => {
     if (record) {
       setEditingResult(record);
       form.setFieldsValue({
