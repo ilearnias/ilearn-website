@@ -235,6 +235,18 @@ class ResultService {
       throw error;
     }
   }
+
+  // Upload a single image and return its URL
+  async uploadSingleImage(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file); // field name must be 'file'
+    const response = await apiRequest.upload("/v1/upload/image", formData);
+    if (response.status && response.data) {
+      // If backend returns { data: { url: '...' } }
+      return response.data.url || response.data;
+    }
+    throw new Error(response.message || "Failed to upload image");
+  }
 }
 
 export const resultService = new ResultService();
