@@ -56,9 +56,33 @@ class ProgrammeService {
       if (search) {
         params.append("search", search);
       }
-      return await apiRequest.get<IProgramme[]>(
-        `${API_ENDPOINTS.PUBLIC.PROGRAMS}?${params}`
+      const response = await apiRequest.get<any>(
+        `${API_ENDPOINTS.ADMIN.PROGRAMS.LIST}?${params}`
       );
+
+      // Handle both possible response structures
+      if (response.status) {
+        // If response.data is an array, use it directly
+        if (Array.isArray(response.data)) {
+          return response;
+        }
+        // If response.data.data is an array (paginated structure), use that
+        else if (response.data && Array.isArray(response.data.data)) {
+          return {
+            ...response,
+            data: response.data.data,
+          };
+        }
+        // If response.data is an object with data property
+        else if (response.data && response.data.data) {
+          return {
+            ...response,
+            data: response.data.data,
+          };
+        }
+      }
+
+      return response;
     } catch (error) {
       console.error("Error fetching programmes:", error);
       throw error;

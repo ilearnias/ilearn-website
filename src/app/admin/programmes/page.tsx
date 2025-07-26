@@ -159,6 +159,10 @@ const Programmes = () => {
         values.endDate = values.endDate.format("YYYY-MM-DD");
       }
 
+      // Ensure isActive is boolean (default to true if not provided)
+      values.isActive =
+        values.isActive !== undefined ? Boolean(values.isActive) : true;
+
       // Only send allowed fields
       const allowedFields = [
         "title",
