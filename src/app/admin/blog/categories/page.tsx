@@ -65,7 +65,7 @@ const BlogCategories = () => {
       const response = await blogService.getAllCategories({
         page: meta.page,
         limit: meta.limit,
-        search: searchText,
+        ...(searchText.trim() && { search: searchText.trim() }), // Only add search if there's a search term
       });
       if (response.status) {
         setCategories(response.data);
@@ -299,7 +299,7 @@ const BlogCategories = () => {
 
       <div className="blog-categories-controls">
         <Input
-          placeholder="Search categories..."
+          placeholder="Search categories by title or description..."
           prefix={<SearchOutlined />}
           onChange={handleSearch}
           style={{ maxWidth: 300 }}

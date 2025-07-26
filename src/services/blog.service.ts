@@ -54,6 +54,7 @@ class BlogService {
   async getAllPosts(params?: {
     page?: number;
     limit?: number;
+    search?: string;
   }): Promise<ApiResponse<IBlogPost[]>> {
     try {
       return await apiRequest.get<IBlogPost[]>(

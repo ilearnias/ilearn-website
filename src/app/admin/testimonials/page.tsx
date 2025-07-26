@@ -185,19 +185,13 @@ const Testimonials = () => {
             setMediaList((prev) =>
               prev.filter((item) => item.id !== record.id)
             );
-            setMeta((prev) => ({
-              ...prev,
-              itemCount: prev.itemCount - 1,
-            }));
+            setMeta((prev) => ({ ...prev, itemCount: prev.itemCount - 1 }));
 
             // If this was the last item on the current page, go to previous page
             const isLastItemOnPage = mediaList.length === 1 && meta.page > 1;
             if (isLastItemOnPage) {
-              setMeta((prev) => ({
-                ...prev,
-                page: prev.page - 1,
-              }));
-              // fetchMedia will be triggered by useEffect when meta.page changes
+              setMeta((prev) => ({ ...prev, page: prev.page - 1 }));
+              // fetchMedia will be triggered by useEffect when currentPage changes
             }
 
             message.success("Testimonial deleted successfully");

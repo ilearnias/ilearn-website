@@ -134,8 +134,13 @@ const Programmes = () => {
             message.success(
               response.message || "Programme deleted successfully"
             );
-            // Optimistically remove the deleted record:
-            setProgrammes((prev) => prev.filter((p) => p.id !== record.id));
+            // If the current page is now empty and not the first page, go to the previous page
+            const isLastItemOnPage = programmes.length === 1 && meta.page > 1;
+            if (isLastItemOnPage) {
+              fetchProgrammes(meta.page - 1, meta.limit, searchText);
+            } else {
+              fetchProgrammes(meta.page, meta.limit, searchText);
+            }
           } else {
             console.error("Delete error:", response);
             message.error(response.message || "Failed to delete programme");
