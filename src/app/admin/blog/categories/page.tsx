@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   Input,
@@ -30,6 +30,7 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import { blogService, IBlogCategory } from "@/services/blog.service";
 import "./styles.scss";
+import { debounce } from "lodash";
 
 const { confirm } = Modal;
 const { TextArea } = Input;
@@ -44,16 +45,41 @@ const BlogCategories = () => {
   );
   const [form] = Form.useForm();
 
+  // Add pagination state
+  const [meta, setMeta] = useState({
+    page: 1,
+    limit: 10,
+    itemCount: 0,
+    totalPages: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [meta.page, meta.limit, searchText]); // Add dependencies
 
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const response = await blogService.getAllCategories();
+      const response = await blogService.getAllCategories({
+        page: meta.page,
+        limit: meta.limit,
+        search: searchText,
+      });
       if (response.status) {
         setCategories(response.data);
+        // Update meta information
+        setMeta(
+          response.meta || {
+            page: meta.page,
+            limit: meta.limit,
+            itemCount: response.data.length,
+            totalPages: Math.ceil(response.data.length / meta.limit),
+            hasPreviousPage: meta.page > 1,
+            hasNextPage: meta.page * meta.limit < response.data.length,
+          }
+        );
       } else {
         message.error(response.message || "Failed to fetch categories");
       }
@@ -64,6 +90,23 @@ const BlogCategories = () => {
       setLoading(false);
     }
   };
+
+  // Add debounced search
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      setSearchText(value);
+      setMeta((prev) => ({ ...prev, page: 1 })); // Reset to first page on search
+    }, 500),
+    []
+  );
+
+  // Update the search input handler
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(e.target.value);
+  };
+
+  // Remove client-side filtering since we're using server-side search
+  // const filteredCategories = categories;
 
   const handleAdd = () => {
     setEditingCategory(null);
@@ -140,16 +183,6 @@ const BlogCategories = () => {
     setIsModalVisible(false);
     form.resetFields();
   };
-
-  const filteredCategories = categories.filter(
-    (category) =>
-      (category.title?.toLowerCase() || "").includes(
-        searchText.toLowerCase()
-      ) ||
-      (category.description?.toLowerCase() || "").includes(
-        searchText.toLowerCase()
-      )
-  );
 
   const columns: ColumnsType<IBlogCategory> = [
     {
@@ -268,9 +301,9 @@ const BlogCategories = () => {
         <Input
           placeholder="Search categories..."
           prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={handleSearch}
           style={{ maxWidth: 300 }}
+          allowClear
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           Add Category
@@ -280,9 +313,26 @@ const BlogCategories = () => {
       <Table
         className="blog-categories-table"
         columns={columns}
-        dataSource={filteredCategories}
+        dataSource={categories}
         rowKey="id"
         loading={loading}
+        pagination={{
+          current: meta.page,
+          pageSize: meta.limit,
+          total: meta.itemCount,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+          onChange: (page, pageSize) => {
+            setMeta((prev) => ({
+              ...prev,
+              page: page,
+              limit: pageSize || prev.limit,
+            }));
+          },
+          pageSizeOptions: ["10", "20", "50", "100"],
+        }}
       />
 
       <Modal
