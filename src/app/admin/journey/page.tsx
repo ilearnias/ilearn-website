@@ -65,9 +65,20 @@ const Journey = () => {
     },
   };
 
+  // Initial fetch
   useEffect(() => {
     fetchJourney();
   }, [currentPage, pageSize]);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCurrentPage(1); // Reset to first page when searching
+      fetchJourney(); // Call fetchJourney directly to ensure search works
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [searchText]);
 
   const fetchJourney = async () => {
     try {
@@ -76,6 +87,7 @@ const Journey = () => {
         page: currentPage,
         limit: pageSize,
         isImage: isImageFilter,
+        ...(searchText.trim() && { search: searchText.toLowerCase().trim() }), // Only add search if there's a search term
       });
       if (response.status) {
         setJourneyList(response.data);
@@ -439,7 +451,7 @@ const Journey = () => {
 
       <div className="journey-controls">
         <Input
-          placeholder="Search journey by description or year..."
+          placeholder="Search journey by title, description, or year..."
           prefix={<SearchOutlined />}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
