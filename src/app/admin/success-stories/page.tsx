@@ -65,8 +65,18 @@ const SuccessStories = () => {
     hasNextPage: false,
   });
 
+  // Initial fetch
   useEffect(() => {
-    fetchStories(meta.page, meta.limit, searchText);
+    fetchStories(1, meta.limit, "");
+  }, []);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchStories(1, meta.limit, searchText);
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timeoutId);
   }, [searchText]);
 
   const fetchStories = async (page = 1, limit = 10, search = "") => {
@@ -75,7 +85,7 @@ const SuccessStories = () => {
       const response = await successStoryService.getAllSuccessStories(
         page,
         limit,
-        search
+        search.trim() || ""
       );
       if (response.status) {
         setStories(response.data);
@@ -133,7 +143,7 @@ const SuccessStories = () => {
             message.success(
               response.message || "Success story deleted successfully"
             );
-            fetchStories();
+            fetchStories(1, meta.limit, searchText);
           } else {
             message.error(response.message || "Failed to delete success story");
           }
@@ -178,7 +188,7 @@ const SuccessStories = () => {
             response.message || "Success story updated successfully"
           );
           setIsModalVisible(false);
-          fetchStories();
+          fetchStories(1, meta.limit, searchText);
         } else {
           message.error(response.message || "Failed to update success story");
         }
@@ -189,7 +199,7 @@ const SuccessStories = () => {
             response.message || "Success story created successfully"
           );
           setIsModalVisible(false);
-          fetchStories();
+          fetchStories(1, meta.limit, searchText);
         } else {
           message.error(response.message || "Failed to create success story");
         }
@@ -225,13 +235,7 @@ const SuccessStories = () => {
     }
   };
 
-  const filteredStories = stories.filter(
-    (story) =>
-      (story.name?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-      (story.description?.toLowerCase() || "").includes(
-        searchText.toLowerCase()
-      )
-  );
+  // Remove client-side filtering since we're using server-side search
 
   const columns: ColumnsType<ISuccessStory> = [
     {
@@ -341,11 +345,12 @@ const SuccessStories = () => {
 
       <div className="success-stories-controls">
         <Input
-          placeholder="Search stories..."
+          placeholder="Search stories by name or description..."
           prefix={<SearchOutlined />}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ maxWidth: 300 }}
+          allowClear
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           Add Story
@@ -355,7 +360,7 @@ const SuccessStories = () => {
       <Table
         className="success-stories-table"
         columns={columns}
-        dataSource={stories} // Use stories directly since filtering is done on server
+        dataSource={stories}
         rowKey="id"
         loading={loading}
         pagination={{

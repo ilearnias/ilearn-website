@@ -41,11 +41,13 @@ export const galleryService = {
     }
   },
 
-  getAllItems: async (page = 1, limit = 10) => {
+  getAllItems: async (page = 1, limit = 10, search = "") => {
     try {
-      const response = await apiRequest.get(
-        `${API_ENDPOINTS.ADMIN.GALLERY.ITEMS.LIST}?page=${page}&limit=${limit}`
-      );
+      let url = `${API_ENDPOINTS.ADMIN.GALLERY.ITEMS.LIST}?page=${page}&limit=${limit}`;
+      if (search && search.trim()) {
+        url += `&search=${encodeURIComponent(search.trim())}`;
+      }
+      const response = await apiRequest.get(url);
       if (!response.status) {
         throw new Error(response.message || "Failed to fetch gallery items");
       }

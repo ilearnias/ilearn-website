@@ -41,7 +41,7 @@ export const mediaService = {
     try {
       const response = await apiRequest.get(
         `/v1/media?page=${page}&limit=${limit}&isTestimonial=${isTestimonial}${
-          search ? `&search=${search}` : ""
+          search ? `&search=${encodeURIComponent(search)}` : ""
         }`
       );
       if (!response.status) {

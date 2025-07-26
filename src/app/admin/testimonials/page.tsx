@@ -185,12 +185,12 @@ const Testimonials = () => {
             setMediaList((prev) =>
               prev.filter((item) => item.id !== record.id)
             );
-            setTotalItems((prev) => prev - 1);
+            setMeta((prev) => ({ ...prev, itemCount: prev.itemCount - 1 }));
 
             // If this was the last item on the current page, go to previous page
-            const isLastItemOnPage = mediaList.length === 1 && currentPage > 1;
+            const isLastItemOnPage = mediaList.length === 1 && meta.page > 1;
             if (isLastItemOnPage) {
-              setCurrentPage((prev) => prev - 1);
+              setMeta((prev) => ({ ...prev, page: prev.page - 1 }));
               // fetchMedia will be triggered by useEffect when currentPage changes
             }
 
@@ -273,13 +273,6 @@ const Testimonials = () => {
     setEditingMedia(null);
     form.resetFields();
     setThumbnailFile([]);
-  };
-
-  const handlePageChange = (page: number, size?: number) => {
-    setCurrentPage(page);
-    if (size && size !== pageSize) {
-      setPageSize(size);
-    }
   };
 
   const handleThumbnailChange = ({ fileList }: { fileList: UploadFile[] }) => {
