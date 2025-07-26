@@ -68,12 +68,11 @@ const ResultsSummary = () => {
         limit: pagination.limit,
       });
 
-      const response = await resultService.getAllResultSummaries(
+      const response : any= await resultService.getAllResultSummaries(
         pagination.page,
         pagination.limit
       );
 
-      console.log("Full API Response:", response);
 
       if (response.status) {
         setData(response.data || []);
