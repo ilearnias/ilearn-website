@@ -62,7 +62,7 @@ const Programmes = () => {
     fetchProgrammes();
   }, []);
 
-  const fetchProgrammes = async () => {
+    const fetchProgrammes = async () => {
     try {
       setLoading(true);
       const response = await programmeService.getAllProgrammes();
@@ -91,6 +91,7 @@ const Programmes = () => {
       ...record,
       startDate: record.startDate ? dayjs(record.startDate) : undefined,
       endDate: record.endDate ? dayjs(record.endDate) : undefined,
+      isActive: record.isActive !== undefined ? record.isActive : true, // Default to true if not provided
     });
     setIsModalVisible(true);
   };
@@ -134,6 +135,9 @@ const Programmes = () => {
       if (values.endDate) {
         values.endDate = values.endDate.format("YYYY-MM-DD");
       }
+      
+      // Ensure isActive is boolean (default to true if not provided)
+      values.isActive = values.isActive !== undefined ? Boolean(values.isActive) : true;
     
       // Only send allowed fields
       const allowedFields = [
@@ -253,6 +257,20 @@ const Programmes = () => {
       dataIndex: "status",
       key: "status",
       render: (status) => <Tag color={getStatusColor(status)}>{status}</Tag>,
+    },
+    {
+      title: "Is Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive) => {
+        // Default to true if isActive is not provided (for future compatibility)
+        const isActiveStatus = isActive !== undefined ? isActive : true;
+        return (
+          <Tag color={isActiveStatus ? "green" : "red"}>
+            {isActiveStatus ? "Active" : "Inactive"}
+          </Tag>
+        );
+      },
     },
     // {
     //   title: "Enrollments",
@@ -377,6 +395,20 @@ const Programmes = () => {
           >
             <Input.TextArea rows={4} />
           </Form.Item>
+
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                name="isActive"
+                label="Is Active"
+                valuePropName="checked"
+                initialValue={true}
+                extra="Note: This field will be functional when the backend supports it. Currently defaults to Active."
+              >
+                <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Modal>
     </div>

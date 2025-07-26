@@ -10,7 +10,7 @@ export interface IProgramme {
   price: number;
   enrollments: number;
   order?: number | null;
-  isActive: boolean;
+  isActive?: boolean; // Made optional since backend doesn't have this field yet
   createdAt: string;
   updatedAt: string;
   deletedAt?: string | null;
@@ -30,7 +30,7 @@ export interface IProgrammeCreate {
   status: 'Active' | 'Inactive' | 'active' | 'inactive';
   price: number;
   order?: number;
-  isActive?: boolean;
+  isActive?: boolean; // Optional since backend doesn't support this yet
   // Optional fields
   category?: string;
   startDate?: string;
@@ -49,7 +49,31 @@ class ProgrammeService {
         page: page.toString(),
         limit: limit.toString()
       });
-      return await apiRequest.get<IProgramme[]>(`${API_ENDPOINTS.PUBLIC.PROGRAMS}?${params}`);
+      const response = await apiRequest.get<any>(`${API_ENDPOINTS.ADMIN.PROGRAMS.LIST}?${params}`);
+      
+      // Handle both possible response structures
+      if (response.status) {
+        // If response.data is an array, use it directly
+        if (Array.isArray(response.data)) {
+          return response;
+        }
+        // If response.data.data is an array (paginated structure), use that
+        else if (response.data && Array.isArray(response.data.data)) {
+          return {
+            ...response,
+            data: response.data.data
+          };
+        }
+        // If response.data is an object with data property
+        else if (response.data && response.data.data) {
+          return {
+            ...response,
+            data: response.data.data
+          };
+        }
+      }
+      
+      return response;
     } catch (error) {
       console.error('Error fetching programmes:', error);
       throw error;
