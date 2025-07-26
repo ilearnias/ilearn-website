@@ -543,6 +543,7 @@ const Testimonials = () => {
                 >
                   <InputNumber
                     min={1}
+                    type="number"
                     style={{ width: "100%" }}
                     placeholder="1"
                   />

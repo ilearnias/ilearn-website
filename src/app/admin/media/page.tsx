@@ -481,8 +481,8 @@ const Media = () => {
 
             <Form.Item
               name="video"
-              label="Video ID"
-              rules={[{ required: true, message: "Please enter video ID" }]}
+              label="Video Url"
+              rules={[{ required: true, message: "Please enter video Url" }]}
             >
               <Input
                 allowClear
@@ -507,6 +507,7 @@ const Media = () => {
                 >
                   <InputNumber
                     min={1}
+                    type="number"
                     style={{ width: "100%" }}
                     placeholder="1"
                   />

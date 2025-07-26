@@ -385,23 +385,31 @@ const Achievers = () => {
 
             <Form.Item
               name="details"
-              label="Details"
-              rules={[{ required: true, message: "Please enter details" }]}
+              label="Rank"
+              rules={[{ required: true, message: "Please enter rank" }]}
             >
-              <Input placeholder="Enter achiever details" />
+              <Input type="number"  placeholder="Enter achiever rank" />
             </Form.Item>
 
             <Form.Item
               name="description"
-              label="Description"
-              rules={[{ required: true, message: "Please enter description" }]}
+              label="Year"
+              rules={[
+                { required: true, message: "Please enter year" },
+                { 
+                  pattern: /^\d{4}$/, 
+                  message: "Please enter a valid 4-digit year (e.g., 2024)" 
+                },
+                { 
+                  validator: (_, value) => {
+                  
+                    return Promise.resolve();
+                  }
+                }
+              ]}
             >
-              <TextArea
-                rows={4}
-                placeholder="Enter detailed description"
-                maxLength={500}
-                showCount
-              />
+               <Input type="number"   placeholder="Enter Year (e.g., 2024)" />
+            
             </Form.Item>
 
             <Form.Item
@@ -484,6 +492,7 @@ const Achievers = () => {
             >
               <InputNumber
                 min={1}
+                type="number"
                 style={{ width: "100%" }}
                 placeholder="Enter display order (1, 2, 3...)"
               />

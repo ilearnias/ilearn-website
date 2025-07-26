@@ -471,7 +471,7 @@ const GalleryPage = () => {
             label="Order"
             rules={[{ required: true, message: "Please input the order!" }]}
           >
-            <InputNumber min={1} style={{ width: "100%" }} />
+            <InputNumber type="number" min={1} style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="isActive"

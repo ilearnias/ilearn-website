@@ -488,7 +488,7 @@ const Journey = () => {
                     },
                   ]}
                 >
-                  <Input placeholder="2023" />
+                  <Input type="number" placeholder="2023" />
                 </Form.Item>
               </Col>
               <Col span={12}>
@@ -506,6 +506,7 @@ const Journey = () => {
                 >
                   <InputNumber
                     min={1}
+                    type="number"
                     style={{ width: "100%" }}
                     placeholder="1"
                   />
@@ -592,7 +593,7 @@ const Journey = () => {
                   </>
                 ) : (
                   <Form.Item
-                    label="YouTube Video URL"
+                    label="Video URL"
                     name="media"
                     rules={[
                       {

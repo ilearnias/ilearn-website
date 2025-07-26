@@ -410,8 +410,8 @@ const BlogPosts = () => {
             <Col span={12}>
               <Form.Item
                 name="link"
-                label="Link URL"
-                rules={[{ required: true, message: "Please enter link URL" }]}
+                label="Link "
+                rules={[{ required: true, message: "Please enter link " }]}
               >
                 <Input />
               </Form.Item>
@@ -436,7 +436,7 @@ const BlogPosts = () => {
                   { required: true, message: "Please enter display order" },
                 ]}
               >
-                <InputNumber min={1} style={{ width: "100%" }} />
+                <InputNumber type="number" min={1} style={{ width: "100%" }} />
               </Form.Item>
             </Col>
             <Col span={6}>

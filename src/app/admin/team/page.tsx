@@ -519,6 +519,7 @@ const Team = () => {
               >
                 <InputNumber
                   min={1}
+                  type="number"
                   style={{ width: "100%" }}
                   placeholder="Enter display order (1, 2, 3...)"
                 />
