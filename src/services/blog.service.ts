@@ -116,10 +116,15 @@ class BlogService {
   }
 
   // Blog Categories
-  async getAllCategories(): Promise<ApiResponse<IBlogCategory[]>> {
+  async getAllCategories(params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }): Promise<ApiResponse<IBlogCategory[]>> {
     try {
       return await apiRequest.get<IBlogCategory[]>(
-        API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.LIST
+        API_ENDPOINTS.ADMIN.BLOG.CATEGORIES.LIST,
+        params ? { params } : undefined
       );
     } catch (error) {
       console.error("Error fetching blog categories:", error);

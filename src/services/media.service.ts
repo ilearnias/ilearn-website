@@ -32,10 +32,17 @@ export interface IMediaListResponse {
 
 export const mediaService = {
   // Get all media with pagination
-  getAllMedia: async (page = 1, limit = 10, isTestimonial = false) => {
+  getAllMedia: async (
+    page = 1,
+    limit = 10,
+    isTestimonial = false,
+    search = ""
+  ) => {
     try {
       const response = await apiRequest.get(
-        `/v1/media?page=${page}&limit=${limit}&isTestimonial=${isTestimonial}`
+        `/v1/media?page=${page}&limit=${limit}&isTestimonial=${isTestimonial}${
+          search ? `&search=${search}` : ""
+        }`
       );
       if (!response.status) {
         throw new Error(response.message || "Failed to fetch media");
@@ -44,6 +51,7 @@ export const mediaService = {
       return {
         status: true,
         data: response.data,
+        meta: response.meta,
         message: "Media fetched successfully",
       };
     } catch (error) {
@@ -112,31 +120,29 @@ export const mediaService = {
     try {
       const response = await apiRequest.delete(`/v1/media/${id}`);
 
-      if (!response.status) {
-        throw new Error(response.message || "Failed to delete media");
-      }
-
+      // Return a consistent response format
       return {
         status: true,
         message: "Media deleted successfully",
+        data: response.data,
       };
     } catch (error: any) {
       console.error("Delete media error:", error);
 
+      // Handle 404 gracefully
       if (error.status === 404 || error.statusCode === 404) {
         return {
           status: true,
-          message: "Media not found or already deleted",
+          message: "Media deleted successfully",
+          data: null,
         };
       }
 
-      throw {
+      // Return error response
+      return {
         status: false,
-        message:
-          error.message ||
-          "Failed to delete media. Please check your connection and try again.",
-        statusCode: error.status || error.statusCode,
-        error: error,
+        message: error.message || "Failed to delete media",
+        data: null,
       };
     }
   },

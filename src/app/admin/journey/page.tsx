@@ -125,11 +125,15 @@ const Journey = () => {
         }
 
         // Determine if media is an image or YouTube link
-        const isImageMedia = response.data.media && !/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/.test(response.data.media);
+        const isImageMedia =
+          response.data.media &&
+          !/^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/.test(
+            response.data.media
+          );
 
         form.setFieldsValue({
           year: response.data.year,
-          title: response.data.title || '',
+          title: response.data.title || "",
           description: response.data.description,
           media: response.data.media,
           order: response.data.order,
@@ -159,17 +163,33 @@ const Journey = () => {
         try {
           setLoading(true);
           const response = await journeyService.deleteJourney(record.id);
+
           if (response.status) {
-            message.success(
-              response.message || "Journey item deleted successfully"
+            // Optimistically update UI
+            setJourneyList((prev) =>
+              prev.filter((item) => item.id !== record.id)
             );
-            fetchJourney();
+            setTotalItems((prev) => prev - 1);
+
+            // If this was the last item on the current page, go to previous page
+            const isLastItemOnPage =
+              journeyList.length === 1 && currentPage > 1;
+            if (isLastItemOnPage) {
+              setCurrentPage((prev) => prev - 1);
+              // fetchJourney will be triggered by useEffect when currentPage changes
+            }
+
+            message.success("Journey item deleted successfully");
           } else {
+            // Show error message and refetch to ensure UI is in sync
             message.error(response.message || "Failed to delete journey item");
+            fetchJourney();
           }
         } catch (error: any) {
-          message.error(error.message || "Failed to delete journey item");
           console.error("Error deleting journey item:", error);
+          message.error("Failed to delete journey item");
+          // Refetch data if deletion failed to ensure UI is in sync
+          fetchJourney();
         } finally {
           setLoading(false);
         }
@@ -189,7 +209,7 @@ const Journey = () => {
       values.isActive = Boolean(values.isActive);
       values.order = Number(values.order);
       values.isImage = Boolean(values.isImage); // Always boolean, defaults to false
-      values.title = values.title || '';
+      values.title = values.title || "";
 
       // Handle image upload if a new file is selected
       if (uploadedFile && uploadedFile.originFileObj) {
@@ -310,7 +330,11 @@ const Journey = () => {
       key: "media",
       render: (media) => {
         // If media is an image, show the image. Otherwise, show the YouTube link as a clickable URL.
-        const isYouTube = typeof media === 'string' && /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/.test(media);
+        const isYouTube =
+          typeof media === "string" &&
+          /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)/.test(
+            media
+          );
         if (!media) return null;
         if (isYouTube) {
           return (
@@ -551,16 +575,22 @@ const Journey = () => {
               {({ getFieldValue }) =>
                 getFieldValue("isImage") ? (
                   <>
-                    <Form.Item 
-                      label="Media (size: 1920x1080px)" 
+                    <Form.Item
+                      label="Media (size: 1920x1080px)"
                       name="media"
                       rules={[
                         {
                           validator: (_, value) => {
-                            if (uploadedFile && (uploadedFile.status === "done" || uploadedFile.originFileObj)) {
+                            if (
+                              uploadedFile &&
+                              (uploadedFile.status === "done" ||
+                                uploadedFile.originFileObj)
+                            ) {
                               return Promise.resolve();
                             }
-                            return Promise.reject(new Error("Please upload an image"));
+                            return Promise.reject(
+                              new Error("Please upload an image")
+                            );
                           },
                         },
                       ]}

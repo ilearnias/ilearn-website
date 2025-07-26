@@ -107,11 +107,37 @@ class JourneyService {
   }
 
   async deleteJourney(id: string) {
-    const response = await apiRequest.delete<{
-      status: boolean;
-      message: string;
-    }>(`/v1/journey/${id}`);
-    return response.data;
+    try {
+      const response = await apiRequest.delete<{
+        status: boolean;
+        message: string;
+      }>(`/v1/journey/${id}`);
+
+      // Return a consistent response format
+      return {
+        status: true,
+        message: "Journey item deleted successfully",
+        data: response.data,
+      };
+    } catch (error: any) {
+      console.error("Delete journey error:", error);
+
+      // Handle 404 gracefully
+      if (error.status === 404 || error.statusCode === 404) {
+        return {
+          status: true,
+          message: "Journey item deleted successfully",
+          data: null,
+        };
+      }
+
+      // Return error response
+      return {
+        status: false,
+        message: error.message || "Failed to delete journey item",
+        data: null,
+      };
+    }
   }
 
   async uploadSingleImage(file: File): Promise<string> {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   Input,
@@ -21,6 +21,7 @@ import {
   DatePicker,
   Switch,
 } from "antd";
+import { debounce } from "lodash";
 import {
   SearchOutlined,
   PlusOutlined,
@@ -56,18 +57,32 @@ const Programmes = () => {
     null
   );
   const [form] = Form.useForm();
+  // Add pagination state
+  const [meta, setMeta] = useState({
+    page: 1,
+    limit: 10,
+    itemCount: 0,
+    totalPages: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
 
   // Fetch programmes on component mount
   useEffect(() => {
-    fetchProgrammes();
-  }, []);
+    fetchProgrammes(meta.page, meta.limit, searchText);
+  }, [searchText]);
 
-  const fetchProgrammes = async () => {
+  const fetchProgrammes = async (page = 1, limit = 10, search = "") => {
     try {
       setLoading(true);
-      const response = await programmeService.getAllProgrammes();
+      const response = await programmeService.getAllProgrammes(
+        page,
+        limit,
+        search
+      );
       if (response.status) {
         setProgrammes(response.data);
+        setMeta(response.meta || {});
       } else {
         message.error(response.message || "Failed to fetch programmes");
       }
@@ -78,6 +93,15 @@ const Programmes = () => {
       setLoading(false);
     }
   };
+
+  // Debounce search to avoid too many API calls
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      setSearchText(value);
+      fetchProgrammes(1, meta.limit, value); // Reset to first page on search
+    }, 500),
+    []
+  );
 
   const handleAdd = () => {
     setEditingProgramme(null);
@@ -134,7 +158,7 @@ const Programmes = () => {
       if (values.endDate) {
         values.endDate = values.endDate.format("YYYY-MM-DD");
       }
-    
+
       // Only send allowed fields
       const allowedFields = [
         "title",
@@ -142,7 +166,7 @@ const Programmes = () => {
         "description",
         "duration",
         "status",
-        
+
         "order",
         "isActive",
         "category",
@@ -165,7 +189,7 @@ const Programmes = () => {
         if (response.status) {
           message.success(response.message || "Programme updated successfully");
           setIsModalVisible(false);
-          fetchProgrammes();
+          fetchProgrammes(meta.page, meta.limit, searchText);
         } else {
           console.error("Update error:", response);
           message.error(response.message || "Failed to update programme");
@@ -177,7 +201,7 @@ const Programmes = () => {
         if (response.status) {
           message.success(response.message || "Programme created successfully");
           setIsModalVisible(false);
-          fetchProgrammes();
+          fetchProgrammes(1, meta.limit, searchText); // Go to first page when creating new item
         } else {
           message.error(response.message || "Failed to create programme");
         }
@@ -247,7 +271,7 @@ const Programmes = () => {
     //     <Tag color={getCategoryColor(category)}>{category}</Tag>
     //   ),
     // },
-   
+
     {
       title: "Status",
       dataIndex: "status",
@@ -260,7 +284,7 @@ const Programmes = () => {
     //   key: "enrollments",
     //   sorter: (a, b) => (a.enrollments || 0) - (b.enrollments || 0),
     // },
-  
+
     {
       title: "Actions",
       key: "actions",
@@ -303,8 +327,7 @@ const Programmes = () => {
         <Input
           placeholder="Search programmes..."
           prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={(e) => debouncedSearch(e.target.value)}
           style={{ maxWidth: 300 }}
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
@@ -315,9 +338,18 @@ const Programmes = () => {
       <Table
         className="programmes-table"
         columns={columns}
-        dataSource={filteredProgrammes}
+        dataSource={programmes} // Use programmes directly since filtering is done on server
         rowKey="id"
         loading={loading}
+        pagination={{
+          current: meta.page,
+          pageSize: meta.limit,
+          total: meta.itemCount,
+          showSizeChanger: true,
+          pageSizeOptions: ["10", "20", "50", "100"],
+          onChange: (page, pageSize) =>
+            fetchProgrammes(page, pageSize, searchText),
+        }}
       />
 
       <Modal

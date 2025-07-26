@@ -56,17 +56,30 @@ const SuccessStories = () => {
   const [editingStory, setEditingStory] = useState<ISuccessStory | null>(null);
   const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
+  const [meta, setMeta] = useState({
+    page: 1,
+    limit: 10,
+    itemCount: 0,
+    totalPages: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
 
   useEffect(() => {
-    fetchStories();
-  }, []);
+    fetchStories(meta.page, meta.limit, searchText);
+  }, [searchText]);
 
-  const fetchStories = async () => {
+  const fetchStories = async (page = 1, limit = 10, search = "") => {
     try {
       setLoading(true);
-      const response = await successStoryService.getAllSuccessStories();
+      const response = await successStoryService.getAllSuccessStories(
+        page,
+        limit,
+        search
+      );
       if (response.status) {
         setStories(response.data);
+        setMeta(response.meta || {});
       } else {
         message.error(response.message || "Failed to fetch success stories");
       }
@@ -342,9 +355,18 @@ const SuccessStories = () => {
       <Table
         className="success-stories-table"
         columns={columns}
-        dataSource={filteredStories}
+        dataSource={stories} // Use stories directly since filtering is done on server
         rowKey="id"
         loading={loading}
+        pagination={{
+          current: meta.page,
+          pageSize: meta.limit,
+          total: meta.itemCount,
+          showSizeChanger: true,
+          pageSizeOptions: ["10", "20", "50", "100"],
+          onChange: (page, pageSize) =>
+            fetchStories(page, pageSize, searchText),
+        }}
       />
 
       <Modal
@@ -371,7 +393,7 @@ const SuccessStories = () => {
                 label="Order"
                 rules={[{ required: true, message: "Please enter order" }]}
               >
-                <InputNumber min={0} style={{ width: "100%" }} />
+                <InputNumber type="number" min={0} style={{ width: "100%" }} />
               </Form.Item>
             </Col>
           </Row>
