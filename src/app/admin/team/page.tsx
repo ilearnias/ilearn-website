@@ -58,10 +58,10 @@ const Team = () => {
   });
 
   // Fetch team members on component mount
-  const fetchTeamMembers = useCallback(async (page = 1, pageSize = 10) => {
+  const fetchTeamMembers = useCallback(async (page = 1, pageSize = 10, search = "") => {
     try {
       setLoading(true);
-      const response: any = await teamService.getAllTeamMembers(page, pageSize);
+      const response: any = await teamService.getAllTeamMembers(page, pageSize, search.trim() || "");
       if (response.status) {
         setTeamMembers(response.data);
 
@@ -85,9 +85,19 @@ const Team = () => {
     }
   }, []);
 
+  // Initial fetch
   useEffect(() => {
-    fetchTeamMembers(1, 10);
+    fetchTeamMembers(1, 10, "");
   }, [fetchTeamMembers]);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchTeamMembers(1, pagination.pageSize, searchText);
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [searchText, fetchTeamMembers, pagination.pageSize]);
 
   const handleAdd = () => {
     setEditingMember(null);
@@ -121,7 +131,7 @@ const Team = () => {
             message.success(
               response.message || "Team member deleted successfully"
             );
-            await fetchTeamMembers(pagination.current, pagination.pageSize);
+            await fetchTeamMembers(pagination.current, pagination.pageSize, searchText);
           } else {
             message.error(response.message || "Failed to delete team member");
           }
@@ -173,9 +183,9 @@ const Team = () => {
         return false;
       }
 
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
 
@@ -207,7 +217,7 @@ const Team = () => {
             response.message || "Team member updated successfully"
           );
           setIsModalVisible(false);
-          await fetchTeamMembers(pagination.current, pagination.pageSize);
+          await fetchTeamMembers(pagination.current, pagination.pageSize, searchText);
         } else {
           message.error(response.message || "Failed to update team member");
         }
@@ -218,7 +228,7 @@ const Team = () => {
             response.message || "Team member created successfully"
           );
           setIsModalVisible(false);
-          await fetchTeamMembers(pagination.current, pagination.pageSize);
+          await fetchTeamMembers(pagination.current, pagination.pageSize, searchText);
         } else {
           message.error(response.message || "Failed to create team member");
         }
@@ -248,21 +258,10 @@ const Team = () => {
       current,
       pageSize,
     }));
-    fetchTeamMembers(current, pageSize);
+    fetchTeamMembers(current, pageSize, searchText);
   };
 
-  // For now, we'll keep client-side filtering since the API doesn't support search
-  // In a real implementation, you'd want to add search parameters to the API call
-  const filteredMembers = useMemo(() => {
-    if (!searchText) return teamMembers;
-
-    return teamMembers.filter(
-      (member) =>
-        member.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        (member.designation &&
-          member.designation.toLowerCase().includes(searchText.toLowerCase()))
-    );
-  }, [teamMembers, searchText]);
+  // Remove client-side filtering since we're using server-side search
 
   const columns: ColumnsType<any> = [
     {
@@ -365,11 +364,12 @@ const Team = () => {
 
       <div className="team-controls">
         <Input
-          placeholder="Search team members..."
+          placeholder="Search team members by name..."
           prefix={<SearchOutlined />}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ maxWidth: 300 }}
+          allowClear
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           Add Member
@@ -379,7 +379,7 @@ const Team = () => {
       <Table
         className="team-table"
         columns={columns}
-        dataSource={filteredMembers}
+        dataSource={teamMembers}
         rowKey="id"
         loading={loading}
         pagination={pagination}
@@ -431,7 +431,7 @@ const Team = () => {
           <Form.Item
             label="Profile Image (size:300x250)"
             required
-            help="Upload a profile image (JPG, PNG, GIF up to 5MB)"
+            help="Upload a profile image (JPG, PNG, GIF up to 3MB)"
           >
             {uploadedImageUrl ? (
               <div style={{ marginBottom: 16 }}>
@@ -491,7 +491,7 @@ const Team = () => {
                     : "Click or drag image to this area to upload"}
                 </p>
                 <p className="ant-upload-hint">
-                  Support for JPG, PNG, GIF up to 5MB
+                  Support for JPG, PNG, GIF up to 3MB
                 </p>
               </Dragger>
             )}
@@ -519,6 +519,7 @@ const Team = () => {
               >
                 <InputNumber
                   min={1}
+                  type="number"
                   style={{ width: "100%" }}
                   placeholder="Enter display order (1, 2, 3...)"
                 />

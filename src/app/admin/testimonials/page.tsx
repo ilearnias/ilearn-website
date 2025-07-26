@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   Input,
@@ -43,6 +43,7 @@ import {
 } from "@/services/media.service";
 import type { UploadFile } from "antd/es/upload/interface";
 import "./styles.scss";
+import { debounce } from "lodash";
 
 const { confirm } = Modal;
 const { TextArea } = Input;
@@ -51,30 +52,61 @@ const Testimonials = () => {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [mediaList, setMediaList] = useState<IMedia[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingMedia, setEditingMedia] = useState<IMedia | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [form] = Form.useForm();
   const [thumbnailFile, setThumbnailFile] = useState<UploadFile[]>([]);
 
+  // Replace individual pagination states with meta object
+  const [meta, setMeta] = useState({
+    page: 1,
+    limit: 10,
+    itemCount: 0,
+    totalPages: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
+
+  // Add debounced search
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      setSearchText(value);
+      setMeta((prev) => ({ ...prev, page: 1 })); // Reset to first page on search
+    }, 500),
+    []
+  );
+
   useEffect(() => {
     fetchMedia();
-  }, [currentPage, pageSize]);
+  }, [meta.page, meta.limit, searchText]); // Add searchText dependency
 
   const fetchMedia = async () => {
     try {
       setLoading(true);
       const response = await mediaService.getAllMedia(
-        currentPage,
-        pageSize,
-        true
+        meta.page,
+        meta.limit,
+        true, // isTestimonial
+        searchText // search parameter
       );
       if (response.status) {
         setMediaList(response.data.data || response.data);
-        setTotalItems(response.data.total || response.data.length);
+        // Update meta information
+        setMeta(
+          response.meta || {
+            page: meta.page,
+            limit: meta.limit,
+            itemCount: response.data.total || response.data.length,
+            totalPages: Math.ceil(
+              (response.data.total || response.data.length) / meta.limit
+            ),
+            hasPreviousPage: meta.page > 1,
+            hasNextPage:
+              meta.page * meta.limit <
+              (response.data.total || response.data.length),
+          }
+        );
       } else {
         message.error(response.message || "Failed to fetch testimonials");
       }
@@ -138,7 +170,7 @@ const Testimonials = () => {
 
   const handleDelete = (record: IMedia) => {
     confirm({
-      title: "Are you sure you want to delete this testimonials?",
+      title: "Are you sure you want to delete this testimonial?",
       content: `This will permanently delete "${record.description}"`,
       okText: "Yes",
       okType: "danger",
@@ -147,15 +179,32 @@ const Testimonials = () => {
         try {
           setLoading(true);
           const response = await mediaService.deleteMedia(record.id);
+
           if (response.status) {
-            message.success(response.message || "Media deleted successfully");
-            fetchMedia();
+            // Optimistically update UI
+            setMediaList((prev) =>
+              prev.filter((item) => item.id !== record.id)
+            );
+            setMeta((prev) => ({ ...prev, itemCount: prev.itemCount - 1 }));
+
+            // If this was the last item on the current page, go to previous page
+            const isLastItemOnPage = mediaList.length === 1 && meta.page > 1;
+            if (isLastItemOnPage) {
+              setMeta((prev) => ({ ...prev, page: prev.page - 1 }));
+              // fetchMedia will be triggered by useEffect when currentPage changes
+            }
+
+            message.success("Testimonial deleted successfully");
           } else {
-            message.error(response.message || "Failed to delete testimonials");
+            // Show error message and refetch to ensure UI is in sync
+            message.error(response.message || "Failed to delete testimonial");
+            fetchMedia();
           }
         } catch (error: any) {
-          message.error(error.message || "Failed to delete testimonials");
-          console.error("Error deleting testimonials:", error);
+          console.error("Error deleting testimonial:", error);
+          message.error("Failed to delete testimonial");
+          // Refetch data if deletion failed to ensure UI is in sync
+          fetchMedia();
         } finally {
           setLoading(false);
         }
@@ -226,13 +275,6 @@ const Testimonials = () => {
     setThumbnailFile([]);
   };
 
-  const handlePageChange = (page: number, size?: number) => {
-    setCurrentPage(page);
-    if (size && size !== pageSize) {
-      setPageSize(size);
-    }
-  };
-
   const handleThumbnailChange = ({ fileList }: { fileList: UploadFile[] }) => {
     setThumbnailFile(fileList.slice(-1));
     form.setFieldsValue({ thumbnail: fileList.length > 0 ? "uploaded" : "" });
@@ -252,9 +294,9 @@ const Testimonials = () => {
         message.error("You can only upload JPG, PNG, GIF or WebP files!");
         return false;
       }
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
       return false; // Manual upload
@@ -266,10 +308,6 @@ const Testimonials = () => {
     accept: ".jpg,.jpeg,.png,.gif,.webp",
     maxCount: 1,
   };
-
-  const filteredMedia = mediaList.filter((item) =>
-    item.description.toLowerCase().includes(searchText.toLowerCase())
-  );
 
   const columns: ColumnsType<IMedia> = [
     {
@@ -365,7 +403,7 @@ const Testimonials = () => {
   const stats = [
     {
       label: "Total Media",
-      value: totalItems,
+      value: meta.itemCount,
       icon: <VideoCameraOutlined />,
       color: "#3b82f6",
     },
@@ -394,8 +432,7 @@ const Testimonials = () => {
         <Input
           placeholder="Search media by description..."
           prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          onChange={(e) => debouncedSearch(e.target.value)}
           style={{ maxWidth: 300 }}
           allowClear
         />
@@ -407,19 +444,24 @@ const Testimonials = () => {
       <Table
         className="media-table"
         columns={columns}
-        dataSource={filteredMedia}
+        dataSource={mediaList} // Use mediaList directly since filtering is done on server
         rowKey="id"
         loading={loading}
         pagination={{
-          current: currentPage,
-          total: totalItems,
-          pageSize: pageSize,
+          current: meta.page,
+          pageSize: meta.limit,
+          total: meta.itemCount,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
-          onChange: handlePageChange,
-          onShowSizeChange: handlePageChange,
+          onChange: (page, pageSize) => {
+            setMeta((prev) => ({
+              ...prev,
+              page: page,
+              limit: pageSize || prev.limit,
+            }));
+          },
           pageSizeOptions: ["10", "20", "50", "100"],
         }}
       />
@@ -474,19 +516,23 @@ const Testimonials = () => {
                     if (thumbnailFile && thumbnailFile.length > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error("Please upload a thumbnail image"));
+                    return Promise.reject(
+                      new Error("Please upload a thumbnail image")
+                    );
                   },
                 },
               ]}
               validateStatus={
-                form.isFieldTouched("thumbnail") && form.getFieldError("thumbnail").length
+                form.isFieldTouched("thumbnail") &&
+                form.getFieldError("thumbnail").length
                   ? "error"
                   : ""
               }
               help={
-                form.isFieldTouched("thumbnail") && form.getFieldError("thumbnail").length
+                form.isFieldTouched("thumbnail") &&
+                form.getFieldError("thumbnail").length
                   ? form.getFieldError("thumbnail")[0]
-                  : "Upload a thumbnail image (max 5MB)"
+                  : "Upload a thumbnail image (max 3MB)"
               }
             >
               <Upload {...uploadProps}>
@@ -518,7 +564,9 @@ const Testimonials = () => {
                     if (thumbnailFile && thumbnailFile.length > 0) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error("Please upload a thumbnail image"));
+                    return Promise.reject(
+                      new Error("Please upload a thumbnail image")
+                    );
                   },
                 },
               ]}
@@ -543,6 +591,7 @@ const Testimonials = () => {
                 >
                   <InputNumber
                     min={1}
+                    type="number"
                     style={{ width: "100%" }}
                     placeholder="1"
                   />

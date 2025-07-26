@@ -186,8 +186,8 @@ const GalleryItemPage = () => {
     // Filter out invalid files
     const validFiles = fileList.filter((file) => {
       // Check file size
-      if (file.size && file.size > 5 * 1024 * 1024) {
-        message.error(`${file.name} is larger than 5MB`);
+      if (file.size && file.size > 3 * 1024 * 1024) {
+        message.error(`${file.name} is larger than 3MB`);
         return false;
       }
 
@@ -226,9 +226,9 @@ const GalleryItemPage = () => {
         return false;
       }
 
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
 
@@ -368,7 +368,7 @@ const GalleryItemPage = () => {
           <Form.Item
             label="Upload Images (size:800x800)"
             required
-            help="Upload one or more images. Maximum size: 5MB per image."
+            help="Upload one or more images. Maximum size: 3MB per image."
           >
             <Upload {...uploadProps}>
               <div>

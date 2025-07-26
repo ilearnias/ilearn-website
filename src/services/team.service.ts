@@ -43,13 +43,18 @@ export interface ITeamMemberUpdate extends Partial<ITeamMemberCreate> {}
 class TeamService {
   async getAllTeamMembers(
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
+    search: string = ""
   ): Promise<ApiResponse<IPaginatedResponse<ITeamMember>>> {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
+        order: "ASC", // Add default order
       });
+      if (search) {
+        params.append("name", search);
+      }
       return await apiRequest.get<IPaginatedResponse<ITeamMember>>(
         `${API_ENDPOINTS.ADMIN.TEAM.LIST}?${params}`
       );

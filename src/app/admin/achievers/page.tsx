@@ -168,9 +168,9 @@ const Achievers = () => {
         return false;
       }
 
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
 
@@ -385,29 +385,37 @@ const Achievers = () => {
 
             <Form.Item
               name="details"
-              label="Details"
-              rules={[{ required: true, message: "Please enter details" }]}
+              label="Rank"
+              rules={[{ required: true, message: "Please enter rank" }]}
             >
-              <Input placeholder="Enter achiever details" />
+              <Input type="number"  placeholder="Enter achiever rank" />
             </Form.Item>
 
             <Form.Item
               name="description"
-              label="Description"
-              rules={[{ required: true, message: "Please enter description" }]}
+              label="Year"
+              rules={[
+                { required: true, message: "Please enter year" },
+                { 
+                  pattern: /^\d{4}$/, 
+                  message: "Please enter a valid 4-digit year (e.g., 2024)" 
+                },
+                { 
+                  validator: (_, value) => {
+                  
+                    return Promise.resolve();
+                  }
+                }
+              ]}
             >
-              <TextArea
-                rows={4}
-                placeholder="Enter detailed description"
-                maxLength={500}
-                showCount
-              />
+               <Input type="number"   placeholder="Enter Year (e.g., 2024)" />
+            
             </Form.Item>
 
             <Form.Item
               label="Profile Image (size:720x800)"
               required
-              help="Upload a profile image (JPG, PNG, GIF up to 5MB)"
+              help="Upload a profile image (JPG, PNG, GIF up to 3MB)"
             >
               {uploadedImageUrl ? (
                 <div style={{ marginBottom: 16 }}>
@@ -469,7 +477,7 @@ const Achievers = () => {
                       : "Click or drag image to this area to upload"}
                   </p>
                   <p className="ant-upload-hint">
-                    Support for JPG, PNG, GIF up to 5MB
+                    Support for JPG, PNG, GIF up to 3MB
                   </p>
                 </Dragger>
               )}
@@ -484,6 +492,7 @@ const Achievers = () => {
             >
               <InputNumber
                 min={1}
+                type="number"
                 style={{ width: "100%" }}
                 placeholder="Enter display order (1, 2, 3...)"
               />

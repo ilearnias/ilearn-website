@@ -100,31 +100,53 @@ const AdminHeader: React.FC = () => {
 
   return (
     <>
-      <header className="admin-header">
+      <header className="admin-header" style={{
+        background: '#fff',
+        padding: '16px 32px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+        borderRadius: '0 0 12px 12px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        minHeight: 72,
+      }}>
         <div className="header-left">
-          <h1 className="page-title">{getPageTitle()}</h1>
+          <h1 className="page-title" style={{ margin: 0, fontWeight: 700, fontSize: 24, color: '#222' }}>{getPageTitle()}</h1>
         </div>
 
-        <div className="header-right">
+        <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <Dropdown
             menu={{ items: profileMenuItems }}
             placement="bottomRight"
             trigger={["click"]}
+            className="w-40"
           >
             <Button
               type="text"
               className="profile-button"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '8px 12px',
+                borderRadius: 8,
+                background: 'transparent',
+                border: 'none',
+                boxShadow: 'none',
+                height: 'auto',
+              }}
               icon={
-                <Space>
+                <Space className="w-40" style={{ gap: 8 }}>
                   <Avatar
                     icon={<UserOutlined />}
                     size="small"
                     className="profile-avatar"
+                    style={{ background: '#1890ff', color: '#fff' }}
                   />
-                  <div className="profile-info">
-                    <span className="profile-name">{user?.name}</span>
+                  <div className="profile-info" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <span className="profile-name" style={{ fontWeight: 500, color: '#222', fontSize: 15 }}>{user?.name}</span>
                   </div>
-                  <DownOutlined className="profile-arrow" />
+                  <DownOutlined className="profile-arrow" style={{ color: '#888', fontSize: 12 }} />
                 </Space>
               }
             />

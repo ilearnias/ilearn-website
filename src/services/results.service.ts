@@ -61,13 +61,17 @@ export interface IResultUpdate extends Partial<IResultCreate> {}
 class ResultService {
   async getAllResults(
     page: number = 1,
-    limit: number = 10
+    limit: number = 10,
+    search: string = ""
   ): Promise<ApiResponse<IPaginatedResponse<IResult>>> {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: limit.toString(),
       });
+      if (search) {
+        params.append("search", search);
+      }
       return await apiRequest.get<IPaginatedResponse<IResult>>(
         `${API_ENDPOINTS.ADMIN.RESULTS.LIST}?${params}`
       );

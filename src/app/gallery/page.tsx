@@ -46,7 +46,7 @@ const GalleryPage = () => {
               }
 
               // Add each image from this item to the group
-              item.images.forEach((imageUrl: string) => {
+              item.images.forEach((imageUrl: any) => {
                 groupedImages[title].push({
                   src: imageUrl,
                   alt: item.title || "Gallery image",

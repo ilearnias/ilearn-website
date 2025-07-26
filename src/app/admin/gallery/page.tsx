@@ -49,8 +49,6 @@ const GalleryPage = () => {
   }[]>([]);
   const [form] = Form.useForm();
   // Pagination state
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [meta, setMeta] = useState({
     page: 1,
     limit: 10,
@@ -60,16 +58,24 @@ const GalleryPage = () => {
     hasNextPage: false,
   });
 
+  // Fetch items on page/meta/search change
   useEffect(() => {
-    fetchItems(meta.page, meta.limit);
+    fetchItems(meta.page, meta.limit, searchText);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [meta.page, meta.limit, searchText]);
 
-  // Only client-side pagination is supported
-  const fetchItems = async (page = 1, limit = 10) => {
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setMeta((prev) => ({ ...prev, page: 1 }));
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [searchText]);
+
+  const fetchItems = async (page = 1, limit = 10, search = "") => {
     try {
       setLoading(true);
-      const response = await galleryService.getAllItems(page, limit);
+      const response = await galleryService.getAllItems(page, limit, search.trim());
       if (response.status) {
         setItems(response.data);
         setMeta(response.meta || {});
@@ -278,7 +284,7 @@ const GalleryPage = () => {
 
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
 
@@ -291,17 +297,6 @@ const GalleryPage = () => {
     accept: ".jpg,.jpeg,.png,.gif,.webp", // Specify accepted file extensions
     maxCount: 10, // Maximum number of files
   };
-
-  const filteredItems = items.filter((item) =>
-    item.title.toLowerCase().includes(searchText.toLowerCase())
-  );
-
-  // For client-side pagination only
-  const paginatedItems = filteredItems.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
-  const total = filteredItems.length;
 
   const columns: ColumnsType<IGalleryItem> = [
     {
@@ -373,6 +368,7 @@ const GalleryPage = () => {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             style={{ width: 200 }}
+            allowClear
           />
           <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
             Add Gallery Item
@@ -391,7 +387,11 @@ const GalleryPage = () => {
             total: meta.itemCount,
             showSizeChanger: true,
             pageSizeOptions: ["10", "20", "50", "100"],
-            onChange: (page, pageSize) => fetchItems(page, pageSize),
+            onChange: (page, pageSize) => setMeta((prev) => ({
+              ...prev,
+              page,
+              limit: pageSize || prev.limit,
+            })),
           }}
         />
       </Card>
@@ -422,7 +422,7 @@ const GalleryPage = () => {
           <Form.Item
             label="Images"
             required
-            help="Upload one or more images. Maximum size: 5MB per image."
+            help="Upload one or more images. Maximum size: 3MB per image."
           >
             <Upload
               beforeUpload={uploadProps.beforeUpload}
@@ -471,7 +471,7 @@ const GalleryPage = () => {
             label="Order"
             rules={[{ required: true, message: "Please input the order!" }]}
           >
-            <InputNumber min={1} style={{ width: "100%" }} />
+            <InputNumber type="number" min={1} style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item
             name="isActive"
