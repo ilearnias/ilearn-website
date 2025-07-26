@@ -279,9 +279,9 @@ const Results = () => {
         message.error("You can only upload JPG, PNG, GIF or WebP files!");
         return false;
       }
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
       return false; // Manual upload

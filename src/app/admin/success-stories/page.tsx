@@ -432,7 +432,7 @@ const SuccessStories = () => {
               )}
             </Upload>
             <div style={{ marginTop: 8, fontSize: "12px", color: "#666" }}>
-              Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
+              Supported formats: JPEG, PNG, GIF, WebP. Max size: 3MB
             </div>
           </Form.Item>
 

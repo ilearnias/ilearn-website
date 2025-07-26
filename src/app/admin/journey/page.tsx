@@ -629,7 +629,7 @@ const Journey = () => {
                           color: "#666",
                         }}
                       >
-                        Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
+                        Supported formats: JPEG, PNG, GIF, WebP. Max size: 3MB
                       </div>
                     </Form.Item>
                   </>

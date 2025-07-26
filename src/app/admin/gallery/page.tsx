@@ -284,7 +284,7 @@ const GalleryPage = () => {
 
       const isLt5M = file.size / 1024 / 1024 < 5;
       if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
 
@@ -422,7 +422,7 @@ const GalleryPage = () => {
           <Form.Item
             label="Images"
             required
-            help="Upload one or more images. Maximum size: 5MB per image."
+            help="Upload one or more images. Maximum size: 3MB per image."
           >
             <Upload
               beforeUpload={uploadProps.beforeUpload}

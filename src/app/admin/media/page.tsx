@@ -304,7 +304,7 @@ const Media = () => {
       title: "Order",
       dataIndex: "order",
       key: "order",
-      width: 80,
+      width: 100,
       sorter: (a, b) => a.order - b.order,
     },
     {

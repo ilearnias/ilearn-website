@@ -168,9 +168,9 @@ const Achievers = () => {
         return false;
       }
 
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
 
@@ -415,7 +415,7 @@ const Achievers = () => {
             <Form.Item
               label="Profile Image (size:720x800)"
               required
-              help="Upload a profile image (JPG, PNG, GIF up to 5MB)"
+              help="Upload a profile image (JPG, PNG, GIF up to 3MB)"
             >
               {uploadedImageUrl ? (
                 <div style={{ marginBottom: 16 }}>
@@ -477,7 +477,7 @@ const Achievers = () => {
                       : "Click or drag image to this area to upload"}
                   </p>
                   <p className="ant-upload-hint">
-                    Support for JPG, PNG, GIF up to 5MB
+                    Support for JPG, PNG, GIF up to 3MB
                   </p>
                 </Dragger>
               )}
