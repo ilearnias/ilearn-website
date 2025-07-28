@@ -30,6 +30,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import "./styles.scss";
@@ -39,9 +40,12 @@ import {
   IResultSummaryCreate,
 } from "@/services/results.service";
 
+const { Search } = Input;
+
 const ResultsSummary = () => {
   const [data, setData] = useState<IResultSummary[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<IResultSummary | null>(
     null
@@ -57,7 +61,7 @@ const ResultsSummary = () => {
     // Test API connectivity first
     testApiConnection();
     fetchData();
-  }, [pagination.current, pagination.pageSize]);
+  }, []); // Remove pagination dependencies to avoid circular updates
 
   const testApiConnection = async () => {
     try {
@@ -91,17 +95,20 @@ const ResultsSummary = () => {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = async (page?: number, pageSize?: number) => {
     setLoading(true);
     try {
+      const currentPage = page || pagination.current;
+      const currentPageSize = pageSize || pagination.pageSize;
+      
       console.log("Fetching data with pagination:", {
-        current: pagination.current,
-        pageSize: pagination.pageSize,
+        current: currentPage,
+        pageSize: currentPageSize,
       });
 
       const response = await resultService.getAllResultSummaries(
-        pagination.current,
-        pagination.pageSize
+        currentPage,
+        currentPageSize
       );
 
       console.log("Full API Response:", response);
@@ -125,6 +132,8 @@ const ResultsSummary = () => {
             );
             setPagination((prev) => ({
               ...prev,
+              current: currentPage,
+              pageSize: currentPageSize,
               total: responseData.meta.itemCount,
             }));
           } else {
@@ -135,6 +144,8 @@ const ResultsSummary = () => {
             );
             setPagination((prev) => ({
               ...prev,
+              current: currentPage,
+              pageSize: currentPageSize,
               total: responseData.data.length,
             }));
           }
@@ -144,6 +155,8 @@ const ResultsSummary = () => {
           setData(responseData);
           setPagination((prev) => ({
             ...prev,
+            current: currentPage,
+            pageSize: currentPageSize,
             total: responseData.length,
           }));
         } else {
@@ -151,6 +164,8 @@ const ResultsSummary = () => {
           setData([]);
           setPagination((prev) => ({
             ...prev,
+            current: currentPage,
+            pageSize: currentPageSize,
             total: 0,
           }));
         }
@@ -160,6 +175,8 @@ const ResultsSummary = () => {
         setData([]);
         setPagination((prev) => ({
           ...prev,
+          current: currentPage,
+          pageSize: currentPageSize,
           total: 0,
         }));
       }
@@ -198,6 +215,8 @@ const ResultsSummary = () => {
       setData(mockData);
       setPagination((prev) => ({
         ...prev,
+        current: page || 1,
+        pageSize: pageSize || 10,
         total: mockData.length,
       }));
     } finally {
@@ -234,6 +253,14 @@ const ResultsSummary = () => {
     } catch (error) {
       message.error("Failed to delete result summary");
     }
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+    // You can implement search logic here
+    // For now, we'll just filter the current data
+    // In a real implementation, you might want to send the search term to the API
+    console.log("Searching for:", value);
   };
 
   const handleModalOk = async () => {
@@ -381,12 +408,33 @@ const ResultsSummary = () => {
         <p>Manage result summary data and statistics</p>
       </div>
 
-      {/* Action Button */}
-      <div style={{ marginBottom: 16 }}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-          Add New
-        </Button>
-      </div>
+      {/* Search and Add New Section */}
+      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+        <Col xs={24} sm={12} md={8}>
+          <Search
+            placeholder="Search results..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            onSearch={handleSearch}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+        </Col>
+        <Col xs={24} sm={12} md={8} style={{ textAlign: 'center' }}>
+          {/* Center spacer */}
+        </Col>
+        <Col xs={24} sm={24} md={8} style={{ textAlign: 'right' }}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="large"
+            onClick={handleCreate}
+          >
+            Add New Result
+          </Button>
+        </Col>
+      </Row>
 
       {/* Data Table */}
       <Card className="results-summary-table">
@@ -404,11 +452,8 @@ const ResultsSummary = () => {
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
             onChange: (page, pageSize) => {
-              setPagination((prev) => ({
-                ...prev,
-                current: page,
-                pageSize: pageSize || 10,
-              }));
+              console.log("Pagination changed:", { page, pageSize });
+              fetchData(page, pageSize);
             },
           }}
         />
