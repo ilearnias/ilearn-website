@@ -75,7 +75,7 @@ const ResultsSummary = () => {
         limit: currentPageSize,
       });
 
-      const response = await resultService.getAllResultSummaries(
+      const response: any = await resultService.getAllResultSummaries(
         currentPage,
         currentPageSize
       );
