@@ -1,7 +1,5 @@
-import HomePageContainer from "./home/pageContainer";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <HomePageContainer />
-  );
+  redirect('/adminlogin');
 }

@@ -30,6 +30,7 @@ import {
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import "./styles.scss";
@@ -39,9 +40,12 @@ import {
   IResultSummaryCreate,
 } from "@/services/results.service";
 
+const { Search } = Input;
+
 const ResultsSummary = () => {
   const [data, setData] = useState<IResultSummary[]>([]);
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<IResultSummary | null>(
     null
@@ -60,19 +64,21 @@ const ResultsSummary = () => {
     fetchData();
   }, [pagination.page, pagination.limit]);
 
-  const fetchData = async () => {
+  const fetchData = async (page?: number, pageSize?: number) => {
     setLoading(true);
     try {
+      const currentPage = page || pagination.page;
+      const currentPageSize = pageSize || pagination.limit;
+
       console.log("Fetching data with pagination:", {
-        page: pagination.page,
-        limit: pagination.limit,
+        page: currentPage,
+        limit: currentPageSize,
       });
 
-      const response : any= await resultService.getAllResultSummaries(
-        pagination.page,
-        pagination.limit
+      const response = await resultService.getAllResultSummaries(
+        currentPage,
+        currentPageSize
       );
-
 
       if (response.status) {
         setData(response.data || []);
@@ -177,6 +183,14 @@ const ResultsSummary = () => {
     } catch (error) {
       message.error("Failed to delete result summary");
     }
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+    // You can implement search logic here
+    // For now, we'll just filter the current data
+    // In a real implementation, you might want to send the search term to the API
+    console.log("Searching for:", value);
   };
 
   const handleModalOk = async () => {
@@ -324,12 +338,33 @@ const ResultsSummary = () => {
         <p>Manage result summary data and statistics</p>
       </div>
 
-      {/* Action Button */}
-      <div style={{ marginBottom: 16 }}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-          Add New
-        </Button>
-      </div>
+      {/* Search and Add New Section */}
+      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+        <Col xs={24} sm={12} md={8}>
+          <Search
+            placeholder="Search results..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            size="large"
+            onSearch={handleSearch}
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
+        </Col>
+        <Col xs={24} sm={12} md={8} style={{ textAlign: "center" }}>
+          {/* Center spacer */}
+        </Col>
+        <Col xs={24} sm={24} md={8} style={{ textAlign: "right" }}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            size="large"
+            onClick={handleCreate}
+          >
+            Add New Result
+          </Button>
+        </Col>
+      </Row>
 
       {/* Data Table */}
       <Card className="results-summary-table">

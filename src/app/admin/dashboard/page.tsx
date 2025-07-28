@@ -2,90 +2,180 @@
 
 import React from "react";
 import { useSelector } from 'react-redux';
-import { Card, Statistic, List, Button, Row, Col, Space } from "antd";
+import Link from "next/link";
+import { Card, Row, Col, Button } from "antd";
 import {
-  UserOutlined,
-  CheckCircleOutlined,
-  DollarOutlined,
-  ShoppingOutlined,
-  PlusOutlined,
+  BookOutlined,
+  TrophyOutlined,
+  SmileOutlined,
+  CrownOutlined,
+  TeamOutlined,
+  PictureOutlined,
+  VideoCameraOutlined,
+  HistoryOutlined,
+  ReadOutlined,
+  MessageOutlined,
   BarChartOutlined,
-  SettingOutlined,
-  MailOutlined,
-  ClockCircleOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import "./styles.scss";
 
 const Dashboard = () => {
   const { user } = useSelector((state: any) => state.auth);
 
-  const stats = [
+  const renderSingleCard = (card: any) => (
+    <Link href={card.href} style={{ textDecoration: 'none' }}>
+      <Card className="dashboard-card">
+        <div className="card-content">
+          <div className="card-icon" style={{ color: card.color }}>
+            {card.icon}
+          </div>
+          <div className="card-text">
+            <h3 className="card-title">{card.title}</h3>
+            <p className="card-description">{card.description}</p>
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+
+  const renderDoubleCard = (card: any) => (
+    <Card className="dashboard-card">
+      <div className="card-content">
+        <div className="card-icon" style={{ color: card.color }}>
+          {card.icon}
+        </div>
+        <div className="card-text">
+          <h3 className="card-title">{card.title}</h3>
+          <p className="card-description">{card.description}</p>
+          
+          <div className="card-links">
+            {card.links.map((link: any, linkIndex: number) => (
+              <Link key={linkIndex} href={link.href} style={{ textDecoration: 'none' }}>
+                <Button 
+                  type="default" 
+                  size="small"
+                  icon={link.icon}
+                  style={{ 
+                    borderColor: card.color, 
+                    color: card.color,
+                    marginRight: linkIndex === 0 ? '8px' : '0'
+                  }}
+                  className="card-link-button"
+                >
+                  {link.label}
+                </Button>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+
+  const dashboardCards = [
     {
-      label: "Total Users",
-      value: 1234,
-      icon: <UserOutlined />,
+      title: "Programmes",
+      description: "Manage educational programmes and courses",
+      icon: <BookOutlined />,
+      href: "/admin/programmes",
       color: "#3b82f6",
-      suffix: "",
+      type: "single",
     },
     {
-      label: "Active Sessions",
-      value: 89,
-      icon: <CheckCircleOutlined />,
+      title: "Results",
+      description: "View and manage student results",
+      icon: <TrophyOutlined />,
       color: "#10b981",
-      suffix: "",
+      type: "double",
+      links: [
+        {
+          label: "Results List",
+          href: "/admin/results",
+          icon: <TrophyOutlined />,
+        },
+        {
+          label: "Results Summary",
+          href: "/admin/results/summary",
+          icon: <BarChartOutlined />,
+        },
+      ],
     },
     {
-      label: "Total Revenue",
-      value: 45678,
-      icon: <DollarOutlined />,
+      title: "Success Stories",
+      description: "Manage success stories and testimonials",
+      icon: <SmileOutlined />,
+      href: "/admin/success-stories",
       color: "#f59e0b",
-      suffix: "$",
+      type: "single",
     },
     {
-      label: "Pending Orders",
-      value: 23,
-      icon: <ShoppingOutlined />,
+      title: "Achievers",
+      description: "Manage top achievers and their profiles",
+      icon: <CrownOutlined />,
+      href: "/admin/achievers",
+      color: "#8b5cf6",
+      type: "single",
+    },
+    {
+      title: "Team",
+      description: "Manage team members and faculty",
+      icon: <TeamOutlined />,
+      href: "/admin/team",
       color: "#ef4444",
-      suffix: "",
-    },
-  ];
-
-  const recentActivities = [
-    {
-      action: "New user registered",
-      time: "2 minutes ago",
-      user: "john@example.com",
-      icon: <UserOutlined />,
+      type: "single",
     },
     {
-      action: "Order completed",
-      time: "5 minutes ago",
-      user: "sarah@example.com",
-      icon: <CheckCircleOutlined />,
+      title: "Gallery",
+      description: "Manage images and media gallery",
+      icon: <PictureOutlined />,
+      href: "/admin/gallery",
+      color: "#06b6d4",
+      type: "single",
     },
     {
-      action: "Payment received",
-      time: "10 minutes ago",
-      user: "mike@example.com",
-      icon: <DollarOutlined />,
+      title: "Media",
+      description: "Manage videos and media content",
+      icon: <VideoCameraOutlined />,
+      href: "/admin/media",
+      color: "#84cc16",
+      type: "single",
     },
     {
-      action: "Support ticket opened",
-      time: "15 minutes ago",
-      user: "lisa@example.com",
-      icon: <MailOutlined />,
+      title: "Journey",
+      description: "Manage company journey and milestones",
+      icon: <HistoryOutlined />,
+      href: "/admin/journey",
+      color: "#f97316",
+      type: "single",
     },
-  ];
-
-  const quickActions = [
-    { label: "Add New User", icon: <PlusOutlined />, type: "primary" as const },
     {
-      label: "View Reports",
-      icon: <BarChartOutlined />,
-      type: "default" as const,
+      title: "Blog",
+      description: "Manage blog posts and categories",
+      icon: <ReadOutlined />,
+      color: "#ec4899",
+      type: "double",
+      links: [
+        {
+          label: "Blog Posts",
+          href: "/admin/blog/posts",
+          icon: <ReadOutlined />,
+        },
+        {
+          label: "Blog Categories",
+          href: "/admin/blog/categories",
+          icon: <FileTextOutlined />,
+        },
+      ],
     },
-    { label: "Settings", icon: <SettingOutlined />, type: "default" as const },
-    { label: "Send Email", icon: <MailOutlined />, type: "default" as const },
+    {
+      title: "Testimonials",
+      description: "Manage customer testimonials and reviews",
+      icon: <MessageOutlined />,
+      href: "/admin/testimonials",
+      color: "#8b5a2b",
+      type: "single",
+    },
   ];
 
   return (
@@ -95,66 +185,15 @@ const Dashboard = () => {
         <p>Here&apos;s what&apos;s happening with your admin panel today.</p>
       </div>
 
-      <Row gutter={[20, 20]} className="stats-grid">
-        {stats.map((stat, index) => (
-          <Col xs={24} sm={12} lg={6} key={index}>
-            <Card className="stat-card">
-              <Statistic
-                title={stat.label}
-                value={stat.value}
-                prefix={stat.icon}
-                suffix={stat.suffix}
-                valueStyle={{ color: stat.color }}
-              />
-            </Card>
+      <Row gutter={[20, 20]} className="dashboard-cards">
+        {dashboardCards.map((card, index) => (
+          <Col xs={24} sm={12} lg={8} key={index}>
+            {card.type === "single" ? renderSingleCard(card) : renderDoubleCard(card)}
           </Col>
         ))}
-      </Row>
-
-      <Row gutter={[20, 20]} className="dashboard-content">
-        <Col xs={24} lg={16}>
-          <Card
-            title="Recent Activities"
-            className="content-card"
-            extra={<ClockCircleOutlined />}
-          >
-            <List
-              dataSource={recentActivities}
-              renderItem={(item) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={item.icon}
-                    title={item.action}
-                    description={item.user}
-                  />
-                  <div className="activity-time">{item.time}</div>
-                </List.Item>
-              )}
-            />
-          </Card>
-        </Col>
-
-        <Col xs={24} lg={8}>
-          <Card title="Quick Actions" className="content-card">
-            <Space direction="vertical" style={{ width: "100%" }}>
-              {quickActions.map((action, index) => (
-                <Button
-                  key={index}
-                  type={action.type}
-                  icon={action.icon}
-                  size="large"
-                  block
-                  className="action-button"
-                >
-                  {action.label}
-                </Button>
-              ))}
-            </Space>
-          </Card>
-        </Col>
       </Row>
     </div>
   );
 };
 
-export default Dashboard;
+export default Dashboard; 
