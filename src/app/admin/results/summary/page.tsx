@@ -100,7 +100,7 @@ const ResultsSummary = () => {
     try {
       const currentPage = page || pagination.current;
       const currentPageSize = pageSize || pagination.pageSize;
-      
+
       console.log("Fetching data with pagination:", {
         current: currentPage,
         pageSize: currentPageSize,
