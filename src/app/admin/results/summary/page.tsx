@@ -52,58 +52,27 @@ const ResultsSummary = () => {
   );
   const [form] = Form.useForm();
   const [pagination, setPagination] = useState({
-    current: 1,
-    pageSize: 10,
-    total: 0,
+    page: 1,
+    limit: 10,
+    itemCount: 0,
+    totalPages: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
   });
 
   useEffect(() => {
-    // Test API connectivity first
-    testApiConnection();
     fetchData();
-  }, []); // Remove pagination dependencies to avoid circular updates
-
-  const testApiConnection = async () => {
-    try {
-      console.log("Testing API connection...");
-
-      // Check if token exists
-      const token = localStorage.getItem("adminToken");
-      console.log("Admin token exists:", !!token);
-
-      const headers: any = {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      };
-
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(
-        "https://ilearn-server.bairuhatech.com/v1/result-summary?page=1&limit=1",
-        {
-          method: "GET",
-          headers,
-        }
-      );
-      console.log("API test response status:", response.status);
-      const data = await response.json();
-      console.log("API test response data:", data);
-    } catch (error) {
-      console.error("API connection test failed:", error);
-    }
-  };
+  }, [pagination.page, pagination.limit]);
 
   const fetchData = async (page?: number, pageSize?: number) => {
     setLoading(true);
     try {
-      const currentPage = page || pagination.current;
-      const currentPageSize = pageSize || pagination.pageSize;
+      const currentPage = page || pagination.page;
+      const currentPageSize = pageSize || pagination.limit;
 
       console.log("Fetching data with pagination:", {
-        current: currentPage,
-        pageSize: currentPageSize,
+        page: currentPage,
+        limit: currentPageSize,
       });
 
       const response = await resultService.getAllResultSummaries(
@@ -114,59 +83,14 @@ const ResultsSummary = () => {
       console.log("Full API Response:", response);
 
       if (response.status) {
-        // Handle the actual API response structure
-        const responseData = response.data;
-        console.log("Response data:", responseData);
-
-        if (responseData && Array.isArray(responseData.data)) {
-          console.log("Data array found:", responseData.data);
-          setData(responseData.data);
-          // Check if meta exists and has itemCount
-          if (
-            responseData.meta &&
-            typeof responseData.meta.itemCount === "number"
-          ) {
-            console.log(
-              "Meta found with itemCount:",
-              responseData.meta.itemCount
-            );
-            setPagination((prev) => ({
-              ...prev,
-              current: currentPage,
-              pageSize: currentPageSize,
-              total: responseData.meta.itemCount,
-            }));
-          } else {
-            // Fallback to array length if meta is not available
-            console.log(
-              "No meta found, using array length:",
-              responseData.data.length
-            );
-            setPagination((prev) => ({
-              ...prev,
-              current: currentPage,
-              pageSize: currentPageSize,
-              total: responseData.data.length,
-            }));
-          }
-        } else if (Array.isArray(responseData)) {
-          // Handle case where response.data is directly an array
-          console.log("Response data is directly an array:", responseData);
-          setData(responseData);
+        setData(response.data || []);
+        if (response.meta) {
           setPagination((prev) => ({
             ...prev,
-            current: currentPage,
-            pageSize: currentPageSize,
-            total: responseData.length,
-          }));
-        } else {
-          console.error("Unexpected response structure:", responseData);
-          setData([]);
-          setPagination((prev) => ({
-            ...prev,
-            current: currentPage,
-            pageSize: currentPageSize,
-            total: 0,
+            itemCount: response.meta.itemCount || 0,
+            totalPages: response.meta.totalPages || 1,
+            hasPreviousPage: response.meta.hasPreviousPage || false,
+            hasNextPage: response.meta.hasNextPage || false,
           }));
         }
       } else {
@@ -175,9 +99,10 @@ const ResultsSummary = () => {
         setData([]);
         setPagination((prev) => ({
           ...prev,
-          current: currentPage,
-          pageSize: currentPageSize,
-          total: 0,
+          itemCount: 0,
+          totalPages: 1,
+          hasPreviousPage: false,
+          hasNextPage: false,
         }));
       }
     } catch (error) {
@@ -215,9 +140,10 @@ const ResultsSummary = () => {
       setData(mockData);
       setPagination((prev) => ({
         ...prev,
-        current: page || 1,
-        pageSize: pageSize || 10,
-        total: mockData.length,
+        itemCount: mockData.length,
+        totalPages: 1,
+        hasPreviousPage: false,
+        hasNextPage: false,
       }));
     } finally {
       setLoading(false);
@@ -248,7 +174,13 @@ const ResultsSummary = () => {
       const response = await resultService.deleteResultSummary(id);
       if (response.status) {
         message.success("Result summary deleted successfully");
-        fetchData();
+        // If the current page is now empty and not the first page, go to the previous page
+        const isLastItemOnPage = data.length === 1 && pagination.page > 1;
+        if (isLastItemOnPage) {
+          setPagination((prev) => ({ ...prev, page: prev.page - 1 }));
+        } else {
+          fetchData();
+        }
       }
     } catch (error) {
       message.error("Failed to delete result summary");
@@ -444,16 +376,19 @@ const ResultsSummary = () => {
           loading={loading}
           rowKey="id"
           pagination={{
-            current: pagination.current,
-            pageSize: pagination.pageSize,
-            total: pagination.total,
+            current: pagination.page,
+            pageSize: pagination.limit,
+            total: pagination.itemCount,
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} items`,
             onChange: (page, pageSize) => {
-              console.log("Pagination changed:", { page, pageSize });
-              fetchData(page, pageSize);
+              setPagination((prev) => ({
+                ...prev,
+                page: page,
+                limit: pageSize || 10,
+              }));
             },
           }}
         />

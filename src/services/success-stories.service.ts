@@ -35,26 +35,22 @@ class SuccessStoryService {
   }
 
   // Admin method to fetch all success stories
-  async getAllSuccessStories(): Promise<ApiResponse<ISuccessStory[]>> {
+  async getAllSuccessStories(
+    page: number = 1,
+    limit: number = 10,
+    search: string = ""
+  ): Promise<ApiResponse<ISuccessStory[]>> {
     try {
-      // Make a direct axios call without authentication for public access
-      const response = await fetch(
-        `${API_CONFIG.BASE_URL}${API_ENDPOINTS.ADMIN.SUCCESS_STORIES.LIST}?page=1&limit=10`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+      if (search) {
+        params.append("search", search);
       }
-
-      const data = await response.json();
-      return data;
+      return await apiRequest.get<ISuccessStory[]>(
+        `${API_ENDPOINTS.ADMIN.SUCCESS_STORIES.LIST}?${params}`
+      );
     } catch (error) {
       console.error("Error fetching success stories:", error);
       throw error;

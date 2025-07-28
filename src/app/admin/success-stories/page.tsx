@@ -56,17 +56,40 @@ const SuccessStories = () => {
   const [editingStory, setEditingStory] = useState<ISuccessStory | null>(null);
   const [uploadedFile, setUploadedFile] = useState<UploadFile | null>(null);
   const [form] = Form.useForm();
+  const [meta, setMeta] = useState({
+    page: 1,
+    limit: 10,
+    itemCount: 0,
+    totalPages: 1,
+    hasPreviousPage: false,
+    hasNextPage: false,
+  });
 
+  // Initial fetch
   useEffect(() => {
-    fetchStories();
+    fetchStories(1, meta.limit, "");
   }, []);
 
-  const fetchStories = async () => {
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      fetchStories(1, meta.limit, searchText);
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [searchText]);
+
+  const fetchStories = async (page = 1, limit = 10, search = "") => {
     try {
       setLoading(true);
-      const response = await successStoryService.getAllSuccessStories();
+      const response = await successStoryService.getAllSuccessStories(
+        page,
+        limit,
+        search.trim() || ""
+      );
       if (response.status) {
         setStories(response.data);
+        setMeta(response.meta || {});
       } else {
         message.error(response.message || "Failed to fetch success stories");
       }
@@ -120,7 +143,7 @@ const SuccessStories = () => {
             message.success(
               response.message || "Success story deleted successfully"
             );
-            fetchStories();
+            fetchStories(1, meta.limit, searchText);
           } else {
             message.error(response.message || "Failed to delete success story");
           }
@@ -165,7 +188,7 @@ const SuccessStories = () => {
             response.message || "Success story updated successfully"
           );
           setIsModalVisible(false);
-          fetchStories();
+          fetchStories(1, meta.limit, searchText);
         } else {
           message.error(response.message || "Failed to update success story");
         }
@@ -176,7 +199,7 @@ const SuccessStories = () => {
             response.message || "Success story created successfully"
           );
           setIsModalVisible(false);
-          fetchStories();
+          fetchStories(1, meta.limit, searchText);
         } else {
           message.error(response.message || "Failed to create success story");
         }
@@ -212,13 +235,7 @@ const SuccessStories = () => {
     }
   };
 
-  const filteredStories = stories.filter(
-    (story) =>
-      (story.name?.toLowerCase() || "").includes(searchText.toLowerCase()) ||
-      (story.description?.toLowerCase() || "").includes(
-        searchText.toLowerCase()
-      )
-  );
+  // Remove client-side filtering since we're using server-side search
 
   const columns: ColumnsType<ISuccessStory> = [
     {
@@ -328,11 +345,12 @@ const SuccessStories = () => {
 
       <div className="success-stories-controls">
         <Input
-          placeholder="Search stories..."
+          placeholder="Search stories by name or description..."
           prefix={<SearchOutlined />}
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ maxWidth: 300 }}
+          allowClear
         />
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           Add Story
@@ -342,9 +360,18 @@ const SuccessStories = () => {
       <Table
         className="success-stories-table"
         columns={columns}
-        dataSource={filteredStories}
+        dataSource={stories}
         rowKey="id"
         loading={loading}
+        pagination={{
+          current: meta.page,
+          pageSize: meta.limit,
+          total: meta.itemCount,
+          showSizeChanger: true,
+          pageSizeOptions: ["10", "20", "50", "100"],
+          onChange: (page, pageSize) =>
+            fetchStories(page, pageSize, searchText),
+        }}
       />
 
       <Modal
@@ -371,7 +398,7 @@ const SuccessStories = () => {
                 label="Order"
                 rules={[{ required: true, message: "Please enter order" }]}
               >
-                <InputNumber min={0} style={{ width: "100%" }} />
+                <InputNumber type="number" min={0} style={{ width: "100%" }} />
               </Form.Item>
             </Col>
           </Row>
@@ -405,7 +432,7 @@ const SuccessStories = () => {
               )}
             </Upload>
             <div style={{ marginTop: 8, fontSize: "12px", color: "#666" }}>
-              Supported formats: JPEG, PNG, GIF, WebP. Max size: 5MB
+              Supported formats: JPEG, PNG, GIF, WebP. Max size: 3MB
             </div>
           </Form.Item>
 

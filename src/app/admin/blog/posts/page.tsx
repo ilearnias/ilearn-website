@@ -48,15 +48,30 @@ const BlogPosts = () => {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
+  // Initial fetch
   useEffect(() => {
     fetchPosts(page, pageSize);
     fetchCategories();
   }, [page, pageSize]);
 
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setPage(1); // Reset to first page when searching
+      fetchPosts(1, pageSize); // Call fetchPosts directly to ensure search works
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [searchText]);
+
   const fetchPosts = async (page = 1, limit = 10) => {
     try {
       setLoading(true);
-      const response = await blogService.getAllPosts({ page, limit });
+      const response = await blogService.getAllPosts({ 
+        page, 
+        limit,
+        ...(searchText.trim() && { search: searchText.toLowerCase().trim() }) // Only add search if there's a search term
+      });
       if (response.status) {
         setPosts(response.data);
         setTotal(
@@ -127,7 +142,7 @@ const BlogPosts = () => {
           const response = await blogService.deletePost(record.id);
           if (response.status) {
             message.success(response.message || "Post deleted successfully");
-            fetchPosts();
+            fetchPosts(page, pageSize);
           } else {
             message.error(response.message || "Failed to delete post");
           }
@@ -165,9 +180,9 @@ const BlogPosts = () => {
         message.error("You can only upload JPG, PNG, GIF or WebP files!");
         return false;
       }
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
       return false; // Manual upload
@@ -199,7 +214,7 @@ const BlogPosts = () => {
         if (response.status) {
           message.success(response.message || "Post updated successfully");
           setIsModalVisible(false);
-          fetchPosts();
+          fetchPosts(page, pageSize);
         } else {
           message.error(response.message || "Failed to update post");
         }
@@ -208,7 +223,7 @@ const BlogPosts = () => {
         if (response.status) {
           message.success(response.message || "Post created successfully");
           setIsModalVisible(false);
-          fetchPosts();
+          fetchPosts(page, pageSize);
         } else {
           message.error(response.message || "Failed to create post");
         }
@@ -296,11 +311,12 @@ const BlogPosts = () => {
           <Card>
             <div className="blog-posts-controls">
               <Input
-                placeholder="Search posts..."
+                placeholder="Search posts by title, description, or tags..."
                 prefix={<SearchOutlined />}
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 style={{ maxWidth: 300 }}
+                allowClear
               />
               <Button
                 type="primary"
@@ -332,6 +348,7 @@ const BlogPosts = () => {
         onChange={(pagination) => {
           setPage(pagination.current || 1);
           setPageSize(pagination.pageSize || 10);
+          // fetchPosts will be called by useEffect when page or pageSize changes
         }}
       />
 
@@ -395,7 +412,7 @@ const BlogPosts = () => {
               <Form.Item
                 label="Image"
                 required
-                help="Upload a blog post image. Maximum size: 5MB."
+                help="Upload a blog post image. Maximum size: 3MB."
               >
                 <Upload {...uploadProps}>
                   {uploadedImage.length >= 1 ? null : (

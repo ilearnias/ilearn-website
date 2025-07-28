@@ -67,12 +67,13 @@ const Results = () => {
   const [form] = Form.useForm();
   const [thumbnailFile, setThumbnailFile] = useState<UploadFile[]>([]);
 
-  const fetchResults = useCallback(async () => {
+  const fetchResults = useCallback(async (page = 1, limit = 10, search = "") => {
     try {
       setLoading(true);
       const response: any = await resultService.getAllResults(
-        pagination?.page || 1,
-        pagination?.limit || 10
+        page,
+        limit,
+        search
       );
       if (response.status) {
         // Clear any previous errors
@@ -114,11 +115,11 @@ const Results = () => {
     } finally {
       setLoading(false);
     }
-  }, [pagination?.page, pagination?.limit]);
+  }, []);
 
   useEffect(() => {
-    fetchResults();
-  }, [fetchResults]);
+    fetchResults(pagination?.page || 1, pagination?.limit || 10, searchText);
+  }, [fetchResults, pagination?.page, pagination?.limit, searchText]);
 
   const handleTableChange = (pagination: any) => {
     if (
@@ -182,7 +183,13 @@ const Results = () => {
           const response = await resultService.deleteResult(record.id);
           if (response.status) {
             message.success(response.message || "Result deleted successfully");
-            fetchResults();
+            // If the current page is now empty and not the first page, go to the previous page
+            const isLastItemOnPage = results.length === 1 && pagination?.page && pagination.page > 1;
+            if (isLastItemOnPage) {
+              fetchResults(pagination.page - 1, pagination.limit, searchText);
+            } else {
+              fetchResults(pagination?.page || 1, pagination?.limit || 10, searchText);
+            }
           } else {
             message.error(response.message || "Failed to delete result");
           }
@@ -228,7 +235,7 @@ const Results = () => {
         if (response.status) {
           message.success(response.message || "Result updated successfully");
           setIsModalVisible(false);
-          fetchResults();
+          fetchResults(pagination?.page || 1, pagination?.limit || 10, searchText);
         } else {
           message.error(response.message || "Failed to update result");
         }
@@ -239,7 +246,7 @@ const Results = () => {
         if (response.status) {
           message.success(response.message || "Result created successfully");
           setIsModalVisible(false);
-          fetchResults();
+          fetchResults(1, pagination?.limit || 10, searchText); // Go to first page when creating new item
         } else {
           message.error(response.message || "Failed to create result");
         }
@@ -272,9 +279,9 @@ const Results = () => {
         message.error("You can only upload JPG, PNG, GIF or WebP files!");
         return false;
       }
-      const isLt5M = file.size / 1024 / 1024 < 5;
-      if (!isLt5M) {
-        message.error("Image must be smaller than 5MB!");
+      const isLt3M = file.size / 1024 / 1024 < 3;
+      if (!isLt3M) {
+        message.error("Image must be smaller than 3MB!");
         return false;
       }
       return false; // Manual upload
@@ -311,14 +318,15 @@ const Results = () => {
     }
   };
 
-  const filteredResults = results.filter(
-    (result) =>
-      result &&
-      ((result.year || "").toLowerCase().includes(searchText.toLowerCase()) ||
-        (result.description || "")
-          .toLowerCase()
-          .includes(searchText.toLowerCase()))
-  );
+  // Remove client-side filtering since search is now handled by API
+  // const filteredResults = results.filter(
+  //   (result) =>
+  //     result &&
+  //     ((result.year || "").toLowerCase().includes(searchText.toLowerCase()) ||
+  //       (result.description || "")
+  //         .toLowerCase()
+  //         .includes(searchText.toLowerCase()))
+  // );
 
   const columns: ColumnsType<IResult> = [
     {
@@ -455,7 +463,7 @@ const Results = () => {
             onChange={(e) => setSearchText(e.target.value)}
             style={{ width: 300 }}
           />
-          <Button icon={<DownloadOutlined />} onClick={handleExportResults}>
+          <Button hidden={true} icon={<DownloadOutlined />} onClick={handleExportResults}>
             Export
           </Button>
         </Space>
@@ -467,7 +475,7 @@ const Results = () => {
       <Table
         className="results-table"
         columns={columns}
-        dataSource={filteredResults || []}
+        dataSource={results || []} // Use results directly since filtering is done on server
         rowKey="id"
         loading={loading}
         pagination={false} // Pagination is handled by Pagination component
@@ -479,14 +487,19 @@ const Results = () => {
         current={pagination?.page || 1}
         total={pagination?.itemCount || 0}
         pageSize={pagination?.limit || 10}
-        showTotal={(total) => `Total ${total} items`}
+        showSizeChanger={true}
+        showQuickJumper={true}
+        showTotal={(total, range) =>
+          `${range[0]}-${range[1]} of ${total} items`
+        }
         onChange={(page, pageSize) => {
           setPagination((prev) => ({
             ...prev,
             page: page,
-            limit: pageSize,
+            limit: pageSize || 10,
           }));
         }}
+        style={{ textAlign: 'right', marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}
       />
 
       <Modal

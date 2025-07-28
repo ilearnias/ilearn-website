@@ -60,9 +60,20 @@ const Media = () => {
   const [form] = Form.useForm();
   const [thumbnailFile, setThumbnailFile] = useState<UploadFile[]>([]);
 
+  // Initial fetch
   useEffect(() => {
     fetchMedia();
   }, [currentPage, pageSize]);
+
+  // Debounced search effect
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setCurrentPage(1); // Reset to first page when searching
+      fetchMedia(); // Call fetchMedia directly to ensure search works
+    }, 500); // 500ms delay
+
+    return () => clearTimeout(timeoutId);
+  }, [searchText]);
 
   const fetchMedia = async () => {
     try {
@@ -70,11 +81,32 @@ const Media = () => {
       const response = await mediaService.getAllMedia(
         currentPage,
         pageSize,
-        false
+        false,
+        searchText.trim() ? searchText.toLowerCase().trim() : "" // Only send search if there's a search term
       );
       if (response.status) {
-        setMediaList(response.data.data || response.data);
-        setTotalItems(response.data.total || response.data.length);
+        // Handle the correct API response structure
+        // The API returns: { status: true, data: [...], meta: {...} }
+        // The service returns: { status: true, data: { data: [...], meta: {...} }, meta: {...} }
+        
+        // The service returns: { status: true, data: [...], meta: {...} }
+        // Where data is the array of media items and meta contains pagination info
+        const mediaData = response.data || [];
+        const totalCount = response.meta?.itemCount || mediaData.length;
+        
+        // Debug search results
+        if (searchText) {
+          console.log('Search term:', searchText);
+          console.log('Search results:', mediaData);
+          console.log('Total results:', totalCount);
+        } else {
+          // Debug all data to see what descriptions contain
+          console.log('All media data:', mediaData);
+          console.log('Sample descriptions:', mediaData.slice(0, 3).map((item: IMedia) => item.description));
+        }
+        
+        setMediaList(mediaData);
+        setTotalItems(totalCount);
       } else {
         message.error(response.message || "Failed to fetch media");
       }
@@ -231,6 +263,7 @@ const Media = () => {
     if (size && size !== pageSize) {
       setPageSize(size);
     }
+    // The fetchMedia will be triggered by the useEffect that watches currentPage and pageSize
   };
 
   const handleThumbnailChange = ({ fileList }: { fileList: UploadFile[] }) => {
@@ -264,16 +297,14 @@ const Media = () => {
     maxCount: 1,
   };
 
-  const filteredMedia = mediaList.filter((item) =>
-    item.description.toLowerCase().includes(searchText.toLowerCase())
-  );
+  // Remove client-side filtering since we're using server-side search
 
   const columns: ColumnsType<IMedia> = [
     {
       title: "Order",
       dataIndex: "order",
       key: "order",
-      width: 80,
+      width: 100,
       sorter: (a, b) => a.order - b.order,
     },
     {
@@ -405,7 +436,7 @@ const Media = () => {
       <Table
         className="media-table"
         columns={columns}
-        dataSource={filteredMedia}
+        dataSource={mediaList}
         rowKey="id"
         loading={loading}
         pagination={{
@@ -419,6 +450,8 @@ const Media = () => {
           onChange: handlePageChange,
           onShowSizeChange: handlePageChange,
           pageSizeOptions: ["10", "20", "50", "100"],
+          disabled: loading,
+          position: ['bottomCenter'],
         }}
       />
 
