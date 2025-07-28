@@ -80,8 +80,6 @@ const ResultsSummary = () => {
         currentPageSize
       );
 
-      console.log("Full API Response:", response);
-
       if (response.status) {
         setData(response.data || []);
         if (response.meta) {
@@ -353,10 +351,10 @@ const ResultsSummary = () => {
             value={searchText}
           />
         </Col>
-        <Col xs={24} sm={12} md={8} style={{ textAlign: 'center' }}>
+        <Col xs={24} sm={12} md={8} style={{ textAlign: "center" }}>
           {/* Center spacer */}
         </Col>
-        <Col xs={24} sm={24} md={8} style={{ textAlign: 'right' }}>
+        <Col xs={24} sm={24} md={8} style={{ textAlign: "right" }}>
           <Button
             type="primary"
             icon={<PlusOutlined />}
