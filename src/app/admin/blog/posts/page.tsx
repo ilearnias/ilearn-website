@@ -30,7 +30,17 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import { blogService, IBlogPost, IBlogCategory } from "@/services/blog.service";
 import { galleryService } from "@/services/gallery.service";
+import dynamic from "next/dynamic";
 import "./styles.scss";
+
+// Dynamically import React Quill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+  loading: () => <p>Loading editor...</p>,
+});
+
+// Import React Quill CSS
+import "react-quill/dist/quill.snow.css";
 
 const { confirm } = Modal;
 const { TextArea } = Input;
@@ -47,6 +57,37 @@ const BlogPosts = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
+  const [quillValue, setQuillValue] = useState("");
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewContent, setPreviewContent] = useState("");
+
+  // React Quill modules configuration
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      [{ color: [] }, { background: [] }],
+      [{ align: [] }],
+      ["link", "image"],
+      ["clean"],
+    ],
+  };
+
+  const quillFormats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "list",
+    "bullet",
+    "color",
+    "background",
+    "align",
+    "link",
+    "image",
+  ];
 
   // Initial fetch
   useEffect(() => {
@@ -108,6 +149,7 @@ const BlogPosts = () => {
   const handleAdd = () => {
     setEditingPost(null);
     form.resetFields();
+    setQuillValue("");
     setUploadedImage([]);
     setIsModalVisible(true);
   };
@@ -115,6 +157,8 @@ const BlogPosts = () => {
   const handleEdit = (record: IBlogPost) => {
     setEditingPost(record);
     form.setFieldsValue(record);
+    // Set Quill editor value from the record's description
+    setQuillValue(record.description || "");
     setUploadedImage(
       record.image
         ? [
@@ -198,6 +242,12 @@ const BlogPosts = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
+      
+      // Validate that Quill editor has content
+      if (!quillValue || quillValue.trim() === '' || quillValue === '<p><br></p>') {
+        message.error("Please enter description content");
+        return;
+      }
       let imageUrl = values.image;
       // If a new file is uploaded, upload it and get the URL
       const newFile = uploadedImage.find((file) => file.originFileObj);
@@ -208,7 +258,14 @@ const BlogPosts = () => {
       } else {
         imageUrl = "";
       }
-      const postData = { ...values, image: imageUrl };
+      
+      // Save the Quill content as XML/HTML
+      const postData = { 
+        ...values, 
+        image: imageUrl,
+        description: quillValue // This will be saved as HTML/XML content
+      };
+      
       if (editingPost) {
         const response = await blogService.updatePost(editingPost.id, postData);
         if (response.status) {
@@ -239,6 +296,11 @@ const BlogPosts = () => {
     form.resetFields();
   };
 
+  const handlePreview = (content: string) => {
+    setPreviewContent(content);
+    setPreviewVisible(true);
+  };
+
   const columns: ColumnsType<IBlogPost> = [
     {
       title: "Title",
@@ -254,6 +316,30 @@ const BlogPosts = () => {
         const category = categories.find((c) => c.id === categoryId);
         return category ? category.title : "";
       },
+    },
+    {
+      title: "Description Preview",
+      dataIndex: "description",
+      key: "description",
+      render: (description) => (
+        <div>
+          <div 
+            dangerouslySetInnerHTML={{ 
+              __html: description ? description.substring(0, 100) + (description.length > 100 ? '...' : '') : '' 
+            }} 
+            style={{ maxHeight: '60px', overflow: 'hidden' }}
+          />
+          {description && (
+            <Button 
+              type="link" 
+              size="small" 
+              onClick={() => handlePreview(description)}
+            >
+              View Full Content
+            </Button>
+          )}
+        </div>
+      ),
     },
     {
       title: "Order",
@@ -391,21 +477,33 @@ const BlogPosts = () => {
             </Col>
           </Row>
 
-          <Form.Item
-            name="subTitle"
-            label="Subtitle"
-            rules={[{ required: true, message: "Please enter subtitle" }]}
-          >
-            <Input />
-          </Form.Item>
+                     {/* Subtitle field commented out
+           <Form.Item
+             name="subTitle"
+             label="Subtitle"
+             rules={[{ required: true, message: "Please enter subtitle" }]}
+           >
+             <Input />
+           </Form.Item>
+           */}
 
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: "Please enter description" }]}
-          >
-            <TextArea rows={5} />
-          </Form.Item>
+                     <Form.Item
+             name="description"
+             label="Description"
+             rules={[{ required: true, message: "Please enter description" }]}
+           >
+             <div style={{ marginBottom: 16 }}>
+               <ReactQuill
+                 theme="snow"
+                 modules={quillModules}
+                 formats={quillFormats}
+                 value={quillValue}
+                 onChange={setQuillValue}
+                 placeholder="Write your blog post content here..."
+                 style={{ height: '250px' }}
+               />
+             </div>
+           </Form.Item>
 
           <Row gutter={16}>
             <Col span={12}>
@@ -462,10 +560,35 @@ const BlogPosts = () => {
               </Form.Item>
             </Col>
           </Row>
-        </Form>
-      </Modal>
-    </div>
-  );
-};
+                 </Form>
+       </Modal>
+
+       {/* Preview Modal */}
+       <Modal
+         title="Content Preview"
+         open={previewVisible}
+         onCancel={() => setPreviewVisible(false)}
+         footer={[
+           <Button key="close" onClick={() => setPreviewVisible(false)}>
+             Close
+           </Button>
+         ]}
+         width={800}
+       >
+         <div 
+           dangerouslySetInnerHTML={{ __html: previewContent }}
+           style={{ 
+             maxHeight: '400px', 
+             overflow: 'auto',
+             padding: '16px',
+             border: '1px solid #d9d9d9',
+             borderRadius: '6px',
+             backgroundColor: '#fafafa'
+           }}
+         />
+       </Modal>
+     </div>
+   );
+ };
 
 export default BlogPosts;
