@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
+import { API_CONFIG } from "@/config/api";
 import { motion, useInView } from "framer-motion";
 import Heading from "@/components/common/Heading";
 import SubHeading from "@/components/common/SubHeading";
@@ -93,7 +94,7 @@ const ResultSummary = () => {
       setError(null);
       try {
         const res = await fetch(
-          "https://ilearn-server.bairuhatech.com/v1/result-summary?page=1&limit=10"
+          `${API_CONFIG.BASE_URL}/v1/result-summary?page=1&limit=10`
         );
         if (!res.ok) throw new Error("Failed to fetch result summary");
         const json = await res.json();

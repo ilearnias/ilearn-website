@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { API_CONFIG, API_ENDPOINTS } from '@/config/api';
 
+export const runtime = 'edge';
+
 export async function POST(request: Request) {
   try {
     // Add CORS headers

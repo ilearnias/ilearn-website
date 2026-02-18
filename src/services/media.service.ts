@@ -1,5 +1,5 @@
 import apiRequest from "@/config/apiRequest";
-import { API_ENDPOINTS } from "@/config/api";
+import { API_CONFIG, API_ENDPOINTS } from "@/config/api";
 
 export interface IMedia {
   id: string;
@@ -208,7 +208,7 @@ export const mediaService = {
 export const getTestimonials = async () => {
   try {
     const response = await fetch(
-      "https://ilearn-server.bairuhatech.com/v1/media?page=1&limit=10&isTestimonial=true",
+      `${API_CONFIG.BASE_URL}/v1/media?page=1&limit=10&isTestimonial=true`,
       {
         headers: {
           accept: "*/*",
