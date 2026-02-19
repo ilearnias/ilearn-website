@@ -1,6 +1,6 @@
 // Base API URL configuration
 export const API_CONFIG = {
-  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "https://ilearn-server.bairuhatech.com",
+  BASE_URL: process.env.NEXT_PUBLIC_API_URL || "https://ilearn-server-production.up.railway.app",
 };
 
 // API Endpoints
